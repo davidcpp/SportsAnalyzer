@@ -7,17 +7,24 @@ using System.Web.Routing;
 
 namespace SportsAnalyzer
 {
-    public class RouteConfig
+  public class RouteConfig
+  {
+    public static void RegisterRoutes(RouteCollection routes)
     {
-        public static void RegisterRoutes(RouteCollection routes)
-        {
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+      routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-            );
-        }
+      //routes.MapRoute(
+      //    name: "Default",
+      //    url: "{controller}/{action}/{id}",
+      //    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+      //);
+
+      routes.MapRoute(
+          name: "Default",
+          url: "{controller}/{action}/{league}/{arg1}/{arg2}",
+          defaults: new { controller="Football", action = "Teams",
+            league = "SPL", arg1 = UrlParameter.Optional, arg2 = UrlParameter.Optional }
+      );
     }
+  }
 }
