@@ -35,7 +35,7 @@ namespace SportsAnalyzer.Models
     [StringLength(80, MinimumLength = 2)]
     public string Name { get; set; }
 
-    //[Required]
+    [Required]
     [Display(Name = "Kraj pochodzenia")]
     [StringLength(60, MinimumLength = 2)]
     public string Country { get; set; }

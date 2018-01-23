@@ -3,7 +3,7 @@ namespace SportsAnalyzer.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class DataAnnotations : DbMigration
+    public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
@@ -13,8 +13,8 @@ namespace SportsAnalyzer.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Team_Id = c.Int(nullable: false),
-                        Name = c.String(nullable: false),
-                        Country = c.String(nullable: false),
+                        Name = c.String(nullable: false, maxLength: 80),
+                        Country = c.String(nullable: false, maxLength: 60),
                         Stadium = c.String(),
                         HomePageURL = c.String(),
                         WIKILink = c.String(),
@@ -27,7 +27,7 @@ namespace SportsAnalyzer.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Team_Id = c.Int(nullable: false),
-                        Team = c.String(nullable: false),
+                        Team = c.String(nullable: false, maxLength: 80),
                         Played = c.Int(nullable: false),
                         Points = c.Int(nullable: false),
                         Won = c.Int(nullable: false),

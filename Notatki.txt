@@ -19,3 +19,14 @@ czasy dla pobierania du¿ych iloœci danych
       //    ViewResult viewResult = footballController.SPL(pageType, seasonYear) as ViewResult;
       //  }
       //}
+
+Czy jest sens testowania b³êdnych danych otrzymywanych od WebService?
+(np. zmienne z wartoœci¹ null, lub ca³e obiekty null)
+Pozostaj¹ testy:
+- przyk³adowa lista danych - sprawdzenie zgodnoœci listy pobranej z list¹ utworzon¹ dla modelu
+- pusta lista danych
+- lista danych z obiektem ze zmienn¹ typu string przekraczaj¹c¹ maksymaln¹ d³ugoœæ dla bazy danych
+
+Czy testowaæ reakcjê na podanie nieprawid³owych argumentów do kontrolera? - to chyba testy integracyjne
+(np. rok sezonu nie obejmowany przez WebService) - liczy siê efekt w postaci pustej listy, który jest przetestowany
+- funkcje nie wyrzucaj¹ wyj¹tków

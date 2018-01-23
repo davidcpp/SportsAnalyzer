@@ -1,11 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
+using System.Linq;
+
 namespace SportsAnalyzer.Models
 {
-  using System;
-  using System.Collections.Generic;
-  using System.ComponentModel.DataAnnotations;
-  using System.Data.Entity;
-  using System.Linq;
-
   public static class TeamLeagueStandingConverter
   {
     public static List<TeamLeagueStanding> ConvertToLeagueStandingList(this List<XMLSoccerCOM.TeamLeagueStanding> XmlList)
@@ -58,10 +58,10 @@ namespace SportsAnalyzer.Models
     [Display(Name = "Bramki zdobyte")]
     public int Goals_For { get; set; }
 
+    [Required]
     [Display(Name = "Bramki stracone")]
     public int Goals_Against { get; set; }
 
-    [Required]
     [Display(Name = "Bilans bramek")]
     public int Goal_Difference { get; set; }
 

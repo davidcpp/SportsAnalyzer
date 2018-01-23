@@ -9,6 +9,12 @@ namespace SportsAnalyzer.DAL
     {
     }
 
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+      Database.SetInitializer<XmlSoccerAPI_DBContext>(null);
+      base.OnModelCreating(modelBuilder);
+    }
+
     public DbSet<FootballTeam> FootballTeams { get; set; }
     public DbSet<TeamLeagueStanding> LeagueTable { get; set; }
   }

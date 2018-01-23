@@ -159,25 +159,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201801171310043_DataAnnotations.cs" />
-    <Compile Include="Migrations\201801171310043_DataAnnotations.Designer.cs">
-      <DependentUpon>201801171310043_DataAnnotations.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801191134003_ChangeTableName.cs" />
-    <Compile Include="Migrations\201801191134003_ChangeTableName.Designer.cs">
-      <DependentUpon>201801191134003_ChangeTableName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801191143393_StringLengthChange.cs" />
-    <Compile Include="Migrations\201801191143393_StringLengthChange.Designer.cs">
-      <DependentUpon>201801191143393_StringLengthChange.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801191146477_ChangeFieldsProperties.cs" />
-    <Compile Include="Migrations\201801191146477_ChangeFieldsProperties.Designer.cs">
-      <DependentUpon>201801191146477_ChangeFieldsProperties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201801192051586_Reconstruction.cs" />
-    <Compile Include="Migrations\201801192051586_Reconstruction.Designer.cs">
-      <DependentUpon>201801192051586_Reconstruction.cs</DependentUpon>
+    <Compile Include="Migrations\201801231024530_InitialCreate.cs" />
+    <Compile Include="Migrations\201801231024530_InitialCreate.Designer.cs">
+      <DependentUpon>201801231024530_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FootballTeam.cs" />
@@ -247,20 +231,8 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201801171310043_DataAnnotations.resx">
-      <DependentUpon>201801171310043_DataAnnotations.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801191134003_ChangeTableName.resx">
-      <DependentUpon>201801191134003_ChangeTableName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801191143393_StringLengthChange.resx">
-      <DependentUpon>201801191143393_StringLengthChange.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801191146477_ChangeFieldsProperties.resx">
-      <DependentUpon>201801191146477_ChangeFieldsProperties.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201801192051586_Reconstruction.resx">
-      <DependentUpon>201801192051586_Reconstruction.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801231024530_InitialCreate.resx">
+      <DependentUpon>201801231024530_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
