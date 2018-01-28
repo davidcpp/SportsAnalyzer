@@ -21,9 +21,13 @@ namespace SportsAnalyzer
 
       routes.MapRoute(
           name: "Default",
-          url: "{controller}/{action}/{league}/{arg1}/{arg2}",
-          defaults: new { controller="Football", action = "Teams",
-            league = "SPL", arg1 = UrlParameter.Optional, arg2 = UrlParameter.Optional }
+          url: "{controller}/{action}/{league}/{seasonYear}",
+          defaults: new {
+            controller ="Football",
+            action = "Teams",
+            league = UrlParameter.Optional,
+            seasonYear = UrlParameter.Optional,
+          }
       );
     }
   }

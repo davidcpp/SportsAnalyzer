@@ -46,8 +46,10 @@ namespace SportsAnalyzer.Controllers
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 
-    public const string SPL_id = "Scottish Premier League";
+    public const string defaultLeagueFullName = "Scottish Premier League";
     public const int defaultSeasonYear = 2017;
+    public const string defaultLeagueShortName = "SPL";
+    public const string defaultLeagueId = "3";
 
     public FootballController()
     {
@@ -86,12 +88,12 @@ namespace SportsAnalyzer.Controllers
       }
     }
 
-    // GET: Football/Teams/{league}/{seasonYear}/{teamName}
-    public ActionResult Teams(string leagueID, int seasonYear = defaultSeasonYear)
+    // GET: Football/Teams/{league}/{seasonYear}
+    public ActionResult Teams(string league = defaultLeagueFullName, int seasonYear = defaultSeasonYear)
     {
-      if (leagueID == null || leagueID == "SPL")
-        leagueID = SPL_id;
-      var XmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(leagueID, seasonYear);
+      if (league == defaultLeagueShortName || league == defaultLeagueId)
+        league = defaultLeagueFullName;
+      var XmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
 
       ClearDBSet(db.FootballTeams);
 
@@ -105,14 +107,14 @@ namespace SportsAnalyzer.Controllers
       return View(db.FootballTeams.ToList());
     }
 
-    // GET: Football/Table/{league}/{seasonYear}/{teamName}
-    // mode - tryb wyświetlania tabeli: 0-normalny, 1-rozszerzony
-    public ActionResult Table(string leagueID, int seasonYear = defaultSeasonYear, int mode = 0)
+    // GET: Football/Table/{league}/{seasonYear}
+    // mode - mode of table display: 0-normal, 1-expanded
+    public ActionResult Table(string league = defaultLeagueFullName, int seasonYear = defaultSeasonYear)
     {
-      if (leagueID == null || leagueID == "SPL")
-        leagueID = SPL_id;
+      if (league == defaultLeagueShortName || league == defaultLeagueId)
+        league = defaultLeagueFullName;
 
-      var XmlLeagueStandings = _xmlSoccerRequester.GetLeagueStandingsBySeason(leagueID, seasonYear);
+      var XmlLeagueStandings = _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonYear);
 
       ClearDBSet(db.LeagueTable);
 

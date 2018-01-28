@@ -119,8 +119,8 @@ namespace SportsAnalyzer.Models
       return true;
     }
 
-    //// Dodatkowe pola obecne w klasie XMLSoccerCOM.TeamLeagueStanding - tutaj niepotrzebne
-    //// ewentualnie bêd¹ potrzebne dla tworzenia widoku rozszerzonego
+    //// Additional field present in the class XMLSoccerCOM.TeamLeagueStanding - here unneeded,
+    //// possibly will be necessary for expanded view creating
 
     //public int RedCards { get; set; }
     //public int YellowCards { get; set; }
