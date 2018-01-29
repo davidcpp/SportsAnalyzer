@@ -4,7 +4,7 @@ using SportsAnalyzer.Controllers;
 using System.Web.Mvc;
 using Moq;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq.Expressions;
 using SportsAnalyzer.Models;
 using System.Data.Entity.Validation;
 
@@ -14,6 +14,7 @@ namespace SportsAnalyzer.Tests.Controllers
   public class FootballControllerTest
   {
     /* Fields */
+
 
     const int numberOfTeams = 12;
     const string shortString = "a";
@@ -27,7 +28,6 @@ namespace SportsAnalyzer.Tests.Controllers
     const string defaultLeague = FootballController.defaultLeagueFullName;
     const string defaultLeagueId = FootballController.defaultLeagueId;
     const string leagueIdExample = "league";
-
 
 
     [TestMethod]
@@ -63,48 +63,38 @@ namespace SportsAnalyzer.Tests.Controllers
       }
     }
 
+
     [TestMethod]
     public void ShowTeams_VariousControllerArgs_ProperArgumentsCall()
     {
       // Arrange
-      var XmlSoccerReq_Mock = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
       var xmlTestList = CreateTestTeamList(0);
 
-      MockSequence sequence = new MockSequence();
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear))
-        .Returns(xmlTestList);
+      var callMockExpressions = new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.Team>>>>
+      {
+        x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, defaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample),
+      };
 
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear))
-        .Returns(xmlTestList);
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear))
-        .Returns(xmlTestList);
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, defaultSeasonYear))
-        .Returns(xmlTestList);
+      Mock<IXmlSoccerRequester> mockXmlReq = SetSequenceOfMockCalls<List<XMLSoccerCOM.Team>>
+        (xmlTestList, callMockExpressions);
 
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample))
-        .Returns(xmlTestList);
+      FootballController footballController = new FootballController(mockXmlReq.Object);
 
-      FootballController footballController = new FootballController(XmlSoccerReq_Mock.Object);
+      var listOfCallArgs = new List<(string, int?)>
+      {
+        (null, null),
+        (defaultLeagueShortName, null),
+        (defaultLeagueId, null),
+        (leagueIdExample, null),
+        (leagueIdExample, seasonYearExample)
+      };
 
       // Act
-
-      // calling controller action without parameters
-      ViewResult viewResult = footballController.Teams() as ViewResult;
-
-      // passing one parameter to controller action
-      viewResult = footballController.Teams(defaultLeagueShortName) as ViewResult;
-      viewResult = footballController.Teams(defaultLeagueId) as ViewResult;
-      viewResult = footballController.Teams(leagueIdExample) as ViewResult;
-
-      // passing two parameter to controller action;
-      viewResult = footballController.Teams(leagueIdExample, seasonYearExample) as ViewResult;
-
-      // Probably calls with null arguments are unneccessary - arguments of Controller action has default values
+      CallControlerActionRepeat(footballController.Teams, listOfCallArgs);
 
       // Assert
     }
@@ -260,41 +250,31 @@ namespace SportsAnalyzer.Tests.Controllers
       var XmlSoccerReq_Mock = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
       var xmlTestLeagueTable = CreateTestLeagueTable(0);
 
-      MockSequence sequence = new MockSequence();
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear))
-        .Returns(xmlTestLeagueTable);
+      var callMockExpressions = new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.TeamLeagueStanding>>>>
+      {
+        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample),
+      };
 
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear))
-        .Returns(xmlTestLeagueTable);
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear))
-        .Returns(xmlTestLeagueTable);
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear))
-        .Returns(xmlTestLeagueTable);
+      Mock<IXmlSoccerRequester> mockXmlReq = SetSequenceOfMockCalls<List<XMLSoccerCOM.TeamLeagueStanding>>
+        (xmlTestLeagueTable, callMockExpressions);
 
-      XmlSoccerReq_Mock.InSequence(sequence)
-        .Setup(x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample))
-        .Returns(xmlTestLeagueTable);
+      FootballController footballController = new FootballController(mockXmlReq.Object);
 
-      FootballController footballController = new FootballController(XmlSoccerReq_Mock.Object);
+      var listOfCallArgs = new List<(string, int?)>
+      {
+        (null, null),
+        (defaultLeagueShortName, null),
+        (defaultLeagueId, null),
+        (leagueIdExample, null),
+        (leagueIdExample, seasonYearExample)
+      };
 
       // Act
-
-      // calling controller action without parameters
-      ViewResult viewResult = footballController.Table() as ViewResult;
-
-      // passing one parameter to controller action
-      viewResult = footballController.Table(defaultLeagueShortName) as ViewResult;
-      viewResult = footballController.Table(defaultLeagueId) as ViewResult;
-      viewResult = footballController.Table(leagueIdExample) as ViewResult;
-
-      // passing two parameter to controller action
-      viewResult = footballController.Table(leagueIdExample, seasonYearExample) as ViewResult;
-
-      // Probably calls with null arguments are unneccessary - arguments of Controller action has default values
+      CallControlerActionRepeat(footballController.Table, listOfCallArgs);
 
       // Assert
     }
@@ -322,7 +302,7 @@ namespace SportsAnalyzer.Tests.Controllers
 
     /* Auxiliary methods */
 
-    List<XMLSoccerCOM.Team> CreateTestTeamList(int size, string testString = "abcd")
+    private List<XMLSoccerCOM.Team> CreateTestTeamList(int size, string testString = "abcd")
     {
       List<XMLSoccerCOM.Team> xmlList = new List<XMLSoccerCOM.Team>();
       for (int i = 1; i <= size; i++)
@@ -332,7 +312,7 @@ namespace SportsAnalyzer.Tests.Controllers
       return xmlList;
     }
 
-    List<XMLSoccerCOM.TeamLeagueStanding> CreateTestLeagueTable(int size, string testString = "abcd", int testInt = 0)
+    private List<XMLSoccerCOM.TeamLeagueStanding> CreateTestLeagueTable(int size, string testString = "abcd", int testInt = 0)
     {
       List<XMLSoccerCOM.TeamLeagueStanding> xmlList = new List<XMLSoccerCOM.TeamLeagueStanding>();
       for (int i = 1; i <= size; i++)
@@ -342,7 +322,7 @@ namespace SportsAnalyzer.Tests.Controllers
       return xmlList;
     }
 
-    XMLSoccerCOM.Team CreateTestTeam(int team_Id, string testString)
+    private XMLSoccerCOM.Team CreateTestTeam(int team_Id, string testString)
     {
       return new XMLSoccerCOM.Team
       {
@@ -355,7 +335,7 @@ namespace SportsAnalyzer.Tests.Controllers
       };
     }
 
-    XMLSoccerCOM.TeamLeagueStanding CreateTestTeamLeagueStanding(int team_Id, int testInt, string testString)
+    private XMLSoccerCOM.TeamLeagueStanding CreateTestTeamLeagueStanding(int team_Id, int testInt, string testString)
     {
       return new XMLSoccerCOM.TeamLeagueStanding
       {
@@ -370,6 +350,48 @@ namespace SportsAnalyzer.Tests.Controllers
         Goals_Against = testInt,
         Goal_Difference = testInt
       };
+    }
+
+    private Mock<IXmlSoccerRequester> SetSequenceOfMockCalls<T>(T xmlData, List<Expression<Func<IXmlSoccerRequester, T>>> CallMockExpressions)
+    {
+      var XmlSoccerReq_Mock = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
+
+      MockSequence sequence = new MockSequence();
+
+      foreach (var expression in CallMockExpressions)
+      {
+        XmlSoccerReq_Mock.InSequence(sequence)
+          .Setup(expression)
+          .Returns(xmlData);
+      }
+
+      return XmlSoccerReq_Mock;
+    }
+
+    delegate ActionResult FootballControllerAction(string league = defaultLeague, int seasonYear = defaultSeasonYear);
+
+    private void CallControlerActionRepeat(FootballControllerAction footballControllerAction, 
+                                           List<(string league, int? seasonYear)> listOfCallArgs)
+    {
+      foreach (var callArgs in listOfCallArgs)
+      {
+        if (callArgs.league == null && callArgs.seasonYear == null)
+        {
+          // calling controller action without parameters
+          footballControllerAction();
+        }
+        else if (callArgs.seasonYear == null)
+        {
+          // calling controller action with 1 parameter
+          footballControllerAction(callArgs.league);
+        }
+        else
+        {
+          // calling controller action with 2 parameters
+          footballControllerAction(callArgs.league, callArgs.seasonYear.Value);
+        }
+      }
+      // Probably calls with null arguments are unneccessary - arguments of Controller action has default values
     }
 
 
