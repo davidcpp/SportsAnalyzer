@@ -17,7 +17,6 @@ namespace SportsAnalyzer.Tests.Controllers
 
     const int numberOfTeams = 12;
     const string shortString = "a";
-    string longString = new string('a', 101);
     const string standardString = "abcd";
 
     const int defaultSeasonYear = FootballController.DefaultSeasonYear;
@@ -41,7 +40,7 @@ namespace SportsAnalyzer.Tests.Controllers
       FootballController footballController = new FootballController(mockXmlReq.Object);
 
       // Act
-      ViewResult viewResult = footballController.Teams(defaultLeague) as ViewResult;
+      ViewResult viewResult = footballController.Teams() as ViewResult;
 
       // Assert
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
@@ -111,7 +110,7 @@ namespace SportsAnalyzer.Tests.Controllers
       FootballController footballController = new FootballController(mockXmlReq.Object);
 
       // Act
-      ViewResult viewResult = footballController.Teams(defaultLeague) as ViewResult;
+      ViewResult viewResult = footballController.Teams() as ViewResult;
 
       // Assert
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
@@ -132,10 +131,8 @@ namespace SportsAnalyzer.Tests.Controllers
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
 
-      ViewResult viewResult = null;
-
       // Act
-      viewResult = footballController.Teams(defaultLeague) as ViewResult;
+      footballController.Teams();
 
       // Assert
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
@@ -154,13 +151,14 @@ namespace SportsAnalyzer.Tests.Controllers
       FootballController footballController = new FootballController(mockXmlReq.Object);
 
       // Act
-      ViewResult viewResult = footballController.Table(defaultLeague) as ViewResult;
+      ViewResult viewResult = footballController.Table() as ViewResult;
 
       // Assert
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       // Checking if list forwarded as a model (viewResult.Model) to View
       // corresponds to test list (Does this list have the same values of their objects? )
+
       List<TeamLeagueStanding> dbList = viewResult.Model as List<TeamLeagueStanding>;
 
       Assert.IsNotNull(dbList);
@@ -186,7 +184,7 @@ namespace SportsAnalyzer.Tests.Controllers
       FootballController footballController = new FootballController(mockXmlReq.Object);
 
       // Act
-      ViewResult viewResult = footballController.Table(defaultLeague) as ViewResult;
+      ViewResult viewResult = footballController.Table() as ViewResult;
 
       // Assert
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
@@ -244,7 +242,7 @@ namespace SportsAnalyzer.Tests.Controllers
       FootballController footballController = new FootballController(mockXmlReq.Object);
 
       // Act
-      ViewResult viewResult = footballController.Table(defaultLeague) as ViewResult;
+      footballController.Table();
 
       // Assert
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
@@ -252,7 +250,7 @@ namespace SportsAnalyzer.Tests.Controllers
 
     /* Auxiliary methods */
 
-    private List<XMLSoccerCOM.Team> CreateTestTeamList(int size, string testString = "abcd")
+    private List<XMLSoccerCOM.Team> CreateTestTeamList(int size, string testString = standardString)
     {
       List<XMLSoccerCOM.Team> xmlList = new List<XMLSoccerCOM.Team>();
       for (int i = 1; i <= size; i++)
@@ -262,7 +260,7 @@ namespace SportsAnalyzer.Tests.Controllers
       return xmlList;
     }
 
-    private List<XMLSoccerCOM.TeamLeagueStanding> CreateTestLeagueTable(int size, string testString = "abcd", int testInt = 0)
+    private List<XMLSoccerCOM.TeamLeagueStanding> CreateTestLeagueTable(int size, string testString = standardString, int testInt = 0)
     {
       List<XMLSoccerCOM.TeamLeagueStanding> xmlList = new List<XMLSoccerCOM.TeamLeagueStanding>();
       for (int i = 1; i <= size; i++)
