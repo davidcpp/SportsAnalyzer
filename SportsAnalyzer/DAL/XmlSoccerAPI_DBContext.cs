@@ -5,6 +5,9 @@ namespace SportsAnalyzer.DAL
 {
   public class XmlSoccerAPI_DBContext : DbContext
   {
+    public DbSet<FootballTeam> FootballTeams { get; set; }
+    public DbSet<TeamLeagueStanding> LeagueTable { get; set; }
+
     public XmlSoccerAPI_DBContext() : base("XmlSoccerAPI_DBContext")
     {
     }
@@ -14,8 +17,5 @@ namespace SportsAnalyzer.DAL
       Database.SetInitializer<XmlSoccerAPI_DBContext>(null);
       base.OnModelCreating(modelBuilder);
     }
-
-    public DbSet<FootballTeam> FootballTeams { get; set; }
-    public DbSet<TeamLeagueStanding> LeagueTable { get; set; }
   }
 }

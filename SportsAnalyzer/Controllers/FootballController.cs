@@ -26,7 +26,6 @@ namespace SportsAnalyzer.Controllers
     {
       Debug.Write("GetAllTeamsByLeagueAndSeason()\n");
       return _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonStartYear);
-
     }
     public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(string league, int seasonStartYear)
     {
