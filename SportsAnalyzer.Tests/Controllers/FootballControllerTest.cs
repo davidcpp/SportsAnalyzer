@@ -143,53 +143,6 @@ namespace SportsAnalyzer.Tests.Controllers
       XmlSoccerReq_Mock.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
     }
 
-
-    // Question is that whether these following methods are practically needed
-    // - assuming that XmlSoccer.Requester doesn't provide Data with null objects or null fields
-
-    [TestMethod]
-    [ExpectedException(exceptionType: typeof(DbEntityValidationException))]
-    public void ShowTeams_TeamWithNullFields_EntityValidationException()
-    {
-      // Arrange
-      var XmlSoccerReq_Mock = new Mock<IXmlSoccerRequester>();
-
-      var xmlTestList = CreateTestTeamList(1, null);
-
-      XmlSoccerReq_Mock.Setup(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>())).
-        Returns(xmlTestList);
-
-      FootballController footballController = new FootballController(XmlSoccerReq_Mock.Object);
-
-      // Act
-      ViewResult viewResult = footballController.Teams(defaultLeague) as ViewResult;
-
-      // Assert
-      XmlSoccerReq_Mock.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
-    }
-
-    [TestMethod]
-    [ExpectedException(exceptionType: typeof(NullReferenceException))]
-    public void ShowTeams_ListWithNullObjects_NullReferenceException()
-    {
-      // Arrange
-      var XmlSoccerReq_Mock = new Mock<IXmlSoccerRequester>();
-
-      var xmlTestList = CreateTestTeamList(3);
-      xmlTestList[1] = null;
-
-      XmlSoccerReq_Mock.Setup(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>())).
-        Returns(xmlTestList);
-
-      FootballController footballController = new FootballController(XmlSoccerReq_Mock.Object);
-
-      // Act
-      ViewResult viewResult = footballController.Teams(defaultLeague) as ViewResult;
-
-      // Assert
-      XmlSoccerReq_Mock.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
-    }
-
     [TestMethod]
     public void ShowTable_TestTable_EqualTables()
     {
