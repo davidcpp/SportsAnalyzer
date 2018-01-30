@@ -22,11 +22,6 @@ namespace SportsAnalyzer.Controllers
     private const string apiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
     private XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(apiKey);
 
-    //public XmlSoccerRequester()
-    //{
-    //  apiKey= "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
-    //  _xmlSoccerRequester = new XMLSoccerCOM.Requester(apiKey);
-    //}
     public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(string league, int seasonStartYear)
     {
       Debug.Write("GetAllTeamsByLeagueAndSeason()\n");
@@ -46,10 +41,10 @@ namespace SportsAnalyzer.Controllers
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 
-    public const string defaultLeagueFullName = "Scottish Premier League";
-    public const int defaultSeasonYear = 2017;
-    public const string defaultLeagueShortName = "SPL";
-    public const string defaultLeagueId = "3";
+    public const string DefaultLeagueFullName = "Scottish Premier League";
+    public const int DefaultSeasonYear = 2017;
+    public const string DefaultLeagueShortName = "SPL";
+    public const string DefaultLeagueId = "3";
 
     public FootballController()
     {
@@ -89,10 +84,10 @@ namespace SportsAnalyzer.Controllers
     }
 
     // GET: Football/Teams/{league}/{seasonYear}
-    public ActionResult Teams(string league = defaultLeagueFullName, int seasonYear = defaultSeasonYear)
+    public ActionResult Teams(string league = DefaultLeagueFullName, int seasonYear = DefaultSeasonYear)
     {
-      if (league == defaultLeagueShortName || league == defaultLeagueId)
-        league = defaultLeagueFullName;
+      if (league == DefaultLeagueShortName || league == DefaultLeagueId)
+        league = DefaultLeagueFullName;
       var XmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
 
       ClearDBSet(db.FootballTeams);
@@ -109,10 +104,10 @@ namespace SportsAnalyzer.Controllers
 
     // GET: Football/Table/{league}/{seasonYear}
     // mode - mode of table display: 0-normal, 1-expanded
-    public ActionResult Table(string league = defaultLeagueFullName, int seasonYear = defaultSeasonYear)
+    public ActionResult Table(string league = DefaultLeagueFullName, int seasonYear = DefaultSeasonYear)
     {
-      if (league == defaultLeagueShortName || league == defaultLeagueId)
-        league = defaultLeagueFullName;
+      if (league == DefaultLeagueShortName || league == DefaultLeagueId)
+        league = DefaultLeagueFullName;
 
       var XmlLeagueStandings = _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonYear);
 
