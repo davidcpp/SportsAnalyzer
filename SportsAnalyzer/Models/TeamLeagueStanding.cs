@@ -109,11 +109,11 @@ namespace SportsAnalyzer.Models
         return false;
       if (Lost != teamStanding.Lost)
         return false;
-      if (Won != teamStanding.Won)
+      if (Goals_For != teamStanding.Goals_For)
         return false;
-      if (Draw != teamStanding.Draw)
+      if (Goals_Against != teamStanding.Goals_Against)
         return false;
-      if (Lost != teamStanding.Lost)
+      if (Goal_Difference != teamStanding.Goal_Difference)
         return false;
 
       return true;
