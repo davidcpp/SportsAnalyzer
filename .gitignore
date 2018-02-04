@@ -260,3 +260,8 @@ paket-files/
 __pycache__/
 *.pyc
 /SportsAnalyzer/Migrations_old
+TODO.txt
+GCop.json
+GCopReport.json
+.vscode/settings.json
+Notes.txt

@@ -8,10 +8,10 @@ namespace SportsAnalyzer.Models
 {
   public static class TeamLeagueStandingConverter
   {
-    public static List<TeamLeagueStanding> ConvertToLeagueStandingList(this List<XMLSoccerCOM.TeamLeagueStanding> XmlList)
+    public static List<TeamLeagueStanding> ConvertToLeagueStandingList(this List<XMLSoccerCOM.TeamLeagueStanding> xmlList)
     {
-      List<TeamLeagueStanding> list = new List<TeamLeagueStanding>();
-      foreach (var xmlTeamLeagueStanding in XmlList)
+      var list = new List<TeamLeagueStanding>();
+      foreach (var xmlTeamLeagueStanding in xmlList)
       {
         list.Add(new TeamLeagueStanding(xmlTeamLeagueStanding));
       }
@@ -23,6 +23,8 @@ namespace SportsAnalyzer.Models
   {
     /* Fields */
 
+    public const int MaxTeamNameLength = 80;
+
     public int Id { get; set; }
 
     [Required]
@@ -31,7 +33,7 @@ namespace SportsAnalyzer.Models
 
     [Required]
     [Display(Name = "Klub")]
-    [StringLength(80, MinimumLength = 2)]
+    [StringLength(MaxTeamNameLength, MinimumLength = 2)]
     public string Team { get; set; }
 
     [Required]
@@ -64,6 +66,19 @@ namespace SportsAnalyzer.Models
 
     [Display(Name = "Bilans bramek")]
     public int Goal_Difference { get; set; }
+
+    //// Additional field present in the class XMLSoccerCOM.TeamLeagueStanding - here unneeded,
+    //// possibly will be necessary for expanded view creating
+
+    public int RedCards { get; set; }
+    public int YellowCards { get; set; }
+    public int NumberOfShots { get; set; }
+    public int PlayedAway { get; set; }
+    public int PlayedAtHome { get; set; }
+
+    //public int? Group_Id { get; set; }
+    //public string Group { get; set; }
+
 
     /* Constructors */
 
@@ -119,15 +134,6 @@ namespace SportsAnalyzer.Models
       return true;
     }
 
-    //// Additional field present in the class XMLSoccerCOM.TeamLeagueStanding - here unneeded,
-    //// possibly will be necessary for expanded view creating
 
-    //public int RedCards { get; set; }
-    //public int YellowCards { get; set; }
-    //public int NumberOfShots { get; set; }
-    //public int PlayedAway { get; set; }
-    //public int PlayedAtHome { get; set; }
-    //public int? Group_Id { get; set; }
-    //public string Group { get; set; }
   }
 }

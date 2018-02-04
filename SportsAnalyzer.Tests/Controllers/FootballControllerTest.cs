@@ -324,22 +324,22 @@ namespace SportsAnalyzer.Tests.Controllers
     private void CallControlerActionMuliply(FootballControllerAction footballControllerAction, 
                                            List<(string league, int? seasonYear)> listOfCallArgs)
     {
-      foreach (var callArgs in listOfCallArgs)
+      foreach (var (league, seasonYear) in listOfCallArgs)
       {
-        if (callArgs.league == null && callArgs.seasonYear == null)
+        if (league == null && seasonYear == null)
         {
           // calling controller action without parameters
           footballControllerAction();
         }
-        else if (callArgs.seasonYear == null)
+        else if (seasonYear == null)
         {
           // calling controller action with 1 parameter
-          footballControllerAction(callArgs.league);
+          footballControllerAction(league);
         }
         else
         {
           // calling controller action with 2 parameters
-          footballControllerAction(callArgs.league, callArgs.seasonYear.Value);
+          footballControllerAction(league, seasonYear.Value);
         }
       }
       // Probably calls with null arguments are unnecessary - arguments of Controller action has default values

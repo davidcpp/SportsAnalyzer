@@ -164,7 +164,9 @@
       <DependentUpon>201801231024530_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\FootballMatch.cs" />
     <Compile Include="Models\FootballTeam.cs" />
+    <Compile Include="Models\Statistics.cs" />
     <Compile Include="Models\TeamLeagueStanding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,11 +1,15 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsAnalyzer", "SportsAnalyzer\SportsAnalyzer.csproj", "{001DF90E-AA75-43BB-B549-A50F535A20BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsAnalyzer.Tests", "SportsAnalyzer.Tests\SportsAnalyzer.Tests.csproj", "{71AA647D-081A-4DF3-B9A3-659935A2B73C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB802F83-E581-4C4B-9B16-7D00D66C9329}"
+	ProjectSection(SolutionItems) = preProject
+		GCop.json = GCop.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +28,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{001DF90E-AA75-43BB-B549-A50F535A20BF} = {EB802F83-E581-4C4B-9B16-7D00D66C9329}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D36EC03-7226-4C75-8CAB-E8F53AD4706E}

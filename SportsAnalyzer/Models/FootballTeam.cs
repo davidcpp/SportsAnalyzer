@@ -11,7 +11,7 @@ namespace SportsAnalyzer.Models
   {
     public static List<FootballTeam> ConvertToTeamList(this List<XMLSoccerCOM.Team> XmlList)
     {
-      List<FootballTeam> list = new List<FootballTeam>();
+      var list = new List<FootballTeam>();
       foreach (var xmlTeam in XmlList)
       {
         list.Add(new FootballTeam(xmlTeam));
@@ -24,6 +24,9 @@ namespace SportsAnalyzer.Models
   {
     /* Fields */
 
+    public const int MaxTeamNameLength = 80;
+    public const int MaxCountryNameLength = 60;
+
     public int Id { get; set; }
 
     [Required]
@@ -32,12 +35,12 @@ namespace SportsAnalyzer.Models
 
     [Required]
     [Display(Name = "Nazwa Drużyny")]
-    [StringLength(80, MinimumLength = 2)]
+    [StringLength(MaxTeamNameLength, MinimumLength = 2)]
     public string Name { get; set; }
 
     [Required]
     [Display(Name = "Kraj pochodzenia")]
-    [StringLength(60, MinimumLength = 2)]
+    [StringLength(MaxCountryNameLength, MinimumLength = 2)]
     public string Country { get; set; }
 
     [Display(Name = "Stadion")]
@@ -48,6 +51,7 @@ namespace SportsAnalyzer.Models
 
     [Display(Name = "Wiki link")]
     public string WIKILink { get; set; }
+
 
     /* Constructors */
 
