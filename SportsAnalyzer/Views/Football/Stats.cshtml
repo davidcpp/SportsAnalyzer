@@ -1,0 +1,131 @@
+﻿@model IEnumerable<SportsAnalyzer.Models.Statistics>
+
+@{
+  ViewBag.Title = "Stats";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Statistics</h2>
+
+<div id="container" style="width: 75%;" >
+  <canvas id="myChart"></canvas>
+</div>
+
+
+<table class="table">
+  <tr>
+    <th>
+      @Html.DisplayNameFor(modelItem => modelItem.LeagueName)
+    </th>
+    <th>
+      @Html.DisplayNameFor(modelItem => modelItem.TeamName)
+    </th>
+    <th>
+      @Html.DisplayNameFor(modelItem => modelItem.MatchesNumber)
+    </th>
+    <th>
+      @Html.DisplayNameFor(modelItem => modelItem.GoalsSum)
+    </th>
+    <th>
+      @Html.DisplayNameFor(modelItem => modelItem.GoalsAvg)
+    </th>
+    <th>
+      @Html.DisplayNameFor(modelItem => modelItem.GoalsAvgHome)
+    </th>
+  </tr>
+
+  @foreach (var item in Model)
+  {
+  <tr>
+    <td>
+      @Html.DisplayFor(modelItem => item.LeagueName)
+    </td>
+    <td>
+      @Html.DisplayFor(model => item.TeamName)
+    </td>
+    <td>
+      @Html.DisplayFor(model => item.MatchesNumber)
+    </td>
+    <td>
+      @Html.DisplayFor(model => item.GoalsSum)
+    </td>
+    <td>
+      @Html.DisplayFor(model => item.GoalsAvg)
+    </td>
+    <td>
+      @Html.DisplayFor(model => item.GoalsAvgHome)/@Html.DisplayFor(model => item.GoalsAvgAway)
+    </td>
+  </tr>
+  }
+
+</table>
+
+
+@{
+  double[] GoalsInIntervalsPercent = Model.ElementAt(0).GoalsInIntervalsPercent;
+  var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+}
+
+@section scripts
+{
+  <script>
+    var color = Chart.helpers.color;
+    var goalsInIntervalsPercent = eval("@serializer.Serialize(GoalsInIntervalsPercent)");
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'bar',
+      // The data for our dataset
+      data: {
+        labels: ["0-15", "15-30", "30-45", "45-60", "60-75", "75-90"],
+        datasets: [{
+          label: 'Percent of goals',
+          backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+          borderColor: window.chartColors.blue,
+          borderWidth: 1,
+          data: goalsInIntervalsPercent,
+        }]
+
+      },
+      // Configuration options go here
+      options: {
+        responsive: true,
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          fontSize: 24,
+          fontColor: window.chartColors.black,
+          text: 'Minutes Intervales of scored goals'
+        },
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Percent of goals',
+              fontColor: window.chartColors.blue,
+            },
+            ticks: {
+              beginAtZero: true,
+              callback: function (value, index, values)
+              {
+                return value + '%';
+              }
+            }
+          }],
+          xAxes: [{
+            gridLines: {
+              offsetGridLines: true
+            }
+          }]
+        },
+
+      }
+
+    });
+
+  </script>
+}
+

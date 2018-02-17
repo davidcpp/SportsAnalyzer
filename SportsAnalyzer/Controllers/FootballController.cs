@@ -148,25 +148,30 @@ namespace SportsAnalyzer.Controllers
         List<XMLSoccerCOM.Team> xmlTeams =
           _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
 
-        xmlLeagueMatches = GetXmlMatcheByRoundsRange(startRound, endRound, xmlLeagueMatches, xmlTeams.Count);
+        xmlLeagueMatches = GetXmlMatchesByRoundsRange(startRound, endRound, xmlLeagueMatches, xmlTeams.Count);
 
-        Statistics statistics = new Statistics();
+        Statistics statistics = new Statistics(DefaultLeagueFullName);
         statistics.CalculateAll(xmlLeagueMatches);
 
         Debug.Write("\nGoals Average: " + statistics.GoalsAvg.ToString() + "\n");
 
         string goalsInIntervalsText = string.Join(" ", statistics.GoalsInIntervals.Select((x, index) => "(" +
-                                                         statistics.TimeIntervalsLimits[index].ToString() + "' -" +
-                                                         statistics.TimeIntervalsLimits[index + 1].ToString() + "'): " +
-                                                         x.ToString()));
+                                                       statistics.TimeIntervalsLimits[index].ToString() + "' -" +
+                                                       statistics.TimeIntervalsLimits[index + 1].ToString() + "'): " +
+                                                       x.ToString()));
 
         Debug.Write("\nGoals in next minutes (1): " + goalsInIntervalsText + "\n");
+        return View(new List<Statistics> { statistics });
       }
-
       return View();
-    }
 
-    private static List<XMLSoccerCOM.Match> GetXmlMatcheByRoundsRange(string startRound, string endRound, List<XMLSoccerCOM.Match> xmlLeagueMatches, int numberOfTeams)
+    }
+    // move this function to Statistics class as its private or protected method and
+    // add method to calculate statistics from several matches
+    private static List<XMLSoccerCOM.Match> GetXmlMatchesByRoundsRange(string startRound, 
+                                                                      string endRound, 
+                                                                      List<XMLSoccerCOM.Match> xmlLeagueMatches, 
+                                                                      int numberOfTeams)
     {
       if (!int.TryParse(startRound, out int startRoundInt))
         startRoundInt = 1;

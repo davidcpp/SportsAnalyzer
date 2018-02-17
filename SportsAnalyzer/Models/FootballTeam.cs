@@ -9,10 +9,10 @@ namespace SportsAnalyzer.Models
 {
   public static class FootballTeamConverter
   {
-    public static List<FootballTeam> ConvertToTeamList(this List<XMLSoccerCOM.Team> XmlList)
+    public static List<FootballTeam> ConvertToTeamList(this List<XMLSoccerCOM.Team> xmlList)
     {
       var list = new List<FootballTeam>();
-      foreach (var xmlTeam in XmlList)
+      foreach (var xmlTeam in xmlList)
       {
         list.Add(new FootballTeam(xmlTeam));
       }
