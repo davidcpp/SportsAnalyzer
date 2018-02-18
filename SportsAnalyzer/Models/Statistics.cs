@@ -8,29 +8,27 @@ using static System.Math;
 
 namespace SportsAnalyzer.Models
 {
-
-
   public class Statistics
   {
-    /* Constant fields*/
+    /* Constant Fields*/
 
-    private const double _defaultMatchTime = 90.0;
-    private const double _defaultNumberOfMatchIntervals = 6.0;
-    private const string _defaultTeamName = "*";
-    private const string _defaultLeagueName = "*";
+    private const double defaultMatchTime = 90.0;
+    private const double defaultNumberOfMatchIntervals = 6.0;
+    private const string defaultTeamName = "*";
+    private const string defaultLeagueName = "*";
 
     /* Fields */
 
-    private double[] _goalsInIntervals = null;
-    private double[] _goalsInIntervalsPercent = null;
-    private double[] _timeIntervalsLimits = null;
+    private double[] goalsInIntervals = null;
+    private double[] goalsInIntervalsPercent = null;
+    private double[] timeIntervalsLimits = null;
 
 
     /* Constructors */
 
-    public Statistics(string leagueName = _defaultLeagueName,
-                      string teamName = _defaultTeamName,
-                      double numberOfMatchIntervals = _defaultNumberOfMatchIntervals)
+    public Statistics(string leagueName = defaultLeagueName,
+                      string teamName = defaultTeamName,
+                      double numberOfMatchIntervals = defaultNumberOfMatchIntervals)
     {
       NumberOfMatchIntervals = numberOfMatchIntervals;
       MatchIntervalLength = MatchTime / NumberOfMatchIntervals;
@@ -42,7 +40,7 @@ namespace SportsAnalyzer.Models
 
     public double NumberOfMatchIntervals { get; }
     public double MatchIntervalLength { get; }
-    public double MatchTime { get; } = _defaultMatchTime;
+    public double MatchTime { get; } = defaultMatchTime;
 
     [Display(Name = "League name")]
     public string LeagueName { get; }
@@ -66,39 +64,39 @@ namespace SportsAnalyzer.Models
     {
       get
       {
-        if (_goalsInIntervals == null)
-          _goalsInIntervals = new double[(int)NumberOfMatchIntervals];
-        return _goalsInIntervals;
+        if (goalsInIntervals == null)
+          goalsInIntervals = new double[(int)NumberOfMatchIntervals];
+        return goalsInIntervals;
       }
-      set { _goalsInIntervals = value; }
+      set { goalsInIntervals = value; }
     }
 
     public double[] GoalsInIntervalsPercent
     {
       get
       {
-        if (_goalsInIntervalsPercent == null)
-          _goalsInIntervalsPercent = new double[(int)NumberOfMatchIntervals];
-        return _goalsInIntervalsPercent;
+        if (goalsInIntervalsPercent == null)
+          goalsInIntervalsPercent = new double[(int)NumberOfMatchIntervals];
+        return goalsInIntervalsPercent;
       }
-      set { _goalsInIntervalsPercent = value; }
+      set { goalsInIntervalsPercent = value; }
     }
 
     public double[] TimeIntervalsLimits
     {
       get
       {
-        if (_timeIntervalsLimits == null)
+        if (timeIntervalsLimits == null)
         {
-          _timeIntervalsLimits = new double[(int)NumberOfMatchIntervals + 1];
+          timeIntervalsLimits = new double[(int)NumberOfMatchIntervals + 1];
           for (int i = 0; i <= NumberOfMatchIntervals; i++)
           {
-            _timeIntervalsLimits[i] = (MatchTime / NumberOfMatchIntervals) * i;
+            timeIntervalsLimits[i] = (MatchTime / NumberOfMatchIntervals) * i;
           }
         }
-        return _timeIntervalsLimits;
+        return timeIntervalsLimits;
       }
-      set { _timeIntervalsLimits = value; }
+      set { timeIntervalsLimits = value; }
     }
 
     /* Methods */
@@ -106,8 +104,8 @@ namespace SportsAnalyzer.Models
     public void CalculateAll(IEnumerable<XMLSoccerCOM.Match> xmlLeagueMatches)
     {
       //// TODO: Why is it necessary to multiply by 2 to reach average number of goals?
-      //goalsAvg = xmlLeagueMatches.Average((match) => (match.HomeGoals ?? 0 + match.AwayGoals ?? 0) * 2);
-      //goalsAvg = xmlLeagueMatches.Average((match) => match.HomeGoals.Value + match.AwayGoals.Value);
+      //GoalsAvg = xmlLeagueMatches.Average((match) => (match.HomeGoals ?? 0 + match.AwayGoals ?? 0) * 2);
+      //GoalsAvg = xmlLeagueMatches.Average((match) => match.HomeGoals.Value + match.AwayGoals.Value);
 
       GoalsSum = xmlLeagueMatches.Sum((match) => match.HomeGoals.Value + match.AwayGoals.Value);
       GoalsAvg = Round(GoalsSum / xmlLeagueMatches.Count(), 2);

@@ -21,9 +21,11 @@ namespace SportsAnalyzer.Models
 
   public class TeamLeagueStanding
   {
-    /* Fields */
+    /* Constant fields */
 
     public const int MaxTeamNameLength = 80;
+
+    /* Properties */
 
     public int Id { get; set; }
 

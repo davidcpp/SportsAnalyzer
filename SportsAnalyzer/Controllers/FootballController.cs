@@ -43,9 +43,7 @@ namespace SportsAnalyzer.Controllers
 
   public class FootballController : Controller
   {
-    private XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
-
-    private readonly IXmlSoccerRequester _xmlSoccerRequester;
+    /* Constant Fields*/
 
     public const string DefaultLeagueFullName = "Scottish Premier League";
     public const int DefaultSeasonYear = 2017;
@@ -53,6 +51,14 @@ namespace SportsAnalyzer.Controllers
     public const string DefaultLeagueId = "3";
     public const int DefaultNumberOfSeasonPhases = 3;
     public const int DefaultNumberOfTeams = 12;
+
+    /* Fields */
+
+    private XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
+
+    private readonly IXmlSoccerRequester _xmlSoccerRequester;
+
+    /* Constructors */
 
     public FootballController()
     {
@@ -65,6 +71,8 @@ namespace SportsAnalyzer.Controllers
       Trace.Write("FootballController(IXmlSoccerRequester)\n");
       _xmlSoccerRequester = xmlSoccerRequester;
     }
+
+    /* Methods */
 
     protected override void Dispose(bool disposing)
     {
@@ -130,6 +138,7 @@ namespace SportsAnalyzer.Controllers
       return View(db.LeagueTable.ToList());
     }
 
+    // GET: Football/Table/{startRound}/{endRound}/{teamName}/{league}/{seasonYear}
     public ActionResult Stats(
       string startRound = "1",
       string endRound = "last",
