@@ -19,6 +19,7 @@ namespace SportsAnalyzer
       //    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
       //);
 
+      // TODO: This route is default ony for developing phase and tests
       routes.MapRoute(
           name: "Default",
           url: "{controller}/{action}/{league}/{seasonYear}/{arg1}/{arg2}/{arg3}",

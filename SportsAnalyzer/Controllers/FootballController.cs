@@ -111,7 +111,6 @@ namespace SportsAnalyzer.Controllers
     }
 
     // GET: Football/Table/{league}/{seasonYear}
-    // mode - mode of table display: 0-normal, 1-expanded
     public ActionResult Table(string league = DefaultLeagueFullName, int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
@@ -153,14 +152,6 @@ namespace SportsAnalyzer.Controllers
         Statistics statistics = new Statistics(DefaultLeagueFullName);
         statistics.CalculateAll(xmlLeagueMatches);
 
-        Debug.Write("\nGoals Average: " + statistics.GoalsAvg.ToString() + "\n");
-
-        string goalsInIntervalsText = string.Join(" ", statistics.GoalsInIntervals.Select((x, index) => "(" +
-                                                       statistics.TimeIntervalsLimits[index].ToString() + "' -" +
-                                                       statistics.TimeIntervalsLimits[index + 1].ToString() + "'): " +
-                                                       x.ToString()));
-
-        Debug.Write("\nGoals in next minutes (1): " + goalsInIntervalsText + "\n");
         return View(new List<Statistics> { statistics });
       }
       return View();
