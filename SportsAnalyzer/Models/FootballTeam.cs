@@ -30,23 +30,23 @@ namespace SportsAnalyzer.Models
     public int Id { get; set; }
 
     [Required]
-    [Display(Name = "Id drużyny")]
+    [Display(Name = "Team Id")]
     public int Team_Id { get; set; }
 
     [Required]
-    [Display(Name = "Nazwa Drużyny")]
+    [Display(Name = "Team Name")]
     [StringLength(MaxTeamNameLength, MinimumLength = 2)]
     public string Name { get; set; }
 
     [Required]
-    [Display(Name = "Kraj pochodzenia")]
+    [Display(Name = "Country")]
     [StringLength(MaxCountryNameLength, MinimumLength = 2)]
     public string Country { get; set; }
 
-    [Display(Name = "Stadion")]
+    [Display(Name = "Stadium")]
     public string Stadium { get; set; }
 
-    [Display(Name = "Strona WWW")]
+    [Display(Name = "Website")]
     public string HomePageURL { get; set; }
 
     [Display(Name = "Wiki link")]
