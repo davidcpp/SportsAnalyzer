@@ -22,16 +22,16 @@ namespace SportsAnalyzer
       // TODO: This route is default ony for developing phase and tests
       routes.MapRoute(
           name: "Default",
-          url: "{controller}/{action}/{league}/{seasonYear}/{arg1}/{arg2}/{arg3}",
+          url: "{controller}/{action}/{startRound}/{endRound}/{teamName}/{league}/{seasonYear}",
           defaults: new
           {
             controller = "Football",
             action = "Stats",
+            startRound = UrlParameter.Optional,
+            endRound = UrlParameter.Optional,
+            teamName = UrlParameter.Optional,
             league = UrlParameter.Optional,
-            seasonYear = UrlParameter.Optional,
-            arg1 = UrlParameter.Optional,
-            arg2 = UrlParameter.Optional,
-            arg3 = UrlParameter.Optional
+            seasonYear = UrlParameter.Optional
           }
       );
     }

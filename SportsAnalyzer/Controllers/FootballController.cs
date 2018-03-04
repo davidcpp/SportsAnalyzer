@@ -9,6 +9,7 @@ using System.Net;
 using System.Diagnostics;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace SportsAnalyzer.Controllers
 {
@@ -49,8 +50,9 @@ namespace SportsAnalyzer.Controllers
     public const int DefaultSeasonYear = 2017;
     public const string DefaultLeagueShortName = "SPL";
     public const string DefaultLeagueId = "3";
-    public const int DefaultNumberOfSeasonPhases = 3;
-    public const int DefaultNumberOfTeams = 12;
+    public const int DefaultRoundsNumber = 33;
+
+    private const int minBreakBetweenRequests = 15000;
 
     /* Fields */
 
@@ -138,7 +140,7 @@ namespace SportsAnalyzer.Controllers
       return View(db.LeagueTable.ToList());
     }
 
-    // GET: Football/Table/{startRound}/{endRound}/{teamName}/{league}/{seasonYear}
+    // GET: Football/Stats/{startRound}/{endRound}/{teamName}/{league}/{seasonYear}
     public ActionResult Stats(
       string startRound = "1",
       string endRound = "last",
@@ -148,57 +150,42 @@ namespace SportsAnalyzer.Controllers
     {
       if (String.IsNullOrEmpty(teamName))
       {
-        // TODO: Enter a min. 15 seconds break between two requests - it's required by the provider
-        // However, Exception hasn't occur so far
         List<XMLSoccerCOM.Match> xmlLeagueMatches =
           _xmlSoccerRequester.GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
 
-        List<XMLSoccerCOM.Team> xmlTeams =
-          _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
+        Thread.Sleep(minBreakBetweenRequests);
 
-        xmlLeagueMatches = GetXmlMatchesByRoundsRange(startRound, endRound, xmlLeagueMatches, xmlTeams.Count);
+        Statistics statistics = new Statistics(DefaultSeasonYear, DefaultLeagueFullName);
+        statistics.SetMatches(xmlLeagueMatches);
+        statistics.SetRoundsRange(startRound, endRound);
+        statistics.CalculateAll();
 
-        Statistics statistics = new Statistics(DefaultLeagueFullName);
-        statistics.CalculateAll(xmlLeagueMatches);
-
-        return View(new List<Statistics> { statistics });
+        statistics.CreateRoundsSelectList();
+        return View(statistics);
       }
       return View();
-
     }
-    // move this function to Statistics class as its private or protected method and
-    // add method to calculate statistics from several matches
-    private static List<XMLSoccerCOM.Match> GetXmlMatchesByRoundsRange(string startRound, 
-                                                                      string endRound, 
-                                                                      List<XMLSoccerCOM.Match> xmlLeagueMatches, 
-                                                                      int numberOfTeams)
+
+    // Action for Multiselect list form
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult Stats([Bind(Include = "LeagueName, SeasonYear, RoundsNumbersInts")] Statistics model)
     {
-      if (!int.TryParse(startRound, out int startRoundInt))
-        startRoundInt = 1;
+      List<XMLSoccerCOM.Match> xmlLeagueMatches =
+        _xmlSoccerRequester.GetHistoricMatchesByLeagueAndSeason(model.LeagueName, model.SeasonYear);
 
-      var startRoundMatches =
-        xmlLeagueMatches.Where(m => m.Round == startRoundInt)
-                        .Select((x, index) => index);
+      Thread.Sleep(minBreakBetweenRequests);
 
-      int startRoundFirstMatchIndex = 0;
-      if (startRoundMatches != null && startRoundMatches.Any())
-        startRoundFirstMatchIndex = startRoundMatches.ElementAt(0);
 
-      // TODO: Is it good to use Lazy generic type to do evaluation of the following expression?
-      if (!int.TryParse(endRound, out int endRoundInt))
-        endRoundInt = (numberOfTeams - 1) * DefaultNumberOfSeasonPhases;
+      Statistics statistics = new Statistics(model.SeasonYear, model.LeagueName);
+      statistics.SetMatches(xmlLeagueMatches);
+      statistics.SetRounds(model.RoundsNumbersInts);
+      statistics.CalculateAll();
 
-      var endRoundMatches =
-        xmlLeagueMatches.Where(m => m.Round == endRoundInt)
-                        .Select((x, index) => index);
-
-      int endRoundLastMatchIndex = xmlLeagueMatches.Count - 1;
-      if (endRoundMatches != null && endRoundMatches.Any())
-        endRoundLastMatchIndex = endRoundMatches.ToArray().Last();
-
-      xmlLeagueMatches = xmlLeagueMatches.GetRange(startRoundFirstMatchIndex,
-                                                  (endRoundLastMatchIndex - startRoundFirstMatchIndex) + 1);
-      return xmlLeagueMatches;
+      statistics.CreateRoundsSelectList();
+      return View(statistics);
     }
+
+
   }
 }

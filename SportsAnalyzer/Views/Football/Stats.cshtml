@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SportsAnalyzer.Models.Statistics>
+﻿@model SportsAnalyzer.Models.Statistics
 
 @{
   ViewBag.Title = "Stats";
@@ -7,62 +7,90 @@
 
 <h2>Statistics</h2>
 
-<div id="container" style="width: 75%;" >
+<div id="container">
   <canvas id="myChart"></canvas>
 </div>
 
+<hr />
 
 <table class="table">
   <tr>
     <th>
-      @Html.DisplayNameFor(modelItem => modelItem.LeagueName)
+      @Html.DisplayNameFor(model => model.LeagueName)
     </th>
     <th>
-      @Html.DisplayNameFor(modelItem => modelItem.TeamName)
+      @Html.DisplayNameFor(model => model.TeamName)
     </th>
     <th>
-      @Html.DisplayNameFor(modelItem => modelItem.MatchesNumber)
+      @Html.DisplayNameFor(model => model.MatchesNumber)
     </th>
     <th>
-      @Html.DisplayNameFor(modelItem => modelItem.GoalsSum)
+      @Html.DisplayNameFor(model => model.GoalsSum)
     </th>
     <th>
-      @Html.DisplayNameFor(modelItem => modelItem.GoalsAvg)
+      @Html.DisplayNameFor(model => model.GoalsAvg)
     </th>
     <th>
-      @Html.DisplayNameFor(modelItem => modelItem.GoalsAvgHome)
+      @Html.DisplayNameFor(model => model.GoalsAvgHome)
     </th>
   </tr>
 
-  @foreach (var item in Model)
-  {
   <tr>
     <td>
-      @Html.DisplayFor(modelItem => item.LeagueName)
+      @Html.DisplayFor(model => model.LeagueName)
     </td>
     <td>
-      @Html.DisplayFor(model => item.TeamName)
+      @Html.DisplayFor(model => model.TeamName)
     </td>
     <td>
-      @Html.DisplayFor(model => item.MatchesNumber)
+      @Html.DisplayFor(model => model.MatchesNumber)
     </td>
     <td>
-      @Html.DisplayFor(model => item.GoalsSum)
+      @Html.DisplayFor(model => model.GoalsSum)
     </td>
     <td>
-      @Html.DisplayFor(model => item.GoalsAvg)
+      @Html.DisplayFor(model => model.GoalsAvg)
     </td>
     <td>
-      @Html.DisplayFor(model => item.GoalsAvgHome)/@Html.DisplayFor(model => item.GoalsAvgAway)
+      @Html.DisplayFor(model => model.GoalsAvgHome)/@Html.DisplayFor(model => model.GoalsAvgAway)
     </td>
   </tr>
-  }
 
 </table>
 
+<hr />
+
+@using (Html.BeginForm("Stats", "Football", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+  @Html.AntiForgeryToken()
+  <div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.LeagueName)
+    @Html.HiddenFor(model => model.SeasonYear)
+    <div class="form-group">
+      @Html.LabelFor(model => model.RoundsSelectList, htmlAttributes: new { @class = "control-label col-md-3 col-sm-6" })
+      <div class="col-md-9 col-sm-6">
+        @Html.ListBoxFor(model => model.RoundsNumbersInts, Model.RoundsSelectList, new { @class = "form-control" })
+        @Html.ValidationMessageFor(i => i.RoundsSelectList, "", new { @class = "text-warning" })
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-offset-3 col-sm-offset-6 col-md-9 col-sm-6">
+        <input type="submit" value="Chose rounds" class="btn btn-default" />
+      </div>
+    </div>
+  </div>
+}
 
 @{
-  double[] GoalsInIntervalsPercent = Model.ElementAt(0).GoalsInIntervalsPercent;
+  double[] GoalsInIntervalsPercent = Model.GoalsInIntervalsPercent;
+  double[] TimeIntervalsLimits = Model.TimeIntervalsLimits;
+  string[] TimeIntervalsTexts = new string[TimeIntervalsLimits.Count() - 1];
+
+  for (int i = 0; i < TimeIntervalsTexts.Count(); i++)
+  {
+    TimeIntervalsTexts[i] = TimeIntervalsLimits[i].ToString() + "-" + TimeIntervalsLimits[i + 1].ToString();
+  }
   var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
 }
 
@@ -70,7 +98,11 @@
 {
   <script>
     var color = Chart.helpers.color;
-    var goalsInIntervalsPercent = eval("@serializer.Serialize(GoalsInIntervalsPercent)");
+    var goalsInIntervalsPercent = eval('@serializer.Serialize(GoalsInIntervalsPercent)');
+    var timeIntervalsAllText = '@serializer.Serialize(TimeIntervalsTexts)';
+    timeIntervalsAllText = timeIntervalsAllText.substring(1, timeIntervalsAllText.length - 1);
+    timeIntervalsAllText = timeIntervalsAllText.replace(new RegExp('&quot;','g'), '');
+    var timeIntervalsTexts = timeIntervalsAllText.split(",");
 
     var ctx = document.getElementById('myChart').getContext('2d');
     var chart = new Chart(ctx, {
@@ -78,7 +110,7 @@
       type: 'bar',
       // The data for our dataset
       data: {
-        labels: ["0-15", "15-30", "30-45", "45-60", "60-75", "75-90"],
+        labels: timeIntervalsTexts,
         datasets: [{
           label: 'Percent of goals',
           backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
@@ -100,6 +132,22 @@
           fontColor: window.chartColors.black,
           text: 'Minutes Intervales of scored goals'
         },
+        tooltips: {
+          callbacks: {
+            label: function (tooltipItem, data)
+            {
+              var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+              if (label)
+              {
+                label += ': ';
+              }
+              label += tooltipItem.yLabel;
+              label += "%";
+              return label;
+            }
+          }
+        },
         scales: {
           yAxes: [{
             scaleLabel: {
@@ -116,6 +164,11 @@
             }
           }],
           xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time intervals [min.]',
+              fontColor: window.chartColors.blue,
+            },
             gridLines: {
               offsetGridLines: true
             }
