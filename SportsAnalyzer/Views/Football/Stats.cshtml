@@ -6,82 +6,89 @@
 }
 
 <h2>Statistics</h2>
-
-<div id="container">
-  <canvas id="myChart"></canvas>
-</div>
-
-<hr />
-
-<table class="table">
-  <tr>
-    <th>
-      @Html.DisplayNameFor(model => model.LeagueName)
-    </th>
-    <th>
-      @Html.DisplayNameFor(model => model.TeamName)
-    </th>
-    <th>
-      @Html.DisplayNameFor(model => model.MatchesNumber)
-    </th>
-    <th>
-      @Html.DisplayNameFor(model => model.GoalsSum)
-    </th>
-    <th>
-      @Html.DisplayNameFor(model => model.GoalsAvg)
-    </th>
-    <th>
-      @Html.DisplayNameFor(model => model.GoalsAvgHome)
-    </th>
-  </tr>
-
-  <tr>
-    <td>
-      @Html.DisplayFor(model => model.LeagueName)
-    </td>
-    <td>
-      @Html.DisplayFor(model => model.TeamName)
-    </td>
-    <td>
-      @Html.DisplayFor(model => model.MatchesNumber)
-    </td>
-    <td>
-      @Html.DisplayFor(model => model.GoalsSum)
-    </td>
-    <td>
-      @Html.DisplayFor(model => model.GoalsAvg)
-    </td>
-    <td>
-      @Html.DisplayFor(model => model.GoalsAvgHome)/@Html.DisplayFor(model => model.GoalsAvgAway)
-    </td>
-  </tr>
-
-</table>
-
-<hr />
-
-@using (Html.BeginForm("Stats", "Football", FormMethod.Post, new { @class = "form-horizontal" }))
-{
-  @Html.AntiForgeryToken()
-  <div class="form-horizontal">
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.LeagueName)
-    @Html.HiddenFor(model => model.SeasonYear)
-    <div class="form-group">
-      @Html.LabelFor(model => model.RoundsSelectList, htmlAttributes: new { @class = "control-label col-md-3 col-sm-6" })
-      <div class="col-md-9 col-sm-6">
-        @Html.ListBoxFor(model => model.RoundsNumbersInts, Model.RoundsSelectList, new { @class = "form-control" })
-        @Html.ValidationMessageFor(i => i.RoundsSelectList, "", new { @class = "text-warning" })
-      </div>
+<div class="container">
+  <div class="well">
+    <div class="row bottom50">
+      <canvas id="myChart"></canvas>
     </div>
-    <div class="form-group">
-      <div class="col-md-offset-3 col-sm-offset-6 col-md-9 col-sm-6">
-        <input type="submit" value="Chose rounds" class="btn btn-default" />
+  </div>
+  <div class="well">
+    <div class="row bottom50">
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <th>
+              @Html.DisplayNameFor(model => model.LeagueName)
+            </th>
+            <th>
+              @Html.DisplayNameFor(model => model.TeamName)
+            </th>
+            <th>
+              @Html.DisplayNameFor(model => model.MatchesNumber)
+            </th>
+            <th>
+              @Html.DisplayNameFor(model => model.GoalsSum)
+            </th>
+            <th>
+              @Html.DisplayNameFor(model => model.GoalsAvg)
+            </th>
+            <th>
+              @Html.DisplayNameFor(model => model.GoalsAvgHome)
+            </th>
+          </tr>
+
+          <tr>
+            <td>
+              @Html.DisplayFor(model => model.LeagueName)
+            </td>
+            <td>
+              @Html.DisplayFor(model => model.TeamName)
+            </td>
+            <td>
+              @Html.DisplayFor(model => model.MatchesNumber)
+            </td>
+            <td>
+              @Html.DisplayFor(model => model.GoalsSum)
+            </td>
+            <td>
+              @Html.DisplayFor(model => model.GoalsAvg)
+            </td>
+            <td>
+              @Html.DisplayFor(model => model.GoalsAvgHome)/@Html.DisplayFor(model => model.GoalsAvgAway)
+            </td>
+          </tr>
+
+        </table>
       </div>
     </div>
   </div>
-}
-
+  <div class="row bottom50 center">
+    <div class="well">
+      @using (Html.BeginForm("Stats", "Football", FormMethod.Post, new { @class = "form-horizontal" }))
+      {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+          @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+          @Html.HiddenFor(model => model.LeagueName)
+          @Html.HiddenFor(model => model.SeasonYear)
+          <div class="form-group">
+            @Html.LabelFor(model => model.RoundsSelectList,
+                                htmlAttributes: new { @class = "control-label col-xs-12 col-sm-6" })
+            <div class="col-xs-12 col-sm-6">
+              @Html.ListBoxFor(model => model.RoundsNumbersInts, Model.RoundsSelectList, new { @class = "form-control" })
+              @Html.ValidationMessageFor(i => i.RoundsSelectList, "", new { @class = "text-warning" })
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12 col-sm-offset-6 col-sm-6">
+              <input type="submit" value="Chose rounds" class="btn btn-default" />
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
 @{
   double[] GoalsInIntervalsPercent = Model.GoalsInIntervalsPercent;
   double[] TimeIntervalsLimits = Model.TimeIntervalsLimits;
@@ -94,7 +101,7 @@
   var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
 }
 
-@section scripts
+@section Scripts
 {
   <script>
     var color = Chart.helpers.color;
