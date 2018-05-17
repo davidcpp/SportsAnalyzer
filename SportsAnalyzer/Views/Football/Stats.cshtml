@@ -96,87 +96,169 @@
 @section Scripts
 {
   <script>
-    var color = Chart.helpers.color;
-    var goalsInIntervalsPercent = eval('@serializer.Serialize(GoalsInIntervalsPercent)');
-    var timeIntervalsAllText = '@serializer.Serialize(TimeIntervalsTexts)';
-    timeIntervalsAllText = timeIntervalsAllText.substring(1, timeIntervalsAllText.length - 1);
-    timeIntervalsAllText = timeIntervalsAllText.replace(new RegExp('&quot;','g'), '');
-    var timeIntervalsTexts = timeIntervalsAllText.split(",");
+    function GetWindowWidth()
+    {
+      var width = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+      return width;
+    }
 
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var chart = new Chart(ctx, {
-      // The type of chart we want to create
-      type: 'bar',
-      // The data for our dataset
-      data: {
-        labels: timeIntervalsTexts,
-        datasets: [{
-          label: 'Percent of goals',
-          backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-          borderColor: window.chartColors.blue,
-          borderWidth: 1,
-          data: goalsInIntervalsPercent,
-        }]
+    function GetWindowHeight()
+    {
+      var height = window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight;
+      return height;
+    }
 
-      },
-      // Configuration options go here
-      options: {
-        responsive: true,
-        legend: {
-          position: 'top',
-        },
-        title: {
-          display: true,
-          fontSize: 24,
-          fontColor: window.chartColors.black,
-          text: 'Minutes Intervales of scored goals'
-        },
-        tooltips: {
-          callbacks: {
-            label: function (tooltipItem, data)
-            {
-              var label = data.datasets[tooltipItem.datasetIndex].label || '';
+    function WriteWindowSizes()
+    {
+      console.log("Browser inner window width: " + GetWindowWidth() + ", height: " + GetWindowHeight() + ".");
+    }
 
-              if (label)
-              {
-                label += ': ';
-              }
-              label += tooltipItem.yLabel;
-              label += "%";
-              return label;
-            }
-          }
-        },
-        scales: {
-          yAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Percent of goals',
-              fontColor: window.chartColors.blue,
-            },
-            ticks: {
-              beginAtZero: true,
-              callback: function (value, index, values)
-              {
-                return value + '%';
-              }
-            }
-          }],
-          xAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Time intervals [min.]',
-              fontColor: window.chartColors.blue,
-            },
-            gridLines: {
-              offsetGridLines: true
-            }
+    function UpdateChartFontSizes(chart, chartSize)
+    {
+      var windowWidth = GetWindowWidth();
+      legendFontSize = Math.round(0.01 * windowWidth + 8);
+      varTitleFontSize = Math.round(0.015 * windowWidth + 8);
+      tooltipsFontSize = Math.round(0.007 * windowWidth + 8);
+      labelsFontSize = Math.round(0.007 * windowWidth + 8);
+      ticksFontSize = Math.round(0.008 * windowWidth + 8);
+
+      console.log("Font sizes for chart - Variables values: ");
+      console.log([varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize].toString())
+
+      if (typeof chart !== "undefined")
+      {    
+        chart.options.title.fontSize = varTitleFontSize;
+        chart.options.legend.labels.fontSize = legendFontSize;
+        chart.options.tooltips.titleFontSize = tooltipsFontSize;
+        chart.options.tooltips.bodyFontSize = tooltipsFontSize;
+        chart.options.scales.yAxes[0].scaleLabel.fontSize = labelsFontSize;
+        chart.options.scales.xAxes[0].scaleLabel.fontSize = labelsFontSize;
+        chart.options.scales.yAxes[0].ticks.fontSize = ticksFontSize;
+        chart.options.scales.xAxes[0].ticks.fontSize = ticksFontSize;
+      } 
+    }
+
+    function PrepareChartData()
+    {
+      color = Chart.helpers.color;
+      goalsInIntervalsPercent = eval('@serializer.Serialize(GoalsInIntervalsPercent)');
+      timeIntervalsAllText = '@serializer.Serialize(TimeIntervalsTexts)';
+      timeIntervalsAllText = timeIntervalsAllText.substring(1, timeIntervalsAllText.length - 1);
+      timeIntervalsAllText = timeIntervalsAllText.replace(new RegExp('&quot;','g'), '');
+      timeIntervalsTexts = timeIntervalsAllText.split(",");
+    }
+
+    function OnResizeChart(chart, chartSize)
+    {
+      console.count("OnResizeChart");
+      console.log("New Chart Size:");
+      console.log(chartSize);
+      WriteWindowSizes();
+      UpdateChartFontSizes(chart, chartSize);
+      chart.update();
+    }
+
+    function CreateChart()
+    {
+      var ctx = $("#myChart");
+      //var ctx = document.getElementById('myChart').getContext('2d');
+      var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'bar',
+        // The data for our dataset
+        data: {
+          labels: timeIntervalsTexts,
+          datasets: [{
+            label: 'Percent of goals',
+            backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+            borderColor: window.chartColors.blue,
+            borderWidth: 1,
+            data: goalsInIntervalsPercent,
           }]
+
         },
+        // Configuration options go here
+        options: {
+          responsive: true,
+          legend: {
+            position: 'top',
+            labels: {
+              fontSize: legendFontSize
+            }
+          },
+          title: {
+            display: true,
+            fontSize: varTitleFontSize,
+            fontColor: window.chartColors.black,
+            text: 'Minutes Intervales of scored goals'
+          },
+          tooltips: {
+            titleFontSize: tooltipsFontSize,
+            bodyFontSize: tooltipsFontSize,
+            callbacks: {
+              label: function (tooltipItem, data)
+              {
+                var label = data.datasets[tooltipItem.datasetIndex].label || '';
 
-      }
+                if (label)
+                {
+                  label += ': ';
+                }
+                label += tooltipItem.yLabel;
+                label += "%";
+                return label;
+              }
+            }
+          },
+          scales: {
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Percent of goals',
+                fontColor: window.chartColors.blue,
+                fontSize: labelsFontSize
+              },
+              ticks: {
+                beginAtZero: true,
+                fontSize: ticksFontSize,
+                callback: function (value, index, values)
+                {
+                  return value + '%';
+                }
+              }
+            }],
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Time intervals [min.]',
+                fontColor: window.chartColors.blue,
+                fontSize: labelsFontSize
+              },
+              ticks: {
+                fontSize: ticksFontSize
+              },
+              gridLines: {
+                offsetGridLines: true
+              }
+            }]
+          }
+        }
+      });
+      chart.options.onResize = OnResizeChart;
+    }
 
-    });
+    function OnPageLoad()
+    {
+      UpdateChartFontSizes();
+      PrepareChartData();
+      CreateChart();
+    }
+
+    OnPageLoad();
 
   </script>
 }
