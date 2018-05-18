@@ -52,13 +52,14 @@ namespace SportsAnalyzer.Controllers
     public const string DefaultLeagueId = "3";
     public const int DefaultRoundsNumber = 33;
 
-    private const int minBreakBetweenRequests = 15000;
-
+    private const int requestsBreakMinutes = 5;
     /* Fields */
 
     private XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
+    private static List<XMLSoccerCOM.Match> xmlLeagueMatches;
+    private DateTime lastUpdateTime;
 
     /* Constructors */
 
@@ -150,10 +151,12 @@ namespace SportsAnalyzer.Controllers
     {
       if (String.IsNullOrEmpty(teamName))
       {
-        List<XMLSoccerCOM.Match> xmlLeagueMatches =
-          _xmlSoccerRequester.GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
-
-        Thread.Sleep(minBreakBetweenRequests);
+        if (lastUpdateTime == DateTime.MinValue ||
+          (lastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+        {
+          xmlLeagueMatches = _xmlSoccerRequester.GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
+          lastUpdateTime = DateTime.UtcNow;
+        }
 
         Statistics statistics = new Statistics(DefaultSeasonYear, DefaultLeagueFullName);
         statistics.SetMatches(xmlLeagueMatches);
@@ -171,12 +174,13 @@ namespace SportsAnalyzer.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult Stats([Bind(Include = "LeagueName, SeasonYear, RoundsNumbersInts")] Statistics model)
     {
-      List<XMLSoccerCOM.Match> xmlLeagueMatches =
-        _xmlSoccerRequester.GetHistoricMatchesByLeagueAndSeason(model.LeagueName, model.SeasonYear);
-
-      Thread.Sleep(minBreakBetweenRequests);
-
-
+      if (lastUpdateTime == DateTime.MinValue ||
+        (lastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+      {
+        xmlLeagueMatches = _xmlSoccerRequester.
+          GetHistoricMatchesByLeagueAndSeason(model.LeagueName, model.SeasonYear);
+        lastUpdateTime = DateTime.UtcNow;
+      }
       Statistics statistics = new Statistics(model.SeasonYear, model.LeagueName);
       statistics.SetMatches(xmlLeagueMatches);
       statistics.SetRounds(model.RoundsNumbersInts);
@@ -185,7 +189,5 @@ namespace SportsAnalyzer.Controllers
       statistics.CreateRoundsSelectList();
       return View(statistics);
     }
-
-
   }
 }
