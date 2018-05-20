@@ -98,6 +98,17 @@
   <script>
     var paddingLeft, paddingRight, paddingTop, paddingBottom;
 
+    function GetChartDisplaySize()
+    {
+      var canvasChart = document.getElementById('myChart');
+
+      chartDisplaySize = {
+        width: parseFloat(canvasChart.style.width),
+        height: parseFloat(canvasChart.style.height)
+      };
+      return chartDisplaySize;
+    }
+
     function GetWindowWidth()
     {
       var width = window.innerWidth
@@ -121,29 +132,33 @@
 
     function UpdateChartLayout(chart, chartSize)
     {
-      var windowWidth = GetWindowWidth();
-      paddingLeft = paddingRight = Math.round(0.01 * windowWidth + 7);
-      paddingTop = paddingBottom = Math.round(0.01 * windowWidth + 7);
+      paddingLeft = paddingRight = Math.round(0.04 * chartSize.width);
+      paddingTop = paddingBottom = Math.round(0.04 * chartSize.width);
 
-      chart.options.layout.padding = {
-        left: paddingLeft,
-        right: paddingRight,
-        top: paddingTop,
-        bottom: paddingBottom
+      if (typeof chart !== "undefined")
+      {
+        chart.options.layout.padding = {
+          left: paddingLeft,
+          right: paddingRight,
+          top: paddingTop,
+          bottom: paddingBottom
+        }
       }
     }
 
     function UpdateChartFontSizes(chart, chartSize)
     {
-      var windowWidth = GetWindowWidth();
-      legendFontSize = Math.round(0.01 * windowWidth + 8);
-      varTitleFontSize = Math.round(0.015 * windowWidth + 8);
-      tooltipsFontSize = Math.round(0.007 * windowWidth + 8);
-      labelsFontSize = Math.round(0.007 * windowWidth + 8);
-      ticksFontSize = Math.round(0.008 * windowWidth + 8);
+      if (typeof chartSize !== "undefined")
+      {
+        legendFontSize = Math.round(0.01 * chartSize.width + 8);
+        varTitleFontSize = Math.round(0.015 * chartSize.width + 8);
+        tooltipsFontSize = Math.round(0.005 * chartSize.width + 10);
+        labelsFontSize = Math.round(0.005 * chartSize.width + 10);
+        ticksFontSize = Math.round(0.005 * chartSize.width + 10);
 
-      console.log("Font sizes for chart - Variables values: ");
-      console.log([varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize].toString())
+        console.log("Font sizes for chart - Variables values: ");
+        console.log([varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize].toString())
+      }
 
       if (typeof chart !== "undefined")
       {    
@@ -174,6 +189,7 @@
       console.log("New Chart Size:");
       console.log(chartSize);
       WriteWindowSizes();
+
       UpdateChartLayout(chart, chartSize);
       UpdateChartFontSizes(chart, chartSize);
       chart.update();
@@ -274,15 +290,20 @@
         }
       });
       chart.options.onResize = OnResizeChart;
+      return chart;
     }
 
     function OnPageLoad()
     {
       WriteWindowSizes();
-      UpdateChartLayout();
-      UpdateChartFontSizes();
+
       PrepareChartData();
-      CreateChart();
+      chart = CreateChart();
+
+      chartDisplaySize = GetChartDisplaySize();
+      UpdateChartLayout(chart, chartDisplaySize);
+      UpdateChartFontSizes(chart, chartDisplaySize);
+      chart.update();
     }
 
     OnPageLoad();
