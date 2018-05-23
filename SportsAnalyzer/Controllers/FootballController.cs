@@ -59,7 +59,7 @@ namespace SportsAnalyzer.Controllers
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
     private static List<XMLSoccerCOM.Match> xmlLeagueMatches;
-    private DateTime lastUpdateTime;
+    private static DateTime lastUpdateTime;
 
     /* Constructors */
 
