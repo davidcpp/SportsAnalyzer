@@ -98,6 +98,40 @@
   <script>
     var paddingLeft, paddingRight, paddingTop, paddingBottom;
     var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
+    var goalsInIntervalsPercent = [];
+    var uri = 'api/stats';
+
+    function UpdateChart(chart, chartDisplaySize)
+    {
+      UpdateChartLayout(chart, chartDisplaySize);
+      UpdateChartFontSizes(chart, chartDisplaySize);
+      window.myChart.update();
+    }
+
+    function GetDataset()
+    {
+      var id = 2;
+      $.getJSON(uri + '/' + id)
+        .done(function (data)
+        {
+          goalsInIntervalsPercent[1] = data;
+          console.log(goalsInIntervalsPercent);
+
+          window.myChart.data.datasets[1] = {
+            label: 'Percent of goals (other)',
+            backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
+            borderColor: window.chartColors.yellow,
+            borderWidth: 1,
+            data: goalsInIntervalsPercent[1]
+          };
+
+          window.myChart.update();         
+        })
+        .fail(function (jqXHR, textStatus, err)
+        {
+          console.log('Error: ' + err);
+        });
+    }
 
     function GetChartDisplaySize()
     {
@@ -162,7 +196,7 @@
       }
 
       if (typeof chart !== "undefined")
-      {    
+      {
         chart.options.title.fontSize = varTitleFontSize;
         chart.options.legend.labels.fontSize = legendFontSize;
         chart.options.tooltips.titleFontSize = tooltipsFontSize;
@@ -171,13 +205,13 @@
         chart.options.scales.xAxes[0].scaleLabel.fontSize = labelsFontSize;
         chart.options.scales.yAxes[0].ticks.fontSize = ticksFontSize;
         chart.options.scales.xAxes[0].ticks.fontSize = ticksFontSize;
-      } 
+      }
     }
 
     function PrepareChartData()
     {
       color = Chart.helpers.color;
-      goalsInIntervalsPercent = eval('@serializer.Serialize(GoalsInIntervalsPercent)');
+      goalsInIntervalsPercent[0] = eval('@serializer.Serialize(GoalsInIntervalsPercent)');
       timeIntervalsAllText = '@serializer.Serialize(TimeIntervalsTexts)';
       timeIntervalsAllText = timeIntervalsAllText.substring(1, timeIntervalsAllText.length - 1);
       timeIntervalsAllText = timeIntervalsAllText.replace(new RegExp('&quot;','g'), '');
@@ -186,34 +220,29 @@
 
     function OnResizeChart(chart, chartSize)
     {
-      console.count("OnResizeChart");
-      console.log("New Chart Size:");
-      console.log(chartSize);
       WriteWindowSizes();
-
-      UpdateChartLayout(chart, chartSize);
-      UpdateChartFontSizes(chart, chartSize);
-      chart.update();
+      UpdateChart(chart, chartSize);
     }
 
     function CreateChart()
     {
+      PrepareChartData();
+
       var ctx = $("#myChart");
       //var ctx = document.getElementById('myChart').getContext('2d');
-      var chart = new Chart(ctx, {
+      window.myChart = new Chart(ctx, {
         // The type of chart we want to create
         type: 'bar',
         // The data for our dataset
         data: {
           labels: timeIntervalsTexts,
           datasets: [{
-            label: 'Percent of goals',
+            label: 'Percent of goals (EPL)',
             backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
             borderColor: window.chartColors.blue,
             borderWidth: 1,
-            data: goalsInIntervalsPercent,
+            data: goalsInIntervalsPercent[0]
           }]
-
         },
         // Configuration options go here
         options: {
@@ -290,21 +319,18 @@
           }
         }
       });
-      chart.options.onResize = OnResizeChart;
-      return chart;
+      window.myChart.options.onResize = OnResizeChart;
+
+      chartDisplaySize = GetChartDisplaySize();
+      UpdateChart(window.myChart, chartDisplaySize);
     }
 
     function OnPageLoad()
     {
       WriteWindowSizes();
 
-      PrepareChartData();
-      chart = CreateChart();
-
-      chartDisplaySize = GetChartDisplaySize();
-      UpdateChartLayout(chart, chartDisplaySize);
-      UpdateChartFontSizes(chart, chartDisplaySize);
-      chart.update();
+      CreateChart();
+      GetDataset();
     }
 
     OnPageLoad();
