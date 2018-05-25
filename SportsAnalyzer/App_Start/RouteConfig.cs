@@ -13,20 +13,14 @@ namespace SportsAnalyzer
     {
       routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-      //routes.MapRoute(
-      //    name: "Default",
-      //    url: "{controller}/{action}/{id}",
-      //    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-      //);
-
       // TODO: This route is default ony for developing phase and tests
       routes.MapRoute(
-          name: "Default",
+          name: "FootballController",
           url: "{controller}/{action}/{startRound}/{endRound}/{teamName}/{league}/{seasonYear}",
           defaults: new
           {
-            controller = "Football",
-            action = "Stats",
+            controller = "Home",
+            action = "Index",
             startRound = UrlParameter.Optional,
             endRound = UrlParameter.Optional,
             teamName = UrlParameter.Optional,
