@@ -325,16 +325,13 @@
       UpdateChart(window.myChart, chartDisplaySize);
     }
 
-    function OnPageLoad()
+    $(document).ready(function ()
     {
       WriteWindowSizes();
 
       CreateChart();
       GetDataset();
-    }
-
-    OnPageLoad();
-
+    });
   </script>
 }
 
