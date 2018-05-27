@@ -22,3 +22,10 @@ select,
 textarea {
   max-width: 280px;
 }*/
+
+.bg-col {
+  background-color: #e9ecef;
+  border-radius: 1rem;
+  margin: 1rem 0.5rem;
+  padding: 1rem;
+}

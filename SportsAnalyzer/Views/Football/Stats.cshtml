@@ -59,28 +59,48 @@
     </table>
   </div>
 </div>
-@using (Html.BeginForm("Stats", "Football", FormMethod.Post, new { @class = "" }))
-{
-  @Html.AntiForgeryToken()
-  @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-  @Html.HiddenFor(model => model.LeagueName)
-  @Html.HiddenFor(model => model.SeasonYear)
 
-  <div class="form-group row justify-content-center">
-    @Html.LabelFor(model => model.RoundsSelectList,
-                                      htmlAttributes: new { @class = "col-sm-auto col-form-label" })
-    <div class="col-sm-3">
-      @Html.ListBoxFor(model => model.RoundsNumbersInts, Model.RoundsSelectList, new { @class = "form-control" })
-      @Html.ValidationMessageFor(i => i.RoundsSelectList, "", new { @class = "text-warning" })
-    </div>
+<div class="row mb-4 mx-1 mb-sm-5 justify-content-center">
+  <div class="col-12 col-sm-4 col-md-3 bg-col">
+    <fieldset>
+      <legend>
+        Teams
+      </legend>
+      <div class="row mx-1 justify-content-center">
+        <div class="form-check col text-center">
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="1">
+          <label class="form-check-label" for="inlineCheckbox1">1</label>
+        </div>
+        <div class="form-check col text-center">
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="2">
+          <label class="form-check-label" for="inlineCheckbox2">2</label>
+        </div>
+        <div class="form-check col text-center">
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="3">
+          <label class="form-check-label" for="inlineCheckbox3">3</label>
+        </div>
+      </div>
+    </fieldset>
   </div>
-  <div class="form-group row justify-content-center">
-    <div class="col-sm-5">
-      <input type="submit" value="Chose rounds" class="btn btn-primary btn-block" />
-    </div>
-  </div>
-}
 
+  <div class="col-12 col-sm-7 col-md-8 bg-col">
+    @using (Html.BeginForm("Stats", "Football", FormMethod.Post, new { @class = "" }))
+    {
+      @Html.AntiForgeryToken()
+      @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+      @Html.HiddenFor(model => model.LeagueName)
+      @Html.HiddenFor(model => model.SeasonYear)
+
+      <div class="form-group justify-content-center">
+        @Html.LabelFor(model => model.RoundsSelectList,
+                                          htmlAttributes: new { @class = "col-sm-auto col-form-label text-center" })
+          @Html.ListBoxFor(model => model.RoundsNumbersInts, Model.RoundsSelectList, new { @class = "form-control" })
+          @Html.ValidationMessageFor(i => i.RoundsSelectList, "", new { @class = "text-warning" })
+      </div>
+          <input type="submit" value="Chose rounds" class="btn btn-primary btn-block" />
+    }
+  </div>
+</div>
 @{
   double[] GoalsInIntervalsPercent = Model.GoalsInIntervalsPercent;
   double[] TimeIntervalsLimits = Model.TimeIntervalsLimits;
@@ -101,6 +121,20 @@
     var goalsInIntervalsPercent = [];
     var uri = 'api/stats';
 
+    var myChartColors = [window.chartColors.blue,
+      window.chartColors.red,
+      window.chartColors.orange,
+      window.chartColors.yellow];
+
+    function RemoveChartDataset(id) {
+      for (var i = 0; i < window.myChart.data.datasets.length; i++) {
+        if (window.myChart.data.datasets[i].label == 'Team ' + id) {
+          window.myChart.data.datasets.splice(i, 1);
+        }
+      }
+      window.myChart.update();
+    }
+
     function UpdateChart(chart, chartDisplaySize)
     {
       UpdateChartLayout(chart, chartDisplaySize);
@@ -108,24 +142,23 @@
       window.myChart.update();
     }
 
-    function GetDataset()
+    function AddChartDataset(id)
     {
-      var id = 2;
       $.getJSON(uri + '/' + id)
         .done(function (data)
         {
-          goalsInIntervalsPercent[1] = data;
-          console.log(goalsInIntervalsPercent);
+          goalsInIntervalsPercent[id] = data;
 
-          window.myChart.data.datasets[1] = {
-            label: 'Percent of goals (other)',
-            backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
-            borderColor: window.chartColors.yellow,
+          var dataset = {
+            label: 'Team ' + id,
+            backgroundColor: color(myChartColors[id]).alpha(0.5).rgbString(),
+            borderColor: myChartColors[id],
             borderWidth: 1,
-            data: goalsInIntervalsPercent[1]
+            data: goalsInIntervalsPercent[id]
           };
 
-          window.myChart.update();         
+          window.myChart.data.datasets.push(dataset);
+          window.myChart.update();
         })
         .fail(function (jqXHR, textStatus, err)
         {
@@ -237,9 +270,9 @@
         data: {
           labels: timeIntervalsTexts,
           datasets: [{
-            label: 'Percent of goals (EPL)',
-            backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-            borderColor: window.chartColors.blue,
+            label: 'Scottish Premier League',
+            backgroundColor: color(myChartColors[0]).alpha(0.5).rgbString(),
+            borderColor: myChartColors[0],
             borderWidth: 1,
             data: goalsInIntervalsPercent[0]
           }]
@@ -330,7 +363,33 @@
       WriteWindowSizes();
 
       CreateChart();
-      GetDataset();
+    });
+
+    $("#inlineCheckbox1").change(function () {
+      if ($(this).prop("checked")) {
+        AddChartDataset(1);
+      }
+      else {
+        RemoveChartDataset(1);
+      }
+    });
+
+    $("#inlineCheckbox2").change(function () {
+      if ($(this).prop("checked")) {
+        AddChartDataset(2);
+      }
+      else {
+        RemoveChartDataset(2);
+      }
+    });
+
+    $("#inlineCheckbox3").change(function () {
+      if ($(this).prop("checked")) {
+        AddChartDataset(3);
+      }
+      else {
+        RemoveChartDataset(3);
+      }
     });
   </script>
 }
