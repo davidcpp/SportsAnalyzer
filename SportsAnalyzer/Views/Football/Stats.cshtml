@@ -5,13 +5,12 @@
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="text-center my-4 my-sm-5">Statistics</h1>
-<div class="row mb-4 mb-sm-5">
-  <canvas id="myChart"></canvas>
-</div>
-<div class="row mb-4 mb-sm-5 justify-content-center">
+<h1 class="text-center mx-1 my-3 my-sm-4">Statistics</h1>
+
+<h2 class="text-center mb-2 mb-sm-3">Basic Statistics</h2>
+<div class="row mx-1 mb-4 mb-sm-5 justify-content-center">
   <div class="table-responsive-lg w-100">
-    <table class="table">
+    <table class="table table-bordered">
       <thead class="thead-light">
         <tr>
           <th>
@@ -60,30 +59,45 @@
   </div>
 </div>
 
-<div class="row mb-4 mx-1 mb-sm-5 justify-content-center">
-  <div class="col-12 col-sm-4 col-md-3 bg-col">
+<h2 class="text-center mx-1">Goals statistics</h2>
+
+<div class="row mx-1">
+  <canvas id="myChart"></canvas>
+</div>
+
+<div class="row mx-1 mx-sm-0 mb-4 mb-sm-5 justify-content-center">
+
+  <div class="col-8 col-sm-6 col-md-4 col-lg-3 col-form">
+    <h4 class="text-center">
+      Select team
+    </h4>
+    <hr class="hr-col" />
     <fieldset>
       <legend>
         Teams
       </legend>
-      <div class="row mx-1 justify-content-center">
-        <div class="form-check col text-center">
+      <div class="row mx-1">
+        <div class="form-check col-12">
           <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="1">
-          <label class="form-check-label" for="inlineCheckbox1">1</label>
+          <label class="form-check-label" for="inlineCheckbox1">Team 1</label>
         </div>
-        <div class="form-check col text-center">
+        <div class="form-check col-12">
           <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="2">
-          <label class="form-check-label" for="inlineCheckbox2">2</label>
+          <label class="form-check-label" for="inlineCheckbox2">Team 2</label>
         </div>
-        <div class="form-check col text-center">
+        <div class="form-check col-12">
           <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="3">
-          <label class="form-check-label" for="inlineCheckbox3">3</label>
+          <label class="form-check-label" for="inlineCheckbox3">Team 3</label>
         </div>
       </div>
     </fieldset>
   </div>
 
-  <div class="col-12 col-sm-7 col-md-8 bg-col">
+  <div class="col-8 col-sm-5 col-md-4 col-lg-3 col-form">
+    <h4 class="text-center">
+      Select rounds
+    </h4>
+    <hr class="hr-col" />
     @using (Html.BeginForm("Stats", "Football", FormMethod.Post, new { @class = "" }))
     {
       @Html.AntiForgeryToken()
@@ -91,9 +105,9 @@
       @Html.HiddenFor(model => model.LeagueName)
       @Html.HiddenFor(model => model.SeasonYear)
 
-      <div class="form-group justify-content-center">
+      <div class="form-group">
         @Html.LabelFor(model => model.RoundsSelectList,
-                                          htmlAttributes: new { @class = "col-sm-auto col-form-label text-center" })
+                                          htmlAttributes: new { @class = "" })
         @Html.ListBoxFor(model => model.RoundsNumbersInts, Model.RoundsSelectList, new { @class = "form-control" })
         @Html.ValidationMessageFor(i => i.RoundsSelectList, "", new { @class = "text-warning" })
       </div>
@@ -101,22 +115,22 @@
     }
   </div>
 </div>
-@{
-  double[] GoalsInIntervalsPercent = Model.GoalsInIntervalsPercent;
-  double[] TimeIntervalsLimits = Model.TimeIntervalsLimits;
-  string[] TimeIntervalsTexts = new string[TimeIntervalsLimits.Count() - 1];
+  @{
+    double[] GoalsInIntervalsPercent = Model.GoalsInIntervalsPercent;
+    double[] TimeIntervalsLimits = Model.TimeIntervalsLimits;
+    string[] TimeIntervalsTexts = new string[TimeIntervalsLimits.Count() - 1];
 
-  for (int i = 0; i < TimeIntervalsTexts.Count(); i++)
-  {
-    TimeIntervalsTexts[i] = TimeIntervalsLimits[i].ToString() + "-" + TimeIntervalsLimits[i + 1].ToString();
+    for (int i = 0; i < TimeIntervalsTexts.Count(); i++)
+    {
+      TimeIntervalsTexts[i] = TimeIntervalsLimits[i].ToString() + "-" + TimeIntervalsLimits[i + 1].ToString();
+    }
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
   }
-  var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-}
 
-@section Scripts
+  @section Scripts
 {
-  <script id="mainScript" src="~/Scripts/main.js"
-          data-time-intervals-all-text='@serializer.Serialize(TimeIntervalsTexts)'
-          data-goals-in-intervals-percent='@serializer.Serialize(GoalsInIntervalsPercent)'></script>
-}
+    <script id="mainScript" src="~/Scripts/main.js"
+            data-time-intervals-all-text='@serializer.Serialize(TimeIntervalsTexts)'
+            data-goals-in-intervals-percent='@serializer.Serialize(GoalsInIntervalsPercent)'></script>
+  }
 
