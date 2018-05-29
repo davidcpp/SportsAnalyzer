@@ -12,20 +12,6 @@ window.chartColors.yellow];
 
 // Getting data of the Model passed from the Stats view
 
-//document.currentScript = document.currentScript || (function () {
-//  var scripts = $('script');
-//  return scripts[scripts.length - 1];
-//})();
-
-//var vars = document.currentScript.data();
-//console.log(vars);
-
-//timeIntervalsAllText = document.currentScript.data("timeIntervalsAllText");
-//goalsInIntervalsPercent[0] = document.currentScript.data("goalsInIntervalsPercent");
-
-//timeIntervalsAllText = $(document.currentScript).attr("timeIntervalsAllText");
-//goalsInIntervalsPercent[0] = $(document.currentScript).data("goalsInIntervalsPercent");
-
 timeIntervalsAllText = $("#mainScript").attr("data-time-intervals-all-text");
 goalsInIntervalsPercent[0] = eval($("#mainScript").attr("data-goals-in-intervals-percent"));
 
@@ -40,7 +26,6 @@ function RemoveChartDataset(id) {
 }
 
 function UpdateChart(chart, chartDisplaySize) {
-  UpdateChartLayout(chart, chartDisplaySize);
   UpdateChartFontSizes(chart, chartDisplaySize);
   window.myChart.update();
 }
@@ -76,48 +61,13 @@ function GetChartDisplaySize() {
   return chartDisplaySize;
 }
 
-function GetWindowWidth() {
-  var width = window.innerWidth
-    || document.documentElement.clientWidth
-    || document.body.clientWidth;
-  return width;
-}
-
-function GetWindowHeight() {
-  var height = window.innerHeight
-    || document.documentElement.clientHeight
-    || document.body.clientHeight;
-  return height;
-}
-
-function WriteWindowSizes() {
-  console.log("Browser inner window width: " + GetWindowWidth() + ", height: " + GetWindowHeight() + ".");
-}
-
-function UpdateChartLayout(chart, chartSize) {
-  paddingLeft = paddingRight = Math.round(0.04 * chartSize.width);
-  paddingTop = paddingBottom = Math.round(0.04 * chartSize.width);
-
-  if (typeof chart !== "undefined") {
-    chart.options.layout.padding = {
-      left: paddingLeft,
-      right: paddingRight,
-      top: paddingTop,
-      bottom: paddingBottom
-    };
-  }
-}
-
 function UpdateChartFontSizes(chart, chartSize) {
   if (typeof chartSize !== "undefined") {
     legendFontSize = Math.round(0.01 * chartSize.width + 8);
-    varTitleFontSize = Math.round(0.015 * chartSize.width + 8);
+    varTitleFontSize = Math.round(0.005 * chartSize.width + 8);
     tooltipsFontSize = Math.round(0.005 * chartSize.width + 10);
     labelsFontSize = Math.round(0.005 * chartSize.width + 10);
     ticksFontSize = Math.round(0.005 * chartSize.width + 10);
-
-    console.log("Font sizes for chart - Variables values: ");
-    console.log([varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize].toString());
   }
 
   if (typeof chart !== "undefined") {
@@ -140,7 +90,6 @@ function PrepareChartData() {
 }
 
 function OnResizeChart(chart, chartSize) {
-  WriteWindowSizes();
   UpdateChart(chart, chartSize);
 }
 
@@ -166,14 +115,6 @@ function CreateChart() {
     // Configuration options go here
     options: {
       responsive: true,
-      layout: {
-        padding: {
-          left: paddingLeft,
-          right: paddingRight,
-          top: paddingTop,
-          bottom: paddingBottom
-        }
-      },
       legend: {
         position: 'top',
         labels: {
@@ -242,19 +183,6 @@ function CreateChart() {
 }
 
 $(document).ready(function () {
-  WriteWindowSizes();
-
-  //var scripts1 = $('script');
-  //var scripts2 = document.getElementsByTagName('script');
-  //console.log(scripts1);
-  //console.log(scripts2);
-  //console.log(document);
-  //console.log(document.currentScript);
-  //if (document.currentScript.async) {
-  //  console.log("Executing asynchronously");
-  //} else {
-  //  console.log("Executing synchronously");
-  //}
   CreateChart();
 });
 
