@@ -5,10 +5,10 @@
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="text-center mx-1 my-3 my-sm-4">Statistics</h1>
+<h1 class="text-center mx-1 my-4">Statistics</h1>
 
-<h2 class="text-center mb-2 mb-sm-3">Basic Statistics</h2>
-<div class="row mx-1 mb-4 mb-sm-5 justify-content-center">
+<h2 class="text-center mb-3">Basic Statistics</h2>
+<div class="row mx-1 mb-5 justify-content-center">
   <div class="table-responsive-lg w-100">
     <table class="table table-bordered">
       <thead class="thead-light">
@@ -59,13 +59,13 @@
   </div>
 </div>
 
-<h2 class="text-center mx-1">Goals statistics</h2>
+<h2 class="text-center mx-1 mb-3">Goals statistics</h2>
 
-<div class="row mx-1">
+<div id="myChartDiv" class="mb-3">
   <canvas id="myChart"></canvas>
 </div>
 
-<div class="row mx-1 mx-sm-0 mb-4 mb-sm-5 justify-content-center">
+<div class="row mx-1 mx-sm-0 mb-4 justify-content-center">
 
   <div class="col-8 col-sm-6 col-md-4 col-lg-3 col-form">
     <h4 class="text-center">
@@ -115,22 +115,22 @@
     }
   </div>
 </div>
-  @{
-    double[] GoalsInIntervalsPercent = Model.GoalsInIntervalsPercent;
-    double[] TimeIntervalsLimits = Model.TimeIntervalsLimits;
-    string[] TimeIntervalsTexts = new string[TimeIntervalsLimits.Count() - 1];
+@{
+  double[] GoalsInIntervalsPercent = Model.GoalsInIntervalsPercent;
+  double[] TimeIntervalsLimits = Model.TimeIntervalsLimits;
+  string[] TimeIntervalsTexts = new string[TimeIntervalsLimits.Count() - 1];
 
-    for (int i = 0; i < TimeIntervalsTexts.Count(); i++)
-    {
-      TimeIntervalsTexts[i] = TimeIntervalsLimits[i].ToString() + "-" + TimeIntervalsLimits[i + 1].ToString();
-    }
-    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+  for (int i = 0; i < TimeIntervalsTexts.Count(); i++)
+  {
+    TimeIntervalsTexts[i] = TimeIntervalsLimits[i].ToString() + "-" + TimeIntervalsLimits[i + 1].ToString();
   }
+  var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+}
 
-  @section Scripts
+@section Scripts
 {
-    <script id="mainScript" src="~/Scripts/main.js"
-            data-time-intervals-all-text='@serializer.Serialize(TimeIntervalsTexts)'
-            data-goals-in-intervals-percent='@serializer.Serialize(GoalsInIntervalsPercent)'></script>
-  }
+  <script id="mainScript" src="~/Scripts/main.js"
+          data-time-intervals-all-text='@serializer.Serialize(TimeIntervalsTexts)'
+          data-goals-in-intervals-percent='@serializer.Serialize(GoalsInIntervalsPercent)'></script>
+}
 

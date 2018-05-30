@@ -64,7 +64,7 @@ function GetChartDisplaySize() {
 function UpdateChartFontSizes(chart, chartSize) {
   if (typeof chartSize !== "undefined") {
     legendFontSize = Math.round(0.01 * chartSize.width + 8);
-    varTitleFontSize = Math.round(0.005 * chartSize.width + 8);
+    varTitleFontSize = Math.round(0.015 * chartSize.width + 8);
     tooltipsFontSize = Math.round(0.005 * chartSize.width + 10);
     labelsFontSize = Math.round(0.005 * chartSize.width + 10);
     ticksFontSize = Math.round(0.005 * chartSize.width + 10);
@@ -115,10 +115,12 @@ function CreateChart() {
     // Configuration options go here
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       legend: {
         position: 'top',
         labels: {
-          fontSize: legendFontSize
+          fontSize: legendFontSize,
+          boxWidth: 30
         }
       },
       title: {
