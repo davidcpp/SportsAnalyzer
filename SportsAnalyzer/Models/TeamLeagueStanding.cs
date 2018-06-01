@@ -8,7 +8,8 @@ namespace SportsAnalyzer.Models
 {
   public static class TeamLeagueStandingConverter
   {
-    public static List<TeamLeagueStanding> ConvertToLeagueStandingList(this List<XMLSoccerCOM.TeamLeagueStanding> xmlList)
+    public static List<TeamLeagueStanding> ConvertToLeagueStandingList(
+      this List<XMLSoccerCOM.TeamLeagueStanding> xmlList)
     {
       var list = new List<TeamLeagueStanding>();
       foreach (var xmlTeamLeagueStanding in xmlList)

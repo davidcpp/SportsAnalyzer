@@ -15,9 +15,14 @@ namespace SportsAnalyzer.Controllers
 {
   public interface IXmlSoccerRequester
   {
-    List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(string league, int seasonStartYear);
-    List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(string league, int seasonStartYear);
-    List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(string league, int seasonStartYear);
+    List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
+      string league, int seasonStartYear);
+
+    List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(
+      string league, int seasonStartYear);
+
+    List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
+      string league, int seasonStartYear);
   }
 
   public class XmlSoccerRequester : IXmlSoccerRequester
@@ -25,20 +30,26 @@ namespace SportsAnalyzer.Controllers
     private const string apiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
     private XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(apiKey);
 
-    public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(string league, int seasonStartYear)
+    public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
+      string league, int seasonStartYear)
     {
       Debug.Write("GetAllTeamsByLeagueAndSeason()\n");
       return _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonStartYear);
     }
-    public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(string league, int seasonStartYear)
+
+    public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(
+      string league, int seasonStartYear)
     {
       Debug.Write("GetLeagueStandingsBySeason()\n");
       return _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonStartYear);
     }
-    public List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(string league, int seasonStartYear)
+
+    public List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
+      string league, int seasonStartYear)
     {
       Debug.Write("GetHistoricMatchesByLeagueAndSeason()\n");
-      return _xmlSoccerRequester.GetHistoricMatchesByLeagueAndSeason(league, seasonStartYear);
+      return _xmlSoccerRequester
+        .GetHistoricMatchesByLeagueAndSeason(league, seasonStartYear);
     }
   }
 
@@ -65,7 +76,7 @@ namespace SportsAnalyzer.Controllers
 
     private static List<XMLSoccerCOM.Match> xmlLeagueMatches;
     private static List<XMLSoccerCOM.TeamLeagueStanding> xmlLeagueStandings;
-    private static List<XMLSoccerCOM.Team> xmlTeams; 
+    private static List<XMLSoccerCOM.Team> xmlTeams;
 
     /* Constructors */
 
@@ -109,13 +120,15 @@ namespace SportsAnalyzer.Controllers
     }
 
     // GET: Football/Teams/{league}/{seasonYear}
-    public ActionResult Teams(string league = DefaultLeagueFullName, int seasonYear = DefaultSeasonYear)
+    public ActionResult Teams(
+      string league = DefaultLeagueFullName,
+      int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
 
-      if (teamsLastUpdateTime == DateTime.MinValue ||
-        (teamsLastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+      if (teamsLastUpdateTime == DateTime.MinValue
+        || (teamsLastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
       {
         xmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
         ClearDBSet(db.FootballTeams);
@@ -134,15 +147,19 @@ namespace SportsAnalyzer.Controllers
     }
 
     // GET: Football/Table/{league}/{seasonYear}
-    public ActionResult Table(string league = DefaultLeagueFullName, int seasonYear = DefaultSeasonYear)
+    public ActionResult Table(
+      string league = DefaultLeagueFullName,
+      int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
 
-      if (tableLastUpdateTime == DateTime.MinValue ||
-        (tableLastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+      if (tableLastUpdateTime == DateTime.MinValue
+        || (tableLastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
       {
-        xmlLeagueStandings = _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonYear);
+        xmlLeagueStandings = _xmlSoccerRequester
+          .GetLeagueStandingsBySeason(league, seasonYear);
+
         ClearDBSet(db.LeagueTable);
 
         db.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
@@ -168,10 +185,12 @@ namespace SportsAnalyzer.Controllers
     {
       if (String.IsNullOrEmpty(teamName))
       {
-        if (lastUpdateTime == DateTime.MinValue ||
-          (lastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+        if (lastUpdateTime == DateTime.MinValue
+          || (lastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
         {
-          xmlLeagueMatches = _xmlSoccerRequester.GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
+          xmlLeagueMatches = _xmlSoccerRequester
+            .GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
+
           lastUpdateTime = DateTime.UtcNow;
         }
 
@@ -189,10 +208,11 @@ namespace SportsAnalyzer.Controllers
     // Action for Multiselect list form
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Stats([Bind(Include = "LeagueName, SeasonYear, RoundsNumbersInts")] Statistics model)
+    public ActionResult Stats(
+      [Bind(Include = "LeagueName, SeasonYear, RoundsNumbersInts")] Statistics model)
     {
-      if (lastUpdateTime == DateTime.MinValue ||
-        (lastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+      if (lastUpdateTime == DateTime.MinValue
+        || (lastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
       {
         xmlLeagueMatches = _xmlSoccerRequester.
           GetHistoricMatchesByLeagueAndSeason(model.LeagueName, model.SeasonYear);

@@ -72,6 +72,7 @@ namespace SportsAnalyzer.Models
 
     [Display(Name = "Avg. number of host/guest goals")]
     public double GoalsAvgHome { get; private set; }
+
     public double GoalsAvgAway { get; private set; }
 
     [Display(Name = "Goals sum")]
@@ -196,7 +197,8 @@ namespace SportsAnalyzer.Models
         EndDate = AllMatches.Last().Date ?? DateTime.UtcNow
       });
 
-      RoundsSelectList = new MultiSelectList(RoundsNumbers.ToList().OrderBy(x => x.Number),
+      RoundsSelectList = new MultiSelectList(
+        RoundsNumbers.ToList().OrderBy(x => x.Number),
         "Number",
         "Number",
         selectedValues: RoundsNumbersInts);
@@ -240,10 +242,11 @@ namespace SportsAnalyzer.Models
 
       if (startRoundInt > 0 && endRoundInt >= startRoundInt)
       {
-        RoundsNumbersInts = Enumerable.Range(startRoundInt, endRoundInt - startRoundInt + 1).ToList();
+        RoundsNumbersInts = Enumerable
+          .Range(startRoundInt, endRoundInt - startRoundInt + 1)
+          .ToList();
       }
     }
-
   }
 
   public class Round

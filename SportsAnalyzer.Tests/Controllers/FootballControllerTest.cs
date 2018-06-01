@@ -27,9 +27,11 @@ namespace SportsAnalyzer.Tests.Controllers
     const string defaultLeagueId = FootballController.DefaultLeagueId;
     const string leagueIdExample = "league";
 
-    /* Delegates */ 
+    /* Delegates */
 
-    delegate ActionResult FootballControllerAction(string league = defaultLeague, int seasonYear = defaultSeasonYear);
+    delegate ActionResult FootballControllerAction(
+      string league = defaultLeague,
+      int seasonYear = defaultSeasonYear);
 
     /* Methods */
 
@@ -40,8 +42,9 @@ namespace SportsAnalyzer.Tests.Controllers
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var xmlTestList = CreateTestTeamList(numberOfTeams);
 
-      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>())).
-        Returns(xmlTestList);
+      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
       FootballController.teamsLastUpdateTime = DateTime.MinValue;
@@ -50,7 +53,8 @@ namespace SportsAnalyzer.Tests.Controllers
       ViewResult viewResult = footballController.Teams() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       // Checking if list forwarded as a model (viewResult.Model) to View
       // corresponds to test list (Does this list have the same values of their objects? )
@@ -75,8 +79,9 @@ namespace SportsAnalyzer.Tests.Controllers
 
       var xmlTestList = CreateTestTeamList(0);
 
-      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>())).
-        Returns(xmlTestList);
+      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
       FootballController.teamsLastUpdateTime = DateTime.MinValue;
@@ -85,7 +90,9 @@ namespace SportsAnalyzer.Tests.Controllers
       ViewResult viewResult = footballController.Teams() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+
       Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
     }
 
@@ -98,8 +105,9 @@ namespace SportsAnalyzer.Tests.Controllers
 
       var xmlTestList = CreateTestTeamList(1, shortString);
 
-      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>())).
-        Returns(xmlTestList);
+      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
       FootballController.teamsLastUpdateTime = DateTime.MinValue;
@@ -108,7 +116,8 @@ namespace SportsAnalyzer.Tests.Controllers
       footballController.Teams();
 
       // Assert
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
     }
 
     [TestMethod]
@@ -117,7 +126,8 @@ namespace SportsAnalyzer.Tests.Controllers
       // Arrange
       var xmlTestList = CreateTestTeamList(0);
 
-      var callMockExpressions = new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.Team>>>>
+      var callMockExpressions =
+        new List <Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.Team>>>>
       {
         x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
         x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
@@ -126,8 +136,8 @@ namespace SportsAnalyzer.Tests.Controllers
         x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample),
       };
 
-      Mock<IXmlSoccerRequester> mockXmlReq = SetSequenceOfMockCalls<List<XMLSoccerCOM.Team>>
-        (xmlTestList, callMockExpressions);
+      Mock<IXmlSoccerRequester> mockXmlReq =
+        SetSequenceOfMockCalls<List<XMLSoccerCOM.Team>>(xmlTestList, callMockExpressions);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
       FootballController.teamsLastUpdateTime = DateTime.MinValue;
@@ -143,8 +153,6 @@ namespace SportsAnalyzer.Tests.Controllers
 
       // Act
       CallControlerActionMuliply(footballController.Teams, listOfCallArgs);
-
-      // Assert
     }
 
     [TestMethod]
@@ -160,7 +168,8 @@ namespace SportsAnalyzer.Tests.Controllers
       ViewResult viewResult = footballController.Teams() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Never());
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Never());
     }
 
     [TestMethod]
@@ -170,8 +179,9 @@ namespace SportsAnalyzer.Tests.Controllers
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var xmlTestList = CreateTestLeagueTable(numberOfTeams);
 
-      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>())).
-        Returns(xmlTestList);
+      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
       FootballController.tableLastUpdateTime = DateTime.MinValue;
@@ -180,10 +190,11 @@ namespace SportsAnalyzer.Tests.Controllers
       ViewResult viewResult = footballController.Table() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       // Checking if list forwarded as a model (viewResult.Model) to View
-      // corresponds to test list (Does this list have the same values of their objects? )
+      // corresponds to test list (Does this list have the same values of their objects?)
 
       List<TeamLeagueStanding> dbList = viewResult.Model as List<TeamLeagueStanding>;
 
@@ -194,7 +205,6 @@ namespace SportsAnalyzer.Tests.Controllers
       {
         Assert.IsTrue(dbList[i].IsEqualToXmlTeamStanding(xmlTestList[i]));
       }
-
     }
 
     [TestMethod]
@@ -204,8 +214,9 @@ namespace SportsAnalyzer.Tests.Controllers
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var xmlTestList = CreateTestLeagueTable(0);
 
-      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>())).
-        Returns(xmlTestList);
+      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
       FootballController.tableLastUpdateTime = DateTime.MinValue;
@@ -214,9 +225,10 @@ namespace SportsAnalyzer.Tests.Controllers
       ViewResult viewResult = footballController.Table() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
-      Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
+      Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
     }
 
     [TestMethod]
@@ -228,8 +240,9 @@ namespace SportsAnalyzer.Tests.Controllers
 
       var xmlTestList = CreateTestLeagueTable(1, shortString);
 
-      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>())).
-        Returns(xmlTestList);
+      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
       FootballController.tableLastUpdateTime = DateTime.MinValue;
@@ -238,7 +251,8 @@ namespace SportsAnalyzer.Tests.Controllers
       footballController.Table();
 
       // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
     }
 
     [TestMethod]
@@ -247,7 +261,9 @@ namespace SportsAnalyzer.Tests.Controllers
       // Arrange
       var xmlTestLeagueTable = CreateTestLeagueTable(0);
 
-      var callMockExpressions = new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.TeamLeagueStanding>>>>
+      var callMockExpressions =
+        new List<Expression<Func<IXmlSoccerRequester,
+                 List<XMLSoccerCOM.TeamLeagueStanding>>>>
       {
         x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
         x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
@@ -256,8 +272,9 @@ namespace SportsAnalyzer.Tests.Controllers
         x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample),
       };
 
-      Mock<IXmlSoccerRequester> mockXmlReq = SetSequenceOfMockCalls<List<XMLSoccerCOM.TeamLeagueStanding>>
-        (xmlTestLeagueTable, callMockExpressions);
+      Mock<IXmlSoccerRequester> mockXmlReq = 
+        SetSequenceOfMockCalls<List<XMLSoccerCOM.TeamLeagueStanding>>(
+          xmlTestLeagueTable, callMockExpressions);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
       FootballController.tableLastUpdateTime = DateTime.MinValue;
@@ -273,8 +290,6 @@ namespace SportsAnalyzer.Tests.Controllers
 
       // Act
       CallControlerActionMuliply(footballController.Table, listOfCallArgs);
-
-      // Assert
     }
 
     [TestMethod]
@@ -290,7 +305,8 @@ namespace SportsAnalyzer.Tests.Controllers
       ViewResult viewResult = footballController.Teams() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Never());
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Never());
     }
 
     /* Auxiliary methods */
@@ -308,7 +324,9 @@ namespace SportsAnalyzer.Tests.Controllers
       };
     }
 
-    private List<XMLSoccerCOM.Team> CreateTestTeamList(int size, string testString = standardString)
+    private List<XMLSoccerCOM.Team> CreateTestTeamList(
+      int size,
+      string testString = standardString)
     {
       List<XMLSoccerCOM.Team> xmlList = new List<XMLSoccerCOM.Team>();
       for (int i = 1; i <= size; i++)
@@ -318,7 +336,10 @@ namespace SportsAnalyzer.Tests.Controllers
       return xmlList;
     }
 
-    private XMLSoccerCOM.TeamLeagueStanding CreateTestTeamLeagueStanding(int team_Id, int testInt, string testString)
+    private XMLSoccerCOM.TeamLeagueStanding CreateTestTeamLeagueStanding(
+      int team_Id,
+      int testInt,
+      string testString)
     {
       return new XMLSoccerCOM.TeamLeagueStanding
       {
@@ -335,9 +356,14 @@ namespace SportsAnalyzer.Tests.Controllers
       };
     }
 
-    private List<XMLSoccerCOM.TeamLeagueStanding> CreateTestLeagueTable(int size, string testString = standardString, int testInt = 0)
+    private List<XMLSoccerCOM.TeamLeagueStanding> CreateTestLeagueTable(
+      int size,
+      string testString = standardString,
+      int testInt = 0)
     {
-      List<XMLSoccerCOM.TeamLeagueStanding> xmlList = new List<XMLSoccerCOM.TeamLeagueStanding>();
+      List<XMLSoccerCOM.TeamLeagueStanding> xmlList =
+        new List<XMLSoccerCOM.TeamLeagueStanding>();
+
       for (int i = 1; i <= size; i++)
       {
         xmlList.Add(CreateTestTeamLeagueStanding(i, testInt, testString));
@@ -345,7 +371,9 @@ namespace SportsAnalyzer.Tests.Controllers
       return xmlList;
     }
 
-    private Mock<IXmlSoccerRequester> SetSequenceOfMockCalls<T>(T xmlData, List<Expression<Func<IXmlSoccerRequester, T>>> CallMockExpressions)
+    private Mock<IXmlSoccerRequester> SetSequenceOfMockCalls<T>(
+      T xmlData,
+      List<Expression<Func<IXmlSoccerRequester, T>>> CallMockExpressions)
     {
       var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
 
@@ -361,8 +389,9 @@ namespace SportsAnalyzer.Tests.Controllers
       return mockXmlReq;
     }
 
-    private void CallControlerActionMuliply(FootballControllerAction footballControllerAction, 
-                                           List<(string league, int? seasonYear)> listOfCallArgs)
+    private void CallControlerActionMuliply(
+      FootballControllerAction footballControllerAction,
+      List<(string league, int? seasonYear)> listOfCallArgs)
     {
       foreach (var (league, seasonYear) in listOfCallArgs)
       {
@@ -382,9 +411,8 @@ namespace SportsAnalyzer.Tests.Controllers
           footballControllerAction(league, seasonYear.Value);
         }
       }
-      // Probably calls with null arguments are unnecessary - arguments of Controller action has default values
+      // Probably calls with null arguments are unnecessary 
+      // - arguments of Controller action has default values
     }
-
-
   }
 }

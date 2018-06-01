@@ -37,10 +37,9 @@ namespace SportsAnalyzer.Migrations
                         Goals_Against = c.Int(nullable: false),
                         Goal_Difference = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.Id);
-            
+                .PrimaryKey(t => t.Id);        
         }
-        
+
         public override void Down()
         {
             DropTable("dbo.TeamLeagueStandings");
