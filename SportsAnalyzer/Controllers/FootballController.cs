@@ -51,15 +51,21 @@ namespace SportsAnalyzer.Controllers
     public const string DefaultLeagueShortName = "SPL";
     public const string DefaultLeagueId = "3";
     public const int DefaultRoundsNumber = 33;
-
     private const int requestsBreakMinutes = 5;
+
     /* Fields */
+
+    public static DateTime lastUpdateTime;
+    public static DateTime tableLastUpdateTime;
+    public static DateTime teamsLastUpdateTime;
 
     private XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
+
     private static List<XMLSoccerCOM.Match> xmlLeagueMatches;
-    private static DateTime lastUpdateTime;
+    private static List<XMLSoccerCOM.TeamLeagueStanding> xmlLeagueStandings;
+    private static List<XMLSoccerCOM.Team> xmlTeams; 
 
     /* Constructors */
 
@@ -107,12 +113,18 @@ namespace SportsAnalyzer.Controllers
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
-      var XmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
 
-      ClearDBSet(db.FootballTeams);
+      if (teamsLastUpdateTime == DateTime.MinValue ||
+        (teamsLastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+      {
+        xmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
+        ClearDBSet(db.FootballTeams);
 
-      db.FootballTeams.AddRange(XmlTeams.ConvertToTeamList());
-      db.SaveChanges();
+        db.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
+        db.SaveChanges();
+
+        teamsLastUpdateTime = DateTime.UtcNow;
+      }
 
       ViewBag.EmptyList = "List of teams is empty";
       if (db.FootballTeams.Count() == 0)
@@ -127,12 +139,17 @@ namespace SportsAnalyzer.Controllers
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
 
-      var XmlLeagueStandings = _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonYear);
+      if (tableLastUpdateTime == DateTime.MinValue ||
+        (tableLastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+      {
+        xmlLeagueStandings = _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonYear);
+        ClearDBSet(db.LeagueTable);
 
-      ClearDBSet(db.LeagueTable);
+        db.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
+        db.SaveChanges();
 
-      db.LeagueTable.AddRange(XmlLeagueStandings.ConvertToLeagueStandingList());
-      db.SaveChanges();
+        tableLastUpdateTime = DateTime.UtcNow;
+      }
 
       ViewBag.EmptyList = "League Table is empty";
       if (db.LeagueTable.Count() == 0)
