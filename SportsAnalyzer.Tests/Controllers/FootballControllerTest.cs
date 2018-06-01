@@ -148,6 +148,22 @@ namespace SportsAnalyzer.Tests.Controllers
     }
 
     [TestMethod]
+    public void ShowTeams_RecentlyUpdatedList_NoRequestInvocation()
+    {
+      // Arrange
+      var mockXmlReq = new Mock<IXmlSoccerRequester>();
+
+      FootballController footballController = new FootballController(mockXmlReq.Object);
+      FootballController.teamsLastUpdateTime = DateTime.UtcNow;
+
+      // Act
+      ViewResult viewResult = footballController.Teams() as ViewResult;
+
+      // Assert
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Never());
+    }
+
+    [TestMethod]
     public void ShowTable_TestTable_EqualTables()
     {
       // Arrange
@@ -259,6 +275,22 @@ namespace SportsAnalyzer.Tests.Controllers
       CallControlerActionMuliply(footballController.Table, listOfCallArgs);
 
       // Assert
+    }
+
+    [TestMethod]
+    public void ShowTable_RecentlyUpdatedTable_NoRequestInvocation()
+    {
+      // Arrange
+      var mockXmlReq = new Mock<IXmlSoccerRequester>();
+
+      FootballController footballController = new FootballController(mockXmlReq.Object);
+      FootballController.tableLastUpdateTime = DateTime.UtcNow;
+
+      // Act
+      ViewResult viewResult = footballController.Teams() as ViewResult;
+
+      // Assert
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Never());
     }
 
     /* Auxiliary methods */
