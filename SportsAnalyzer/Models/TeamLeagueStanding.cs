@@ -72,11 +72,11 @@ namespace SportsAnalyzer.Models
     //// Additional field present in the class XMLSoccerCOM.TeamLeagueStanding - here unneeded,
     //// possibly will be necessary for expanded view creating
 
-    public int RedCards { get; set; }
-    public int YellowCards { get; set; }
-    public int NumberOfShots { get; set; }
-    public int PlayedAway { get; set; }
-    public int PlayedAtHome { get; set; }
+    //public int RedCards { get; set; }
+    //public int YellowCards { get; set; }
+    //public int NumberOfShots { get; set; }
+    //public int PlayedAway { get; set; }
+    //public int PlayedAtHome { get; set; }
 
     //public int? Group_Id { get; set; }
     //public string Group { get; set; }
