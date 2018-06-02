@@ -1,82 +1,83 @@
 ﻿@model IEnumerable<SportsAnalyzer.Models.TeamLeagueStanding>
 
 @{
-    ViewBag.Title = "SPL League Table";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+  ViewBag.Title = "SPL League Table";
+  Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+  @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Team_Id)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Team)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Played)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Points)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Won)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Draw)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Lost)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Goals_For)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Goals_Against)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Goal_Difference)
-        </th>
-    </tr>
+  <tr>
+    <th>
+      @Html.DisplayNameFor(model => model.Team_Id)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.Team)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.Played)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.Points)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.Won)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.Draw)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.Lost)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.Goals_For)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.Goals_Against)
+    </th>
+    <th>
+      @Html.DisplayNameFor(model => model.Goal_Difference)
+    </th>
+  </tr>
 
-@foreach (var item in Model) {
+  @foreach (var item in Model)
+  {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Team_Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Team)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Played)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Points)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Won)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Draw)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Lost)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Goals_For)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Goals_Against)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Goal_Difference)
-        </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Team_Id)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Team)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Played)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Points)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Won)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Draw)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Lost)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Goals_For)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Goals_Against)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => item.Goal_Difference)
+      </td>
     </tr>
-}
+  }
 
 </table>
