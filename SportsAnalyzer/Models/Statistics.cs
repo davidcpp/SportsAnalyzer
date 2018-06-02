@@ -124,9 +124,6 @@ namespace SportsAnalyzer.Models
 
     public void CalculateAll()
     {
-      //// TODO: Why is it necessary to multiply by 2 to reach average number of goals?
-      //GoalsAvg = xmlLeagueMatches.Average((match) => (match.HomeGoals ?? 0 + match.AwayGoals ?? 0) * 2);
-      //GoalsAvg = xmlLeagueMatches.Average((match) => match.HomeGoals.Value + match.AwayGoals.Value);
       GoalsSum = SelectedMatches.Sum((match) => match.HomeGoals.Value + match.AwayGoals.Value);
       GoalsAvg = Round(GoalsSum / SelectedMatches.Count(), 2);
       GoalsAvgHome = Round(SelectedMatches.Average((match) => match.HomeGoals.Value), 2);

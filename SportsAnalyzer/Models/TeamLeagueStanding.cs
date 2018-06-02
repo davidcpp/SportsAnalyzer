@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
-using System.Linq;
 
 namespace SportsAnalyzer.Models
 {
@@ -69,19 +66,6 @@ namespace SportsAnalyzer.Models
 
     [Display(Name = "Goals Difference")]
     public int Goal_Difference { get; set; }
-
-    //// Additional field present in the class XMLSoccerCOM.TeamLeagueStanding - here unneeded,
-    //// possibly will be necessary for expanded view creating
-
-    //public int RedCards { get; set; }
-    //public int YellowCards { get; set; }
-    //public int NumberOfShots { get; set; }
-    //public int PlayedAway { get; set; }
-    //public int PlayedAtHome { get; set; }
-
-    //public int? Group_Id { get; set; }
-    //public string Group { get; set; }
-
 
     /* Constructors */
 

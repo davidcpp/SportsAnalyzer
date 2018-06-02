@@ -1,11 +1,8 @@
 namespace SportsAnalyzer.Migrations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
+  using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<SportsAnalyzer.DAL.XmlSoccerAPI_DBContext>
+  internal sealed class Configuration : DbMigrationsConfiguration<SportsAnalyzer.DAL.XmlSoccerAPI_DBContext>
     {
         public Configuration()
         {

@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using SportsAnalyzer.Models;
 using SportsAnalyzer.DAL;
-using System.Net;
-using System.Diagnostics;
 using System.Data.Entity;
-using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace SportsAnalyzer.Controllers
 {
@@ -33,21 +28,18 @@ namespace SportsAnalyzer.Controllers
     public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
       string league, int seasonStartYear)
     {
-      Debug.Write("GetAllTeamsByLeagueAndSeason()\n");
       return _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonStartYear);
     }
 
     public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(
       string league, int seasonStartYear)
     {
-      Debug.Write("GetLeagueStandingsBySeason()\n");
       return _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonStartYear);
     }
 
     public List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
       string league, int seasonStartYear)
     {
-      Debug.Write("GetHistoricMatchesByLeagueAndSeason()\n");
       return _xmlSoccerRequester
         .GetHistoricMatchesByLeagueAndSeason(league, seasonStartYear);
     }
@@ -82,13 +74,11 @@ namespace SportsAnalyzer.Controllers
 
     public FootballController()
     {
-      Trace.Write("FootballController()\n");
       _xmlSoccerRequester = new XmlSoccerRequester();
     }
 
     public FootballController(IXmlSoccerRequester xmlSoccerRequester)
     {
-      Trace.Write("FootballController(IXmlSoccerRequester)\n");
       _xmlSoccerRequester = xmlSoccerRequester;
     }
 
