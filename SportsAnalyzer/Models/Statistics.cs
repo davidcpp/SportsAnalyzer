@@ -124,11 +124,11 @@ namespace SportsAnalyzer.Models
 
     public void CalculateAll()
     {
-      GoalsSum = SelectedMatches.Sum((match) => match.HomeGoals.Value + match.AwayGoals.Value);
-      GoalsAvg = Round(GoalsSum / SelectedMatches.Count, 2);
-      GoalsAvgHome = Round(SelectedMatches.Average((match) => match.HomeGoals.Value), 2);
-      GoalsAvgAway = Round(SelectedMatches.Average((match) => match.AwayGoals.Value), 2);
       MatchesNumber = SelectedMatches.Count;
+      GoalsSum = SelectedMatches.Sum((match) => match.HomeGoals.Value + match.AwayGoals.Value);
+      GoalsAvg = Round(GoalsSum / MatchesNumber, 2);
+      GoalsAvgHome = Round(SelectedMatches.Average((match) => match.HomeGoals.Value), 2);
+      GoalsAvgAway = Round(SelectedMatches.Average((match) => match.AwayGoals.Value), 2);    
 
       var regexGoalTime = new Regex("\\d{1,}");
       foreach (var xmlMatch in SelectedMatches)
