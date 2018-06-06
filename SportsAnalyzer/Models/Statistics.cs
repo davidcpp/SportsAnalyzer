@@ -232,6 +232,12 @@ namespace SportsAnalyzer.Models
 
       SelectedMatches = AllMatches.Select(x => x)
         .Where(x => RoundsNumbersInts.Contains(x.Round ?? 1)).ToList();
+
+      if (TeamName != defaultTeamName)
+      {
+        SelectedMatches = SelectedMatches.Select(x => x)
+          .Where((x) => x.HomeTeam == TeamName || x.AwayTeam == TeamName).ToList();
+      }
     }
 
     private void GenerateUserSelectedRounds()

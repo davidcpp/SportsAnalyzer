@@ -16,9 +16,9 @@ timeIntervalsAllText = $("#mainScript").attr("data-time-intervals-all-text");
 goalsInIntervalsPercent[0] = eval($("#mainScript").attr("data-goals-in-intervals-percent"));
 
 
-function RemoveChartDataset(id) {
+function RemoveChartDataset(teamName) {
   for (var i = 0; i < window.myChart.data.datasets.length; i++) {
-    if (window.myChart.data.datasets[i].label === 'Team ' + id) {
+    if (window.myChart.data.datasets[i].label === teamName) {
       window.myChart.data.datasets.splice(i, 1);
     }
   }
@@ -30,13 +30,13 @@ function UpdateChart(chart, chartDisplaySize) {
   window.myChart.update();
 }
 
-function AddChartDataset(id) {
-  $.getJSON(webApiUri + '/' + id)
+function AddChartDataset(teamName, id) {
+  $.getJSON(webApiUri + '/' + teamName)
     .done(function (data) {
       goalsInIntervalsPercent[id] = data;
 
       var dataset = {
-        label: 'Team ' + id,
+        label: teamName,
         backgroundColor: color(myChartColors[id]).alpha(0.5).rgbString(),
         borderColor: myChartColors[id],
         borderWidth: 1,
@@ -188,29 +188,14 @@ $(document).ready(function () {
   CreateChart();
 });
 
-$("#inlineCheckbox1").change(function () {
-  if ($(this).prop("checked")) {
-    AddChartDataset(1);
-  }
-  else {
-    RemoveChartDataset(1);
-  }
-});
+$(".form-check-input").change(function () {
+  var teamName = $("label[for='" + $(this).attr('id') + "']").text();
+  var id = $(this).val();
 
-$("#inlineCheckbox2").change(function () {
   if ($(this).prop("checked")) {
-    AddChartDataset(2);
+    AddChartDataset(teamName, id);
   }
   else {
-    RemoveChartDataset(2);
-  }
-});
-
-$("#inlineCheckbox3").change(function () {
-  if ($(this).prop("checked")) {
-    AddChartDataset(3);
-  }
-  else {
-    RemoveChartDataset(3);
+    RemoveChartDataset(teamName);
   }
 });

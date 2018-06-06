@@ -54,8 +54,8 @@ namespace SportsAnalyzer.Controllers
     public const string DefaultLeagueShortName = "SPL";
     public const string DefaultLeagueId = "3";
     public const int DefaultRoundsNumber = 33;
-    private const int requestsBreakMinutes = 5;
-    private const int requestsBreakSeconds = 15;
+    public const int requestsBreakMinutes = 5;
+    public const int requestsBreakSeconds = 15;
 
     /* Fields */
 
@@ -68,13 +68,13 @@ namespace SportsAnalyzer.Controllers
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 
-    private static List<XMLSoccerCOM.Match> xmlLeagueMatches =
+    public static List<XMLSoccerCOM.Match> xmlLeagueMatches =
       new List<XMLSoccerCOM.Match>();
 
-    private static List<XMLSoccerCOM.TeamLeagueStanding> xmlLeagueStandings =
+    public static List<XMLSoccerCOM.TeamLeagueStanding> xmlLeagueStandings =
       new List<XMLSoccerCOM.TeamLeagueStanding>();
 
-    private static List<XMLSoccerCOM.Team> xmlTeams =
+    public static List<XMLSoccerCOM.Team> xmlTeams =
       new List<XMLSoccerCOM.Team>();
 
 
@@ -109,7 +109,7 @@ namespace SportsAnalyzer.Controllers
       return View(db.FootballTeams.ToList());
     }
 
-    void ClearDBSet(DbSet dbList)
+    public static void ClearDBSet(DbSet dbList)
     {
       foreach (var dbItem in dbList)
       {
