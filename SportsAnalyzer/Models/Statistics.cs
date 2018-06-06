@@ -124,11 +124,16 @@ namespace SportsAnalyzer.Models
 
     public void CalculateAll()
     {
+      if (SelectedMatches == null || SelectedMatches.Count == 0)
+      {
+        return;
+      }
+
       MatchesNumber = SelectedMatches.Count;
       GoalsSum = SelectedMatches.Sum((match) => match.HomeGoals.Value + match.AwayGoals.Value);
       GoalsAvg = Round(GoalsSum / MatchesNumber, 2);
       GoalsAvgHome = Round(SelectedMatches.Average((match) => match.HomeGoals.Value), 2);
-      GoalsAvgAway = Round(SelectedMatches.Average((match) => match.AwayGoals.Value), 2);    
+      GoalsAvgAway = Round(SelectedMatches.Average((match) => match.AwayGoals.Value), 2);
 
       var regexGoalTime = new Regex("\\d{1,}");
       foreach (var xmlMatch in SelectedMatches)
@@ -166,7 +171,7 @@ namespace SportsAnalyzer.Models
       var startDate = DateTime.UtcNow;
 
       int prevMatchRound = 0;
-      int currentMatchRound = AllMatches[0].Round ?? 1;
+      int currentMatchRound = AllMatches.Count > 0 ? (AllMatches[0].Round ?? 0) : 0;
 
       for (int i = 1; i < AllMatches.Count; i++)
       {
@@ -191,7 +196,7 @@ namespace SportsAnalyzer.Models
       {
         Number = currentMatchRound,
         StartDate = startDate,
-        EndDate = AllMatches.Last().Date ?? DateTime.UtcNow
+        EndDate = AllMatches.Count > 0 ? (AllMatches.Last().Date ?? DateTime.UtcNow) : (DateTime.UtcNow)
       });
 
       RoundsSelectList = new MultiSelectList(
