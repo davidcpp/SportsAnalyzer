@@ -1,5 +1,4 @@
-﻿var paddingLeft, paddingRight, paddingTop, paddingBottom;
-var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
+﻿var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
 var timeIntervalsAllText = "";
 var timeIntervalsTexts = [];
 var goalsInIntervalsPercent = [];
@@ -97,7 +96,6 @@ function CreateChart() {
   PrepareChartData();
 
   var ctx = $("#myChart");
-  //var ctx = document.getElementById('myChart').getContext('2d');
   window.myChart = new Chart(ctx, {
     // The type of chart we want to create
     type: 'bar',
