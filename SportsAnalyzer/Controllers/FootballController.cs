@@ -55,10 +55,12 @@ namespace SportsAnalyzer.Controllers
     public const string DefaultLeagueId = "3";
     public const int DefaultRoundsNumber = 33;
     private const int requestsBreakMinutes = 5;
+    private const int requestsBreakSeconds = 15;
 
     /* Fields */
 
     public static DateTime lastUpdateTime;
+    public static DateTime matchesLastUpdateTime;
     public static DateTime tableLastUpdateTime;
     public static DateTime teamsLastUpdateTime;
 
@@ -66,9 +68,15 @@ namespace SportsAnalyzer.Controllers
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 
-    private static List<XMLSoccerCOM.Match> xmlLeagueMatches;
-    private static List<XMLSoccerCOM.TeamLeagueStanding> xmlLeagueStandings;
-    private static List<XMLSoccerCOM.Team> xmlTeams;
+    private static List<XMLSoccerCOM.Match> xmlLeagueMatches =
+      new List<XMLSoccerCOM.Match>();
+
+    private static List<XMLSoccerCOM.TeamLeagueStanding> xmlLeagueStandings =
+      new List<XMLSoccerCOM.TeamLeagueStanding>();
+
+    private static List<XMLSoccerCOM.Team> xmlTeams =
+      new List<XMLSoccerCOM.Team>();
+
 
     /* Constructors */
 
@@ -117,16 +125,18 @@ namespace SportsAnalyzer.Controllers
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
 
-      if (teamsLastUpdateTime == DateTime.MinValue
-        || (teamsLastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+      if ((teamsLastUpdateTime == DateTime.MinValue
+        || (DateTime.UtcNow - teamsLastUpdateTime).TotalMinutes > requestsBreakMinutes)
+        && (DateTime.UtcNow - lastUpdateTime).TotalSeconds > requestsBreakSeconds)
       {
+        lastUpdateTime = DateTime.UtcNow;
+        teamsLastUpdateTime = lastUpdateTime;
+
         xmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
         ClearDBSet(db.FootballTeams);
 
         db.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
         db.SaveChanges();
-
-        teamsLastUpdateTime = DateTime.UtcNow;
       }
 
       ViewBag.EmptyList = "List of teams is empty";
@@ -144,9 +154,13 @@ namespace SportsAnalyzer.Controllers
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
 
-      if (tableLastUpdateTime == DateTime.MinValue
-        || (tableLastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+      if ((tableLastUpdateTime == DateTime.MinValue
+        || (DateTime.UtcNow - tableLastUpdateTime).TotalMinutes > requestsBreakMinutes)
+        && (DateTime.UtcNow - lastUpdateTime).TotalSeconds > requestsBreakSeconds)
       {
+        lastUpdateTime = DateTime.UtcNow;
+        tableLastUpdateTime = lastUpdateTime;
+
         xmlLeagueStandings = _xmlSoccerRequester
           .GetLeagueStandingsBySeason(league, seasonYear);
 
@@ -154,8 +168,6 @@ namespace SportsAnalyzer.Controllers
 
         db.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
         db.SaveChanges();
-
-        tableLastUpdateTime = DateTime.UtcNow;
       }
 
       ViewBag.EmptyList = "League Table is empty";
@@ -175,13 +187,15 @@ namespace SportsAnalyzer.Controllers
     {
       if (String.IsNullOrEmpty(teamName))
       {
-        if (lastUpdateTime == DateTime.MinValue
-          || (lastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+        if ((matchesLastUpdateTime == DateTime.MinValue
+          || (DateTime.UtcNow - matchesLastUpdateTime).TotalMinutes > requestsBreakMinutes)
+          && (DateTime.UtcNow - lastUpdateTime).TotalSeconds > requestsBreakSeconds)
         {
+          lastUpdateTime = DateTime.UtcNow;
+          matchesLastUpdateTime = lastUpdateTime;
+
           xmlLeagueMatches = _xmlSoccerRequester
             .GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
-
-          lastUpdateTime = DateTime.UtcNow;
         }
 
         Statistics statistics = new Statistics(DefaultSeasonYear, DefaultLeagueFullName);
@@ -201,13 +215,17 @@ namespace SportsAnalyzer.Controllers
     public ActionResult Stats(
       [Bind(Include = "LeagueName, SeasonYear, RoundsNumbersInts")] Statistics model)
     {
-      if (lastUpdateTime == DateTime.MinValue
-        || (lastUpdateTime - DateTime.UtcNow).TotalMinutes > requestsBreakMinutes)
+      if ((matchesLastUpdateTime == DateTime.MinValue
+        || (DateTime.UtcNow - matchesLastUpdateTime).TotalMinutes > requestsBreakMinutes)
+        && (DateTime.UtcNow - lastUpdateTime).TotalSeconds > requestsBreakSeconds)
       {
+        lastUpdateTime = DateTime.UtcNow;
+        matchesLastUpdateTime = lastUpdateTime;
+
         xmlLeagueMatches = _xmlSoccerRequester.
           GetHistoricMatchesByLeagueAndSeason(model.LeagueName, model.SeasonYear);
-        lastUpdateTime = DateTime.UtcNow;
       }
+
       Statistics statistics = new Statistics(model.SeasonYear, model.LeagueName);
       statistics.SetMatches(xmlLeagueMatches);
       statistics.SetRounds(model.RoundsNumbersInts);
