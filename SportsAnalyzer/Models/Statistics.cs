@@ -168,10 +168,11 @@ namespace SportsAnalyzer.Models
     public void CreateRoundsSelectList()
     {
       Dictionary<int, bool> roundsDictionary = new Dictionary<int, bool>();
-      var startDate = DateTime.UtcNow;
 
       int prevMatchRound = 0;
       int currentMatchRound = AllMatches.Count > 0 ? (AllMatches[0].Round ?? 0) : 0;
+      var startDate = AllMatches.Count > 0 ?
+        (AllMatches[0].Date ?? DateTime.MinValue) : DateTime.MinValue;
 
       for (int i = 1; i < AllMatches.Count; i++)
       {
