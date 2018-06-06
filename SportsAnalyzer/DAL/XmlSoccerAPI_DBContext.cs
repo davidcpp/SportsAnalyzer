@@ -7,6 +7,7 @@ namespace SportsAnalyzer.DAL
   {
     public DbSet<FootballTeam> FootballTeams { get; set; }
     public DbSet<TeamLeagueStanding> LeagueTable { get; set; }
+    public DbSet<FootballMatch> LeagueMatches { get; set; }
 
     public XmlSoccerAPI_DBContext() : base("XmlSoccerAPI_DBContext")
     {
