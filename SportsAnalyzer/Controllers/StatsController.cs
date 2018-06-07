@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using SportsAnalyzer.Models;
 using SportsAnalyzer.DAL;
+using System.Linq;
 
 namespace SportsAnalyzer.Controllers
 {
@@ -57,10 +58,15 @@ namespace SportsAnalyzer.Controllers
 
         xmlLeagueMatches = _xmlSoccerRequester
           .GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
+
+        FootballController.ClearDBSet(db.LeagueMatches);
+
+        db.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
+        db.SaveChanges();
       }
 
       Statistics statistics = new Statistics(seasonYear, league, teamName);
-      statistics.SetMatches(xmlLeagueMatches);
+      statistics.SetMatches(db.LeagueMatches.ToList());
       statistics.SetRoundsRange(startRound, endRound);
       statistics.CalculateAll();
 

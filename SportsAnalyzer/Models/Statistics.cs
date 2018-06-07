@@ -45,8 +45,8 @@ namespace SportsAnalyzer.Models
 
     /* Properties */
 
-    public List<XMLSoccerCOM.Match> AllMatches { get; private set; }
-    public List<XMLSoccerCOM.Match> SelectedMatches { get; private set; }
+    public List<FootballMatch> AllMatches { get; private set; }
+    public List<FootballMatch> SelectedMatches { get; private set; }
     public List<Round> RoundsNumbers { get; set; } = new List<Round>();
     public List<int> RoundsNumbersInts { get; set; } = new List<int>();
 
@@ -136,10 +136,12 @@ namespace SportsAnalyzer.Models
       GoalsAvgAway = Round(SelectedMatches.Average((match) => match.AwayGoals.Value), 2);
 
       var regexGoalTime = new Regex("\\d{1,}");
-      foreach (var xmlMatch in SelectedMatches)
+      foreach (var match in SelectedMatches)
       {
-        string[] detailedGoals = xmlMatch.HomeGoalDetails;
-        foreach (var detailedGoal in xmlMatch.HomeGoalDetails)
+        var homeGoalDetails = match.HomeGoalDetails.Split(new char[] { ';' });
+        var awayGoalDetails = match.AwayGoalDetails.Split(new char[] { ';' });
+
+        foreach (var detailedGoal in homeGoalDetails)
         {
           if (double.TryParse(regexGoalTime.Match(detailedGoal).Value, out double goalTime))
           {
@@ -148,7 +150,7 @@ namespace SportsAnalyzer.Models
           }
         }
 
-        foreach (var detailedGoal in xmlMatch.AwayGoalDetails)
+        foreach (var detailedGoal in awayGoalDetails)
         {
           if (double.TryParse(regexGoalTime.Match(detailedGoal).Value, out double goalTime))
           {
@@ -221,7 +223,7 @@ namespace SportsAnalyzer.Models
       SetSelectedMatches();
     }
 
-    public void SetMatches(IEnumerable<XMLSoccerCOM.Match> matches)
+    public void SetMatches(IEnumerable<FootballMatch> matches)
     {
       AllMatches = matches.ToList();
       LeagueRoundsNumber = AllMatches.Select(x => x.Round).Max() ?? LeagueRoundsNumber;

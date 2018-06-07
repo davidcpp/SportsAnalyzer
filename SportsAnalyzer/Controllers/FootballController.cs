@@ -196,10 +196,15 @@ namespace SportsAnalyzer.Controllers
 
           xmlLeagueMatches = _xmlSoccerRequester
             .GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
+
+          ClearDBSet(db.LeagueMatches);
+
+          db.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
+          db.SaveChanges();
         }
 
         Statistics statistics = new Statistics(DefaultSeasonYear, DefaultLeagueFullName);
-        statistics.SetMatches(xmlLeagueMatches);
+        statistics.SetMatches(db.LeagueMatches.ToList());
         statistics.SetRoundsRange(startRound, endRound);
         statistics.CalculateAll();
 
@@ -224,10 +229,15 @@ namespace SportsAnalyzer.Controllers
 
         xmlLeagueMatches = _xmlSoccerRequester.
           GetHistoricMatchesByLeagueAndSeason(model.LeagueName, model.SeasonYear);
+
+        ClearDBSet(db.LeagueMatches);
+
+        db.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
+        db.SaveChanges();
       }
 
       Statistics statistics = new Statistics(model.SeasonYear, model.LeagueName);
-      statistics.SetMatches(xmlLeagueMatches);
+      statistics.SetMatches(db.LeagueMatches.ToList());
       statistics.SetRounds(model.RoundsNumbersInts);
       statistics.CalculateAll();
 
