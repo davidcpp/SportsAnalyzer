@@ -176,6 +176,10 @@
     <Compile Include="Migrations\201806041003215_LeagueMatches.Designer.cs">
       <DependentUpon>201806041003215_LeagueMatches.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806071946175_FootballMatchFix.cs" />
+    <Compile Include="Migrations\201806071946175_FootballMatchFix.Designer.cs">
+      <DependentUpon>201806071946175_FootballMatchFix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FootballMatch.cs" />
     <Compile Include="Models\FootballTeam.cs" />
@@ -295,6 +299,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806041003215_LeagueMatches.resx">
       <DependentUpon>201806041003215_LeagueMatches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806071946175_FootballMatchFix.resx">
+      <DependentUpon>201806071946175_FootballMatchFix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

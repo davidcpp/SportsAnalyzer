@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SportsAnalyzer.Models
 {
@@ -19,14 +20,15 @@ namespace SportsAnalyzer.Models
   {
     public int Id { get; set; }
 
+    public DateTime? Date { get; set; }
     public string AwayTeam { get; set; }
     public int? AwayGoals { get; set; }
-    public string[] AwayGoalDetails { get; set; }
+    public string AwayGoalDetails { get; set; }
     public int? Round { get; set; }
     public string League { get; set; }
     public string HomeTeam { get; set; }
     public int? HomeGoals { get; set; }
-    public string[] HomeGoalDetails { get; set; }
+    public string HomeGoalDetails { get; set; }
 
     /* Constructors */
 
@@ -41,27 +43,31 @@ namespace SportsAnalyzer.Models
 
     public void ConvertFromXmlSoccerMatch(XMLSoccerCOM.Match match)
     {
+      Date = match.Date;
+      Round = match.Round;
       AwayTeam = match.AwayTeam;
       AwayGoals = match.AwayGoals;
-      AwayGoalDetails = match.AwayGoalDetails;
+      AwayGoalDetails = string.Join(";", match.AwayGoalDetails);
       HomeTeam = match.HomeTeam;
       HomeGoals = match.HomeGoals;
-      HomeGoalDetails = match.HomeGoalDetails;
+      HomeGoalDetails = string.Join(";", match.HomeGoalDetails);
     }
 
-    public bool IsEqualToXmlMatch(XMLSoccerCOM.Match team)
+    public bool IsEqualToXmlMatch(XMLSoccerCOM.Match match)
     {
-      if (AwayTeam != team.AwayTeam)
+      if (Date != match.Date)
         return false;
-      if (AwayGoals != team.AwayGoals)
+      if (AwayTeam != match.AwayTeam)
         return false;
-      if (AwayGoalDetails != team.AwayGoalDetails)
+      if (AwayGoals != match.AwayGoals)
         return false;
-      if (HomeTeam != team.HomeTeam)
+      if (AwayGoalDetails.Equals(match.AwayGoalDetails.ToString()))
         return false;
-      if (HomeGoals != team.HomeGoals)
+      if (HomeTeam != match.HomeTeam)
         return false;
-      if (HomeGoalDetails != team.HomeGoalDetails)
+      if (HomeGoals != match.HomeGoals)
+        return false;
+      if (HomeGoalDetails.Equals(match.HomeGoalDetails.ToString()))
         return false;
 
       return true;
