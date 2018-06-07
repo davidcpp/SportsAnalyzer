@@ -188,10 +188,10 @@ namespace SportsAnalyzer.Models
         {
           Number = prevMatchRound,
           StartDate = startDate,
-          EndDate = AllMatches[i - 1].Date ?? DateTime.UtcNow
+          EndDate = AllMatches[i - 1].Date ?? DateTime.MinValue
         });
 
-        startDate = AllMatches[i].Date ?? DateTime.UtcNow;
+        startDate = AllMatches[i].Date ?? DateTime.MinValue;
         roundsDictionary[prevMatchRound] = true;
       }
 
@@ -199,7 +199,7 @@ namespace SportsAnalyzer.Models
       {
         Number = currentMatchRound,
         StartDate = startDate,
-        EndDate = AllMatches.Count > 0 ? (AllMatches.Last().Date ?? DateTime.UtcNow) : (DateTime.UtcNow)
+        EndDate = AllMatches.Count > 0 ? (AllMatches.Last().Date ?? DateTime.MinValue) : (DateTime.MinValue)
       });
 
       RoundsSelectList = new MultiSelectList(
