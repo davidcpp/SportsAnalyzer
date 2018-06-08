@@ -4,6 +4,7 @@ using System.Web.Http;
 using SportsAnalyzer.Models;
 using SportsAnalyzer.DAL;
 using System.Linq;
+using static SportsAnalyzer.Common;
 
 namespace SportsAnalyzer.Controllers
 {
@@ -12,17 +13,6 @@ namespace SportsAnalyzer.Controllers
     private XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
-
-    private const int defaultSeasonYear = FootballController.DefaultSeasonYear;
-    private const int requestsBreakMinutes = FootballController.requestsBreakMinutes;
-    private const int requestsBreakSeconds = FootballController.requestsBreakSeconds;
-
-    private const string defaultLeagueFullName = FootballController.DefaultLeagueFullName;
-    private const string defaultLeagueShortName = FootballController.DefaultLeagueShortName;
-    private const string defaultLeagueId = FootballController.DefaultLeagueId;
-
-    private static DateTime lastUpdateTime = FootballController.lastUpdateTime;
-    private static DateTime matchesLastUpdateTime = FootballController.matchesLastUpdateTime;
 
     public StatsController()
     {
@@ -39,24 +29,24 @@ namespace SportsAnalyzer.Controllers
       string teamName,
       string startRound = "1",
       string endRound = "last",
-      string league = defaultLeagueFullName,
-      int seasonYear = defaultSeasonYear)
+      string league = DefaultLeagueFullName,
+      int seasonYear = DefaultSeasonYear)
     {
-      if (league == defaultLeagueShortName || league == defaultLeagueId)
-        league = defaultLeagueFullName;
+      if (league == DefaultLeagueShortName || league == DefaultLeagueId)
+        league = DefaultLeagueFullName;
 
-      if ((matchesLastUpdateTime == DateTime.MinValue
-        || (DateTime.UtcNow - matchesLastUpdateTime).TotalMinutes > requestsBreakMinutes)
-        && (DateTime.UtcNow - lastUpdateTime).TotalSeconds > requestsBreakSeconds)
+      if ((MatchesLastUpdateTime == DateTime.MinValue
+        || (DateTime.UtcNow - MatchesLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
+        && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds)
       {
         // TODO: Extract the method from the current condition code
-        lastUpdateTime = DateTime.UtcNow;
-        matchesLastUpdateTime = lastUpdateTime;
+        LastUpdateTime = DateTime.UtcNow;
+        MatchesLastUpdateTime = LastUpdateTime;
 
         var xmlLeagueMatches = _xmlSoccerRequester
           .GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
 
-        FootballController.ClearDBSet(db.LeagueMatches);
+        ClearDBSet(db.LeagueMatches);
 
         db.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
         db.SaveChanges();

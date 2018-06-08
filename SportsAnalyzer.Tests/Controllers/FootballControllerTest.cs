@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using SportsAnalyzer.Models;
 using System.Data.Entity.Validation;
+using static SportsAnalyzer.Common;
 
 namespace SportsAnalyzer.Tests.Controllers
 {
@@ -19,12 +20,12 @@ namespace SportsAnalyzer.Tests.Controllers
     const string shortString = "a";
     const string standardString = "abcd";
 
-    const int defaultSeasonYear = FootballController.DefaultSeasonYear;
+    const int defaultSeasonYear = DefaultSeasonYear;
     const int seasonYearExample = 2001;
 
-    const string defaultLeagueShortName = FootballController.DefaultLeagueShortName;
-    const string defaultLeague = FootballController.DefaultLeagueFullName;
-    const string defaultLeagueId = FootballController.DefaultLeagueId;
+    const string defaultLeagueShortName = DefaultLeagueShortName;
+    const string defaultLeague = DefaultLeagueFullName;
+    const string defaultLeagueId = DefaultLeagueId;
     const string leagueIdExample = "league";
 
     /* Delegates */
@@ -47,8 +48,8 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.teamsLastUpdateTime = DateTime.MinValue;
-      FootballController.lastUpdateTime = DateTime.MinValue;
+      TeamsLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       // Act
       ViewResult viewResult = footballController.Teams() as ViewResult;
@@ -85,8 +86,8 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.teamsLastUpdateTime = DateTime.MinValue;
-      FootballController.lastUpdateTime = DateTime.MinValue;
+      TeamsLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       // Act
       ViewResult viewResult = footballController.Teams() as ViewResult;
@@ -112,8 +113,8 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.teamsLastUpdateTime = DateTime.MinValue;
-      FootballController.lastUpdateTime = DateTime.MinValue;
+      TeamsLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       // Act
       footballController.Teams();
@@ -143,8 +144,8 @@ namespace SportsAnalyzer.Tests.Controllers
         SetSequenceOfMockCalls<List<XMLSoccerCOM.Team>>(xmlTestList, callMockExpressions);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.teamsLastUpdateTime = DateTime.MinValue;
-      FootballController.lastUpdateTime = DateTime.MinValue;
+      TeamsLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       var listOfCallArgs = new List<(string, int?)>
       {
@@ -166,8 +167,8 @@ namespace SportsAnalyzer.Tests.Controllers
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.teamsLastUpdateTime = DateTime.UtcNow;
-      FootballController.lastUpdateTime = DateTime.UtcNow;
+      TeamsLastUpdateTime = DateTime.UtcNow;
+      LastUpdateTime = DateTime.UtcNow;
 
       // Act
       ViewResult viewResult = footballController.Teams() as ViewResult;
@@ -189,8 +190,8 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.tableLastUpdateTime = DateTime.MinValue;
-      FootballController.lastUpdateTime = DateTime.MinValue;
+      TableLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       // Act
       ViewResult viewResult = footballController.Table() as ViewResult;
@@ -225,8 +226,8 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.tableLastUpdateTime = DateTime.MinValue;
-      FootballController.lastUpdateTime = DateTime.MinValue;
+      TableLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       // Act
       ViewResult viewResult = footballController.Table() as ViewResult;
@@ -252,8 +253,8 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(xmlTestList);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.tableLastUpdateTime = DateTime.MinValue;
-      FootballController.lastUpdateTime = DateTime.MinValue;
+      TableLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       // Act
       footballController.Table();
@@ -285,8 +286,8 @@ namespace SportsAnalyzer.Tests.Controllers
           xmlTestLeagueTable, callMockExpressions);
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.tableLastUpdateTime = DateTime.MinValue;
-      FootballController.lastUpdateTime = DateTime.MinValue;
+      TableLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       var listOfCallArgs = new List<(string, int?)>
       {
@@ -308,8 +309,8 @@ namespace SportsAnalyzer.Tests.Controllers
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
 
       FootballController footballController = new FootballController(mockXmlReq.Object);
-      FootballController.tableLastUpdateTime = DateTime.UtcNow;
-      FootballController.lastUpdateTime = DateTime.UtcNow;
+      TableLastUpdateTime = DateTime.UtcNow;
+      LastUpdateTime = DateTime.UtcNow;
 
       // Act
       ViewResult viewResult = footballController.Teams() as ViewResult;

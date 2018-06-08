@@ -5,19 +5,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using static System.Math;
+using static SportsAnalyzer.Common;
 
 namespace SportsAnalyzer.Models
 {
   public class Statistics
   {
-    /* Constant Fields*/
-
-    private const double defaultMatchTime = 90.0;
-    private const double defaultNumberOfMatchIntervals = 6.0;
-    private const int defaultRoundNumbers = 33;
-    private const string defaultTeamName = "*";
-    private const string defaultLeagueName = "*";
-
     /* Fields */
 
     private double[] goalsInIntervals = null;
@@ -31,9 +24,9 @@ namespace SportsAnalyzer.Models
     }
 
     public Statistics(int seasonYear,
-                    string leagueName = defaultLeagueName,
-                    string teamName = defaultTeamName,
-                    double numberOfMatchIntervals = defaultNumberOfMatchIntervals)
+                    string leagueName = DefaultLeagueName,
+                    string teamName = DefaultTeamName,
+                    double numberOfMatchIntervals = DefaultNumberOfMatchIntervals)
     {
       SeasonYear = seasonYear;
       NumberOfMatchIntervals = numberOfMatchIntervals;
@@ -53,13 +46,13 @@ namespace SportsAnalyzer.Models
     public MultiSelectList RoundsSelectList { get; private set; }
 
     public int SeasonYear { get; set; }
-    public int LeagueRoundsNumber { get; private set; } = defaultRoundNumbers;
+    public int LeagueRoundsNumber { get; private set; } = DefaultRoundsNumber;
     public string StartRound { get; private set; }
     public string EndRound { get; private set; }
 
     public double NumberOfMatchIntervals { get; }
     public double MatchIntervalLength { get; }
-    public double MatchTime { get; } = defaultMatchTime;
+    public double MatchTime { get; } = DefaultMatchTime;
 
     [Display(Name = "League name")]
     public string LeagueName { get; set; }
@@ -234,7 +227,7 @@ namespace SportsAnalyzer.Models
       SelectedMatches = AllMatches.Select(x => x)
         .Where(x => RoundsNumbersInts.Contains(x.Round ?? 1)).ToList();
 
-      if (TeamName != defaultTeamName)
+      if (TeamName != DefaultTeamName)
       {
         SelectedMatches = SelectedMatches.Select(x => x)
           .Where((x) => x.HomeTeam == TeamName || x.AwayTeam == TeamName).ToList();
