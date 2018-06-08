@@ -24,8 +24,6 @@ namespace SportsAnalyzer.Controllers
     private static DateTime lastUpdateTime = FootballController.lastUpdateTime;
     private static DateTime matchesLastUpdateTime = FootballController.matchesLastUpdateTime;
 
-    private static List<XMLSoccerCOM.Match> xmlLeagueMatches = FootballController.xmlLeagueMatches;
-
     public StatsController()
     {
       _xmlSoccerRequester = new XmlSoccerRequester();
@@ -55,7 +53,7 @@ namespace SportsAnalyzer.Controllers
         lastUpdateTime = DateTime.UtcNow;
         matchesLastUpdateTime = lastUpdateTime;
 
-        xmlLeagueMatches = _xmlSoccerRequester
+        var xmlLeagueMatches = _xmlSoccerRequester
           .GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
 
         FootballController.ClearDBSet(db.LeagueMatches);

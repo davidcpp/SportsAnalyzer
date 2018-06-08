@@ -68,15 +68,6 @@ namespace SportsAnalyzer.Controllers
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 
-    public static List<XMLSoccerCOM.Match> xmlLeagueMatches =
-      new List<XMLSoccerCOM.Match>();
-
-    public static List<XMLSoccerCOM.TeamLeagueStanding> xmlLeagueStandings =
-      new List<XMLSoccerCOM.TeamLeagueStanding>();
-
-    public static List<XMLSoccerCOM.Team> xmlTeams =
-      new List<XMLSoccerCOM.Team>();
-
     /* Constructors */
 
     public FootballController()
@@ -131,7 +122,7 @@ namespace SportsAnalyzer.Controllers
         lastUpdateTime = DateTime.UtcNow;
         teamsLastUpdateTime = lastUpdateTime;
 
-        xmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
+        var xmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
         ClearDBSet(db.FootballTeams);
 
         db.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
@@ -160,7 +151,7 @@ namespace SportsAnalyzer.Controllers
         lastUpdateTime = DateTime.UtcNow;
         tableLastUpdateTime = lastUpdateTime;
 
-        xmlLeagueStandings = _xmlSoccerRequester
+        var xmlLeagueStandings = _xmlSoccerRequester
           .GetLeagueStandingsBySeason(league, seasonYear);
 
         ClearDBSet(db.LeagueTable);
@@ -193,7 +184,7 @@ namespace SportsAnalyzer.Controllers
           lastUpdateTime = DateTime.UtcNow;
           matchesLastUpdateTime = lastUpdateTime;
 
-          xmlLeagueMatches = _xmlSoccerRequester
+          var xmlLeagueMatches = _xmlSoccerRequester
             .GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
 
           ClearDBSet(db.LeagueMatches);
@@ -226,7 +217,7 @@ namespace SportsAnalyzer.Controllers
         lastUpdateTime = DateTime.UtcNow;
         matchesLastUpdateTime = lastUpdateTime;
 
-        xmlLeagueMatches = _xmlSoccerRequester.
+        var xmlLeagueMatches = _xmlSoccerRequester.
           GetHistoricMatchesByLeagueAndSeason(model.LeagueName, model.SeasonYear);
 
         ClearDBSet(db.LeagueMatches);
