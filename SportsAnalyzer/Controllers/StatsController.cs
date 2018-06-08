@@ -26,7 +26,6 @@ namespace SportsAnalyzer.Controllers
 
     private static List<XMLSoccerCOM.Match> xmlLeagueMatches = FootballController.xmlLeagueMatches;
 
-
     public StatsController()
     {
       _xmlSoccerRequester = new XmlSoccerRequester();

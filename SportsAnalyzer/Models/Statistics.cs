@@ -8,7 +8,6 @@ using static System.Math;
 
 namespace SportsAnalyzer.Models
 {
-
   public class Statistics
   {
     /* Constant Fields*/
@@ -64,6 +63,7 @@ namespace SportsAnalyzer.Models
 
     [Display(Name = "League name")]
     public string LeagueName { get; set; }
+
     [Display(Name = "Team name")]
     public string TeamName { get; }
 
@@ -85,9 +85,8 @@ namespace SportsAnalyzer.Models
     {
       get
       {
-        if (goalsInIntervals == null)
-          goalsInIntervals = new double[(int)NumberOfMatchIntervals];
-        return goalsInIntervals;
+        return goalsInIntervals ?? 
+          (goalsInIntervals = new double[(int)NumberOfMatchIntervals]);
       }
       set { goalsInIntervals = value; }
     }
@@ -96,9 +95,8 @@ namespace SportsAnalyzer.Models
     {
       get
       {
-        if (goalsInIntervalsPercent == null)
-          goalsInIntervalsPercent = new double[(int)NumberOfMatchIntervals];
-        return goalsInIntervalsPercent;
+        return goalsInIntervalsPercent ?? 
+          (goalsInIntervalsPercent = new double[(int)NumberOfMatchIntervals]);
       }
       set { goalsInIntervalsPercent = value; }
     }
@@ -166,7 +164,6 @@ namespace SportsAnalyzer.Models
       }
     }
 
-
     public void CreateRoundsSelectList()
     {
       Dictionary<int, bool> roundsDictionary = new Dictionary<int, bool>();
@@ -199,7 +196,8 @@ namespace SportsAnalyzer.Models
       {
         Number = currentMatchRound,
         StartDate = startDate,
-        EndDate = AllMatches.Count > 0 ? (AllMatches.Last().Date ?? DateTime.MinValue) : (DateTime.MinValue)
+        EndDate = AllMatches.Count > 0 ? 
+          (AllMatches.Last().Date ?? DateTime.MinValue) : (DateTime.MinValue)
       });
 
       RoundsSelectList = new MultiSelectList(
@@ -264,8 +262,8 @@ namespace SportsAnalyzer.Models
   {
     [Required]
     public int Number { get; set; }
+
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
   }
-
 }

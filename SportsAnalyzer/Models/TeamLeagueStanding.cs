@@ -120,7 +120,5 @@ namespace SportsAnalyzer.Models
 
       return true;
     }
-
-
   }
 }

@@ -48,7 +48,6 @@ namespace SportsAnalyzer.Models
     [Display(Name = "Wiki link")]
     public string WIKILink { get; set; }
 
-
     /* Constructors */
 
     public FootballTeam() { }
@@ -81,8 +80,5 @@ namespace SportsAnalyzer.Models
 
       return true;
     }
-
   }
-
-
 }

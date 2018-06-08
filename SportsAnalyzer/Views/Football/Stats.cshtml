@@ -57,7 +57,8 @@
             @Html.DisplayFor(model => model.GoalsAvg)
           </td>
           <td>
-            @Html.DisplayFor(model => model.GoalsAvgHome)/@Html.DisplayFor(model => model.GoalsAvgAway)
+            @Html.DisplayFor(model => model.GoalsAvgHome)/
+            @Html.DisplayFor(model => model.GoalsAvgAway)
           </td>
         </tr>
       </tbody>
@@ -112,10 +113,14 @@
       @Html.HiddenFor(model => model.SeasonYear)
 
       <div class="form-group">
-        @Html.LabelFor(model => model.RoundsSelectList,
-                                          htmlAttributes: new { @class = "" })
-        @Html.ListBoxFor(model => model.RoundsNumbersInts, Model.RoundsSelectList, new { @class = "form-control" })
-        @Html.ValidationMessageFor(i => i.RoundsSelectList, "", new { @class = "text-warning" })
+        @Html.LabelFor(model => model.RoundsSelectList, 
+          htmlAttributes: new { @class = "" })
+
+        @Html.ListBoxFor(model => model.RoundsNumbersInts, 
+          Model.RoundsSelectList, new { @class = "form-control" })
+
+        @Html.ValidationMessageFor(i => i.RoundsSelectList, "", 
+          new { @class = "text-warning" })
       </div>
       <input type="submit" value="Chose rounds" class="btn btn-primary btn-block" />
     }
@@ -128,7 +133,8 @@
 
   for (int i = 0; i < TimeIntervalsTexts.Count(); i++)
   {
-    TimeIntervalsTexts[i] = TimeIntervalsLimits[i].ToString() + "-" + TimeIntervalsLimits[i + 1].ToString();
+    TimeIntervalsTexts[i] = TimeIntervalsLimits[i].ToString() + "-" +
+      TimeIntervalsLimits[i + 1].ToString();
   }
   var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
 }
@@ -137,6 +143,7 @@
 {
   <script id="mainScript" src="~/Scripts/main.js"
           data-time-intervals-all-text='@serializer.Serialize(TimeIntervalsTexts)'
-          data-goals-in-intervals-percent='@serializer.Serialize(GoalsInIntervalsPercent)'></script>
+          data-goals-in-intervals-percent='@serializer.Serialize(GoalsInIntervalsPercent)'>
+  </script>
 }
 

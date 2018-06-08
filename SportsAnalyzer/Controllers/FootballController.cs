@@ -77,7 +77,6 @@ namespace SportsAnalyzer.Controllers
     public static List<XMLSoccerCOM.Team> xmlTeams =
       new List<XMLSoccerCOM.Team>();
 
-
     /* Constructors */
 
     public FootballController()
