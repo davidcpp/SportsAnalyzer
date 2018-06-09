@@ -50,9 +50,13 @@ namespace SportsAnalyzer
   {
     /* Constant Fields*/
 
+    public const string DefaultLeagueName = "*";
     public const string DefaultLeagueShortName = "SPL";
     public const string DefaultLeagueFullName = "Scottish Premier League";
     public const string DefaultLeagueId = "3";
+    public const string DefaultTeamName = "*";
+
+
     public const int DefaultSeasonYear = 2017;
     public const int DefaultRoundsNumber = 33;
     public const int RequestsBreakMinutes = 5;
@@ -60,8 +64,6 @@ namespace SportsAnalyzer
 
     public const double DefaultMatchTime = 90.0;
     public const double DefaultNumberOfMatchIntervals = 6.0;
-    public const string DefaultTeamName = "*";
-    public const string DefaultLeagueName = "*";
 
     /* Fields */
 
