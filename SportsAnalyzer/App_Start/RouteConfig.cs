@@ -16,14 +16,13 @@ namespace SportsAnalyzer
       // TODO: This route is default ony for developing phase and tests
       routes.MapRoute(
           name: "FootballController",
-          url: "{controller}/{action}/{startRound}/{endRound}/{teamName}/{league}/{seasonYear}",
+          url: "{controller}/{action}/{startRound}/{endRound}/{league}/{seasonYear}",
           defaults: new
           {
             controller = "Home",
             action = "Index",
             startRound = UrlParameter.Optional,
             endRound = UrlParameter.Optional,
-            teamName = UrlParameter.Optional,
             league = UrlParameter.Optional,
             seasonYear = UrlParameter.Optional
           }

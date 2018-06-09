@@ -23,7 +23,7 @@ namespace SportsAnalyzer.Controllers
 
     public FootballController(IXmlSoccerRequester xmlSoccerRequester)
     {
-      _xmlSoccerRequester = xmlSoccerRequester;     
+      _xmlSoccerRequester = xmlSoccerRequester;
     }
 
     /* Methods */
@@ -105,20 +105,15 @@ namespace SportsAnalyzer.Controllers
     public ActionResult Stats(
       string startRound = "1",
       string endRound = "last",
-      string teamName = "",
       string league = DefaultLeagueFullName,
       int seasonYear = DefaultSeasonYear)
     {
-      if (String.IsNullOrEmpty(teamName))
+      if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
-        if (IsDataOutOfDate(MatchesLastUpdateTime))
-        {
-          RefreshMatchesData(league, seasonYear, _xmlSoccerRequester, db);
-        }
-        var statistics = CalcStats(league, seasonYear, startRound, endRound, db);
-        return View(statistics);
+        RefreshMatchesData(league, seasonYear, _xmlSoccerRequester, db);
       }
-      return View();
+      var statistics = CalcStats(league, seasonYear, startRound, endRound, db);
+      return View(statistics);
     }
 
     // Action for Multiselect list form
