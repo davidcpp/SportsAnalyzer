@@ -1,9 +1,14 @@
-﻿using System;
+﻿using SportsAnalyzer.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 
 namespace SportsAnalyzer
 {
+  using IXmlSR = SportsAnalyzer.IXmlSoccerRequester;
+  using XmlSocDB = SportsAnalyzer.DAL.XmlSoccerAPI_DBContext;
+
   public interface IXmlSoccerRequester
   {
     List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
@@ -71,6 +76,54 @@ namespace SportsAnalyzer
       {
         dbList.Remove(dbItem);
       }
+    }
+
+    public static bool IsDataOutOfDate(DateTime dataLastUpdateTime)
+    {
+      return (dataLastUpdateTime == DateTime.MinValue
+        || (DateTime.UtcNow - dataLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
+        && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds;
+    }
+
+    public static void RefreshMatchesData(string leagueName,
+      int seasonYear,
+      IXmlSR xmlSocReq,
+      XmlSocDB xmlSocDB)
+    {
+      LastUpdateTime = DateTime.UtcNow;
+      MatchesLastUpdateTime = LastUpdateTime;
+
+      var xmlLeagueMatches = xmlSocReq.
+        GetHistoricMatchesByLeagueAndSeason(leagueName, seasonYear);
+
+      ClearDBSet(xmlSocDB.LeagueMatches);
+
+      xmlSocDB.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
+      xmlSocDB.SaveChanges();
+    }
+
+    public static Statistics CalcStats(string leagueName,
+      int seasonYear,
+      string startRound,
+      string endRound,
+      XmlSocDB xmlSocDB)
+    {
+      var statistics = new Statistics(seasonYear, leagueName);
+      statistics.SetMatches(xmlSocDB.LeagueMatches.ToList());
+      statistics.SetRoundsRange(startRound, endRound);
+      statistics.CalculateAll();
+      statistics.CreateRoundsSelectList();
+      return statistics;
+    }
+
+    public static Statistics CalcStatsForRounds(Statistics model, XmlSocDB xmlSocDB)
+    {
+      var statistics = new Statistics(model.SeasonYear, model.LeagueName);
+      statistics.SetMatches(xmlSocDB.LeagueMatches.ToList());
+      statistics.SetRounds(model.RoundsNumbersInts);
+      statistics.CalculateAll();
+      statistics.CreateRoundsSelectList();
+      return statistics;
     }
   }
 }

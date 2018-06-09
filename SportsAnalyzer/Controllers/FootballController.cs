@@ -53,9 +53,7 @@ namespace SportsAnalyzer.Controllers
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
 
-      if ((TeamsLastUpdateTime == DateTime.MinValue
-        || (DateTime.UtcNow - TeamsLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
-        && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds)
+      if (IsDataOutOfDate(TeamsLastUpdateTime))
       {
         LastUpdateTime = DateTime.UtcNow;
         TeamsLastUpdateTime = LastUpdateTime;
@@ -82,9 +80,7 @@ namespace SportsAnalyzer.Controllers
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
 
-      if ((TableLastUpdateTime == DateTime.MinValue
-        || (DateTime.UtcNow - TableLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
-        && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds)
+      if (IsDataOutOfDate(TableLastUpdateTime))
       {
         LastUpdateTime = DateTime.UtcNow;
         TableLastUpdateTime = LastUpdateTime;
@@ -115,28 +111,11 @@ namespace SportsAnalyzer.Controllers
     {
       if (String.IsNullOrEmpty(teamName))
       {
-        if ((MatchesLastUpdateTime == DateTime.MinValue
-          || (DateTime.UtcNow - MatchesLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
-          && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds)
+        if (IsDataOutOfDate(MatchesLastUpdateTime))
         {
-          LastUpdateTime = DateTime.UtcNow;
-          MatchesLastUpdateTime = LastUpdateTime;
-
-          var xmlLeagueMatches = _xmlSoccerRequester
-            .GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
-
-          ClearDBSet(db.LeagueMatches);
-
-          db.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
-          db.SaveChanges();
+          RefreshMatchesData(league, seasonYear, _xmlSoccerRequester, db);
         }
-
-        Statistics statistics = new Statistics(DefaultSeasonYear, DefaultLeagueFullName);
-        statistics.SetMatches(db.LeagueMatches.ToList());
-        statistics.SetRoundsRange(startRound, endRound);
-        statistics.CalculateAll();
-
-        statistics.CreateRoundsSelectList();
+        var statistics = CalcStats(league, seasonYear, startRound, endRound, db);
         return View(statistics);
       }
       return View();
@@ -148,28 +127,11 @@ namespace SportsAnalyzer.Controllers
     public ActionResult Stats(
       [Bind(Include = "LeagueName, SeasonYear, RoundsNumbersInts")] Statistics model)
     {
-      if ((MatchesLastUpdateTime == DateTime.MinValue
-        || (DateTime.UtcNow - MatchesLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
-        && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds)
+      if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
-        LastUpdateTime = DateTime.UtcNow;
-        MatchesLastUpdateTime = LastUpdateTime;
-
-        var xmlLeagueMatches = _xmlSoccerRequester.
-          GetHistoricMatchesByLeagueAndSeason(model.LeagueName, model.SeasonYear);
-
-        ClearDBSet(db.LeagueMatches);
-
-        db.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
-        db.SaveChanges();
+        RefreshMatchesData(model.LeagueName, model.SeasonYear, _xmlSoccerRequester, db);
       }
-
-      Statistics statistics = new Statistics(model.SeasonYear, model.LeagueName);
-      statistics.SetMatches(db.LeagueMatches.ToList());
-      statistics.SetRounds(model.RoundsNumbersInts);
-      statistics.CalculateAll();
-
-      statistics.CreateRoundsSelectList();
+      var statistics = CalcStatsForRounds(model, db);
       return View(statistics);
     }
   }
