@@ -1,8 +1,46 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 
 namespace SportsAnalyzer
 {
+  public interface IXmlSoccerRequester
+  {
+    List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
+      string league, int seasonStartYear);
+
+    List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(
+      string league, int seasonStartYear);
+
+    List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
+      string league, int seasonStartYear);
+  }
+
+  public class XmlSoccerRequester : IXmlSoccerRequester
+  {
+    private const string apiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
+    private XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(apiKey);
+
+    public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
+      string league, int seasonStartYear)
+    {
+      return _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonStartYear);
+    }
+
+    public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(
+      string league, int seasonStartYear)
+    {
+      return _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonStartYear);
+    }
+
+    public List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
+      string league, int seasonStartYear)
+    {
+      return _xmlSoccerRequester
+        .GetHistoricMatchesByLeagueAndSeason(league, seasonStartYear);
+    }
+  }
+
   public static class Common
   {
     /* Constant Fields*/
