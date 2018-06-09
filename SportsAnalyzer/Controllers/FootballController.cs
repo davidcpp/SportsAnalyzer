@@ -92,6 +92,9 @@ namespace SportsAnalyzer.Controllers
       string league = DefaultLeagueFullName,
       int seasonYear = DefaultSeasonYear)
     {
+      if (league == DefaultLeagueShortName || league == DefaultLeagueId)
+        league = DefaultLeagueFullName;
+
       if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
         RefreshMatchesData(league, seasonYear, _xmlSoccerRequester, db);
@@ -106,6 +109,9 @@ namespace SportsAnalyzer.Controllers
     public ActionResult Stats(
       [Bind(Include = "LeagueName, SeasonYear, RoundsNumbersInts")] Statistics model)
     {
+      if (model.LeagueName == DefaultLeagueShortName || model.LeagueName == DefaultLeagueId)
+        model.LeagueName = DefaultLeagueFullName;
+
       if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
         RefreshMatchesData(model.LeagueName, model.SeasonYear, _xmlSoccerRequester, db);
