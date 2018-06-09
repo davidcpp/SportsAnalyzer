@@ -55,14 +55,7 @@ namespace SportsAnalyzer.Controllers
 
       if (IsDataOutOfDate(TeamsLastUpdateTime))
       {
-        LastUpdateTime = DateTime.UtcNow;
-        TeamsLastUpdateTime = LastUpdateTime;
-
-        var xmlTeams = _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonYear);
-        ClearDBSet(db.FootballTeams);
-
-        db.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
-        db.SaveChanges();
+        RefreshTeamsData(league, seasonYear, _xmlSoccerRequester, db);
       }
 
       ViewBag.EmptyList = "List of teams is empty";
@@ -82,16 +75,7 @@ namespace SportsAnalyzer.Controllers
 
       if (IsDataOutOfDate(TableLastUpdateTime))
       {
-        LastUpdateTime = DateTime.UtcNow;
-        TableLastUpdateTime = LastUpdateTime;
-
-        var xmlLeagueStandings = _xmlSoccerRequester
-          .GetLeagueStandingsBySeason(league, seasonYear);
-
-        ClearDBSet(db.LeagueTable);
-
-        db.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
-        db.SaveChanges();
+        RefreshTableData(league, seasonYear, _xmlSoccerRequester, db);
       }
 
       ViewBag.EmptyList = "League Table is empty";

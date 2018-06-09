@@ -87,6 +87,38 @@ namespace SportsAnalyzer
         && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds;
     }
 
+    public static void RefreshTeamsData(string league,
+      int seasonYear,
+      IXmlSR xmlSocReq,
+      XmlSocDB xmlSocDB)
+    {
+      LastUpdateTime = DateTime.UtcNow;
+      TeamsLastUpdateTime = LastUpdateTime;
+
+      var xmlTeams = xmlSocReq.GetAllTeamsByLeagueAndSeason(league, seasonYear);
+      ClearDBSet(xmlSocDB.FootballTeams);
+
+      xmlSocDB.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
+      xmlSocDB.SaveChanges();
+    }
+
+    public static void RefreshTableData(string league,
+      int seasonYear,
+      IXmlSR xmlSocReq,
+      XmlSocDB xmlSocDB)
+    {
+      LastUpdateTime = DateTime.UtcNow;
+      TableLastUpdateTime = LastUpdateTime;
+
+      var xmlLeagueStandings = xmlSocReq
+        .GetLeagueStandingsBySeason(league, seasonYear);
+
+      ClearDBSet(xmlSocDB.LeagueTable);
+
+      xmlSocDB.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
+      xmlSocDB.SaveChanges();
+    }
+
     public static void RefreshMatchesData(string leagueName,
       int seasonYear,
       IXmlSR xmlSocReq,
