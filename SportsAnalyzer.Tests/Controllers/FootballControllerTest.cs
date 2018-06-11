@@ -16,21 +16,21 @@ namespace SportsAnalyzer.Tests.Controllers
   {
     /* Fields */
 
-    const int numberOfTeams = 12;
-    const string shortString = "a";
-    const string standardString = "abcd";
+    private const int numberOfTeams = 12;
+    private const string shortString = "a";
+    private const string standardString = "abcd";
 
-    const int defaultSeasonYear = DefaultSeasonYear;
-    const int seasonYearExample = 2001;
+    private const int defaultSeasonYear = DefaultSeasonYear;
+    private const int seasonYearExample = 2001;
 
-    const string defaultLeagueShortName = DefaultLeagueShortName;
-    const string defaultLeague = DefaultLeagueFullName;
-    const string defaultLeagueId = DefaultLeagueId;
-    const string leagueIdExample = "league";
+    private const string defaultLeagueShortName = DefaultLeagueShortName;
+    private const string defaultLeague = DefaultLeagueFullName;
+    private const string defaultLeagueId = DefaultLeagueId;
+    private const string leagueIdExample = "league";
 
     /* Delegates */
 
-    delegate ActionResult FootballControllerAction(
+    private delegate ActionResult FootballControllerAction(
       string league = defaultLeague,
       int seasonYear = defaultSeasonYear);
 
