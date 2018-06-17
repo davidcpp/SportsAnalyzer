@@ -2,6 +2,7 @@
 var timeIntervalsAllText = "";
 var timeIntervalsTexts = [];
 var goalsInIntervalsPercent = [];
+var selectedRounds = [];
 var webApiUri = 'api/stats';
 
 var myChartColors = [window.chartColors.blue,
@@ -29,8 +30,18 @@ function UpdateChart(chart, chartDisplaySize) {
   window.myChart.update();
 }
 
+function ConfirmSelectedRounds() {
+  var roundsSize = selectedRounds.length;
+  for (var i = 0; i < roundsSize; i++) {
+    selectedRounds.pop();
+  }
+  $("#roundsList :selected").each(function () {
+    selectedRounds.push($(this).val());
+  });
+}
+
 function AddChartDataset(teamName, id) {
-  $.getJSON(webApiUri + '/' + teamName)
+  $.post(webApiUri, { "Rounds": selectedRounds, "TeamName": teamName }, null, "json")
     .done(function (data) {
       goalsInIntervalsPercent[id] = data;
 
@@ -184,6 +195,7 @@ function CreateChart() {
 
 $(document).ready(function () {
   CreateChart();
+  ConfirmSelectedRounds();
 });
 
 $(".form-check-input").change(function () {
@@ -195,5 +207,31 @@ $(".form-check-input").change(function () {
   }
   else {
     RemoveChartDataset(teamName);
+  }
+});
+
+function GetChartData(index, teamName) {
+  $.post(webApiUri, { "Rounds": selectedRounds, "TeamName": teamName }, null, "json")
+    .done(function (newData) {
+      window.myChart.data.datasets[index].data = newData;
+      window.myChart.update();
+    })
+    .fail(function (jqXHR, textStatus, err) {
+      console.log('Error: ' + err);
+    });
+}
+
+$("#changeRounds").click(function () {
+  ConfirmSelectedRounds();
+
+  for (var i = 0; i < window.myChart.data.datasets.length; i++) {
+    var datasetData = window.myChart.data.datasets[i].data;
+
+    var teamName = "*";
+    if (window.myChart.data.datasets[i].label !== 'Scottish Premier League') {
+      var teamName = window.myChart.data.datasets[i].label;
+    }
+
+    GetChartData(i, teamName);
   }
 });

@@ -24,16 +24,13 @@ namespace SportsAnalyzer.Controllers
       _xmlSoccerRequester = xmlSoccerRequester;
     }
 
-    [HttpGet]
-    public IHttpActionResult GetDataset(
-      string teamName,
-      string startRound = "1",
-      string endRound = "last",
-      string league = DefaultLeagueFullName,
-      int seasonYear = DefaultSeasonYear)
+    [HttpPost]
+    public IHttpActionResult GetDataset(StatsRequestModel statsRequest)
     {
-      if (league == DefaultLeagueShortName || league == DefaultLeagueId)
-        league = DefaultLeagueFullName;
+      Statistics stats = new Statistics(teamName: statsRequest.TeamName);
+
+      if (stats.LeagueName == DefaultLeagueShortName || stats.LeagueName == DefaultLeagueId)
+        stats.LeagueName = DefaultLeagueFullName;
 
       if ((MatchesLastUpdateTime == DateTime.MinValue
         || (DateTime.UtcNow - MatchesLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
@@ -44,20 +41,24 @@ namespace SportsAnalyzer.Controllers
         MatchesLastUpdateTime = LastUpdateTime;
 
         var xmlLeagueMatches = _xmlSoccerRequester
-          .GetHistoricMatchesByLeagueAndSeason(league, seasonYear);
+          .GetHistoricMatchesByLeagueAndSeason(stats.LeagueName, stats.SeasonYear);
 
         ClearDBSet(db.LeagueMatches);
 
         db.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
         db.SaveChanges();
       }
+      stats.SetMatches(db.LeagueMatches.ToList());
+      stats.SetRounds(statsRequest.Rounds.ToList());
+      stats.CalculateAll();
 
-      Statistics statistics = new Statistics(seasonYear, league, teamName);
-      statistics.SetMatches(db.LeagueMatches.ToList());
-      statistics.SetRoundsRange(startRound, endRound);
-      statistics.CalculateAll();
+      return Ok(stats.GoalsInIntervalsPercent);
+    }
 
-      return Ok(statistics.GoalsInIntervalsPercent);
+    public class StatsRequestModel
+    {
+      public int[] Rounds { get; set; }
+      public string TeamName { get; set; }
     }
   }
 }

@@ -23,7 +23,7 @@ namespace SportsAnalyzer.Models
     {
     }
 
-    public Statistics(int seasonYear,
+    public Statistics(int seasonYear = DefaultSeasonYear,
                     string leagueName = DefaultLeagueName,
                     string teamName = DefaultTeamName,
                     double numberOfMatchIntervals = DefaultNumberOfMatchIntervals)

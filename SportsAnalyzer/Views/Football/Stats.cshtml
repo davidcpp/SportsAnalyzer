@@ -79,7 +79,7 @@
       Select team
     </h4>
     <hr class="hr-col" />
-    <fieldset>
+    <fieldset id="teamsChecks">
       <legend>
         Teams
       </legend>
@@ -105,25 +105,17 @@
       Select rounds
     </h4>
     <hr class="hr-col" />
-    @using (Html.BeginForm("Stats", "Football", FormMethod.Post, new { @class = "" }))
-    {
-      @Html.AntiForgeryToken()
-      @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-      @Html.HiddenFor(model => model.LeagueName)
-      @Html.HiddenFor(model => model.SeasonYear)
+    <div class="form-group">
+      @Html.LabelFor(model => model.RoundsSelectList,
+        htmlAttributes: new { @class = "" })
 
-      <div class="form-group">
-        @Html.LabelFor(model => model.RoundsSelectList, 
-          htmlAttributes: new { @class = "" })
+      @Html.ListBoxFor(model => model.RoundsNumbersInts,
+        Model.RoundsSelectList, new { @class = "form-control", @id = "roundsList" })
 
-        @Html.ListBoxFor(model => model.RoundsNumbersInts, 
-          Model.RoundsSelectList, new { @class = "form-control" })
-
-        @Html.ValidationMessageFor(i => i.RoundsSelectList, "", 
-          new { @class = "text-warning" })
-      </div>
-      <input type="submit" value="Chose rounds" class="btn btn-primary btn-block" />
-    }
+      @Html.ValidationMessageFor(i => i.RoundsSelectList, "",
+        new { @class = "text-warning" })
+    </div>
+    <input type="button" value="Chose rounds" class="btn btn-primary btn-block" id="changeRounds" />
   </div>
 </div>
 @{
