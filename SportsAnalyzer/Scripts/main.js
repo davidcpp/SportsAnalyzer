@@ -1,7 +1,7 @@
 ﻿var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
 var timeIntervalsAllText = "";
 var timeIntervalsTexts = [];
-var goalsInIntervalsPercent = [];
+var goalsInIntervalsPercent;
 var selectedRounds = [];
 var webApiUri = 'api/stats';
 
@@ -13,7 +13,7 @@ window.chartColors.yellow];
 // Getting data of the Model passed from the Stats view
 
 timeIntervalsAllText = $("#mainScript").attr("data-time-intervals-all-text");
-goalsInIntervalsPercent[0] = eval($("#mainScript").attr("data-goals-in-intervals-percent"));
+goalsInIntervalsPercent = eval($("#mainScript").attr("data-goals-in-intervals-percent"));
 
 
 function RemoveChartDataset(teamName) {
@@ -43,14 +43,13 @@ function ConfirmSelectedRounds() {
 function AddChartDataset(teamName, id) {
   $.post(webApiUri, { "Rounds": selectedRounds, "TeamName": teamName }, null, "json")
     .done(function (data) {
-      goalsInIntervalsPercent[id] = data;
 
       var dataset = {
         label: teamName,
         backgroundColor: color(myChartColors[id]).alpha(0.5).rgbString(),
         borderColor: myChartColors[id],
         borderWidth: 1,
-        data: goalsInIntervalsPercent[id]
+        data: data
       };
 
       window.myChart.data.datasets.push(dataset);
@@ -118,7 +117,7 @@ function CreateChart() {
         backgroundColor: color(myChartColors[0]).alpha(0.5).rgbString(),
         borderColor: myChartColors[0],
         borderWidth: 1,
-        data: goalsInIntervalsPercent[0]
+        data: goalsInIntervalsPercent
       }]
     },
     // Configuration options go here
