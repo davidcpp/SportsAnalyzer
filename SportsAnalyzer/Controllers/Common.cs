@@ -150,14 +150,13 @@ namespace SportsAnalyzer
       return statistics;
     }
 
-    public static Statistics CalcStatsForRounds(Statistics model, XmlSocDB xmlSocDB)
+    public static void CalcStatsForRounds(Statistics stats,
+      XmlSocDB xmlSocDB,
+      IEnumerable<int> selectedRounds)
     {
-      var statistics = new Statistics(model.SeasonYear, model.LeagueName);
-      statistics.SetMatches(xmlSocDB.LeagueMatches.ToList());
-      statistics.SetRounds(model.RoundsNumbersInts);
-      statistics.CalculateAll();
-      statistics.CreateRoundsSelectList();
-      return statistics;
+      stats.SetMatches(xmlSocDB.LeagueMatches.ToList());
+      stats.SetRounds(selectedRounds);
+      stats.CalculateAll();
     }
   }
 }

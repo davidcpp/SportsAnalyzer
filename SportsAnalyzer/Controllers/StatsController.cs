@@ -32,25 +32,11 @@ namespace SportsAnalyzer.Controllers
       if (stats.LeagueName == DefaultLeagueShortName || stats.LeagueName == DefaultLeagueId)
         stats.LeagueName = DefaultLeagueFullName;
 
-      if ((MatchesLastUpdateTime == DateTime.MinValue
-        || (DateTime.UtcNow - MatchesLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
-        && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds)
+      if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
-        // TODO: Extract the method from the current condition code
-        LastUpdateTime = DateTime.UtcNow;
-        MatchesLastUpdateTime = LastUpdateTime;
-
-        var xmlLeagueMatches = _xmlSoccerRequester
-          .GetHistoricMatchesByLeagueAndSeason(stats.LeagueName, stats.SeasonYear);
-
-        ClearDBSet(db.LeagueMatches);
-
-        db.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
-        db.SaveChanges();
+        RefreshMatchesData(stats.LeagueName, stats.SeasonYear, _xmlSoccerRequester, db);
       }
-      stats.SetMatches(db.LeagueMatches.ToList());
-      stats.SetRounds(statsRequest.Rounds.ToList());
-      stats.CalculateAll();
+      CalcStatsForRounds(stats, db, statsRequest.Rounds.ToList());
 
       return Ok(stats.GoalsInIntervalsPercent);
     }
