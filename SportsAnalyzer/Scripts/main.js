@@ -52,6 +52,8 @@ function AddChartDataset(teamName, id) {
         data: data
       };
 
+      // calling RemoveChartDataset method in case of delay in receiving results from WebApi
+      RemoveChartDataset(teamName);
       window.myChart.data.datasets.push(dataset);
       window.myChart.update();
     })
