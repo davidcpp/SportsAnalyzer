@@ -45,7 +45,7 @@ namespace SportsAnalyzer.Controllers
       {
         RefreshMatchesData(stats.LeagueName, stats.SeasonYear, _xmlSoccerRequester, db);
       }
-      CalcStatsForRounds(stats, db, statsRequest.Rounds.ToList());
+      stats.CalcStatsForRounds(db, statsRequest.Rounds.ToList());
 
       return Ok(stats.GoalsInIntervalsPercent);
     }

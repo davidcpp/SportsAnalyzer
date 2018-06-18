@@ -99,8 +99,10 @@ namespace SportsAnalyzer.Controllers
       {
         RefreshMatchesData(league, seasonYear, _xmlSoccerRequester, db);
       }
-      var statistics = CalcStats(league, seasonYear, startRound, endRound, db);
-      return View(statistics);
+      var stats = new Statistics(seasonYear, league);
+      stats.CalcStats(db, startRound, endRound);
+      stats.CreateRoundsSelectList();
+      return View(stats);
     }
   }
 }

@@ -136,21 +136,17 @@ namespace SportsAnalyzer
       xmlSocDB.SaveChanges();
     }
 
-    public static Statistics CalcStats(string leagueName,
-      int seasonYear,
+    public static void CalcStats(this Statistics statistics,
+      XmlSocDB xmlSocDB,
       string startRound,
-      string endRound,
-      XmlSocDB xmlSocDB)
+      string endRound)
     {
-      var statistics = new Statistics(seasonYear, leagueName);
       statistics.SetMatches(xmlSocDB.LeagueMatches.ToList());
       statistics.SetRoundsRange(startRound, endRound);
       statistics.CalculateAll();
-      statistics.CreateRoundsSelectList();
-      return statistics;
     }
 
-    public static void CalcStatsForRounds(Statistics stats,
+    public static void CalcStatsForRounds(this Statistics stats,
       XmlSocDB xmlSocDB,
       IEnumerable<int> selectedRounds)
     {
