@@ -102,22 +102,5 @@ namespace SportsAnalyzer.Controllers
       var statistics = CalcStats(league, seasonYear, startRound, endRound, db);
       return View(statistics);
     }
-
-    // Action for Multiselect list form
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Stats(
-      [Bind(Include = "LeagueName, SeasonYear, RoundsNumbersInts")] Statistics model)
-    {
-      if (model.LeagueName == DefaultLeagueShortName || model.LeagueName == DefaultLeagueId)
-        model.LeagueName = DefaultLeagueFullName;
-
-      if (IsDataOutOfDate(MatchesLastUpdateTime))
-      {
-        RefreshMatchesData(model.LeagueName, model.SeasonYear, _xmlSoccerRequester, db);
-      }
-      var statistics = CalcStatsForRounds(model, db);
-      return View(statistics);
-    }
   }
 }
