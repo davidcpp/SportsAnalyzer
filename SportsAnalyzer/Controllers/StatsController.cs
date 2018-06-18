@@ -24,6 +24,15 @@ namespace SportsAnalyzer.Controllers
       _xmlSoccerRequester = xmlSoccerRequester;
     }
 
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        db.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
     [HttpPost]
     public IHttpActionResult GetDataset(StatsRequestModel statsRequest)
     {
