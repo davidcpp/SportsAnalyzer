@@ -1,5 +1,4 @@
 ﻿var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
-var timeIntervalsAllText = "";
 var timeIntervalsTexts = [];
 var goalsInIntervalsPercent;
 var selectedRounds = [];
@@ -13,7 +12,7 @@ window.chartColors.yellow];
 
 // Getting data of the Model passed from the Stats view
 
-timeIntervalsAllText = $("#mainScript").attr("data-time-intervals-all-text");
+timeIntervalsTexts = eval($("#mainScript").attr("data-time-intervals-all-text"));
 goalsInIntervalsPercent = eval($("#mainScript").attr("data-goals-in-intervals-percent"));
 leagueName = eval($("#mainScript").attr("data-league-name"));
 seasonYear = eval($("#mainScript").attr("data-season-year"));
@@ -107,9 +106,6 @@ function UpdateChartFontSizes(chart, chartSize) {
 
 function PrepareChartData() {
   color = Chart.helpers.color;
-  timeIntervalsAllText = timeIntervalsAllText.substring(1, timeIntervalsAllText.length - 1);
-  timeIntervalsAllText = timeIntervalsAllText.replace(new RegExp('&quot;', 'g'), '');
-  timeIntervalsTexts = timeIntervalsAllText.split(",");
 }
 
 function OnResizeChart(chart, chartSize) {
