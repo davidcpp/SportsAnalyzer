@@ -4,6 +4,7 @@ var timeIntervalsTexts = [];
 var goalsInIntervalsPercent;
 var selectedRounds = [];
 var webApiUri = 'api/stats';
+var leagueName, seasonYear;
 
 var myChartColors = [window.chartColors.blue,
 window.chartColors.red,
@@ -14,7 +15,8 @@ window.chartColors.yellow];
 
 timeIntervalsAllText = $("#mainScript").attr("data-time-intervals-all-text");
 goalsInIntervalsPercent = eval($("#mainScript").attr("data-goals-in-intervals-percent"));
-
+leagueName = eval($("#mainScript").attr("data-league-name"));
+seasonYear = eval($("#mainScript").attr("data-season-year"));
 
 function RemoveChartDataset(teamName) {
   for (var i = 0; i < window.myChart.data.datasets.length; i++) {
@@ -40,8 +42,18 @@ function ConfirmSelectedRounds() {
   });
 }
 
+function GetStatsRequestData(teamName) {
+  return {
+    "TeamName": teamName,
+    "LeagueName": leagueName,
+    "SeasonYear": seasonYear,
+    "Rounds": selectedRounds
+  };
+}
+
 function AddChartDataset(teamName, id) {
-  $.post(webApiUri, { "Rounds": selectedRounds, "TeamName": teamName }, null, "json")
+  var statsRequestData = GetStatsRequestData(teamName);
+  $.post(webApiUri, statsRequestData, null, "json")
     .done(function (data) {
 
       var dataset = {
@@ -115,7 +127,7 @@ function CreateChart() {
     data: {
       labels: timeIntervalsTexts,
       datasets: [{
-        label: 'Scottish Premier League',
+        label: leagueName,
         backgroundColor: color(myChartColors[0]).alpha(0.5).rgbString(),
         borderColor: myChartColors[0],
         borderWidth: 1,
@@ -212,7 +224,8 @@ $(".form-check-input").change(function () {
 });
 
 function GetChartData(index, teamName) {
-  $.post(webApiUri, { "Rounds": selectedRounds, "TeamName": teamName }, null, "json")
+  var statsRequestData = GetStatsRequestData(teamName);
+  $.post(webApiUri, statsRequestData, null, "json")
     .done(function (newData) {
       window.myChart.data.datasets[index].data = newData;
       window.myChart.update();
@@ -229,7 +242,7 @@ $("#changeRounds").click(function () {
     var datasetData = window.myChart.data.datasets[i].data;
 
     var teamName = "*";
-    if (window.myChart.data.datasets[i].label !== 'Scottish Premier League') {
+    if (window.myChart.data.datasets[i].label !== leagueName) {
       var teamName = window.myChart.data.datasets[i].label;
     }
 

@@ -36,15 +36,22 @@ namespace SportsAnalyzer.Controllers
     [HttpPost]
     public IHttpActionResult GetDataset(StatsRequestModel statsRequest)
     {
-      Statistics stats = new Statistics(teamName: statsRequest.TeamName);
-
-      if (stats.LeagueName == DefaultLeagueShortName || stats.LeagueName == DefaultLeagueId)
-        stats.LeagueName = DefaultLeagueFullName;
+      if (statsRequest.LeagueName == DefaultLeagueShortName
+        || statsRequest.LeagueName == DefaultLeagueId)
+      {
+        statsRequest.LeagueName = DefaultLeagueFullName;
+      }
 
       if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
-        RefreshMatchesData(stats.LeagueName, stats.SeasonYear, _xmlSoccerRequester, db);
+        RefreshMatchesData(statsRequest.LeagueName,
+          statsRequest.SeasonYear,
+          _xmlSoccerRequester,
+          db);
       }
+      Statistics stats = new Statistics(statsRequest.SeasonYear,
+        statsRequest.LeagueName,
+        statsRequest.TeamName);
       stats.CalcStatsForRounds(db, statsRequest.Rounds.ToList());
 
       return Ok(stats.GoalsInIntervalsPercent);
@@ -54,6 +61,8 @@ namespace SportsAnalyzer.Controllers
     {
       public int[] Rounds { get; set; }
       public string TeamName { get; set; }
+      public string LeagueName { get; set; }
+      public int SeasonYear { get; set; }
     }
   }
 }

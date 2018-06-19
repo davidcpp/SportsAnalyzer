@@ -135,7 +135,9 @@
 {
   <script id="mainScript" src="~/Scripts/main.js"
           data-time-intervals-all-text='@serializer.Serialize(TimeIntervalsTexts)'
-          data-goals-in-intervals-percent='@serializer.Serialize(GoalsInIntervalsPercent)'>
+          data-goals-in-intervals-percent='@serializer.Serialize(GoalsInIntervalsPercent)'
+          data-league-name='@serializer.Serialize(Model.LeagueName)'
+          data-season-year='@serializer.Serialize(Model.SeasonYear)'>
   </script>
 }
 
