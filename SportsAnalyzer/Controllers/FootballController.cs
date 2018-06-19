@@ -85,7 +85,7 @@ namespace SportsAnalyzer.Controllers
       return View(db.LeagueTable.ToList());
     }
 
-    // GET: Football/Stats/{startRound}/{endRound}/{teamName}/{league}/{seasonYear}
+    // GET: Football/Stats/{startRound}/{endRound}/{league}/{seasonYear}
     public ActionResult Stats(
       string startRound = "1",
       string endRound = "last",
