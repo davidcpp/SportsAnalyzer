@@ -11,7 +11,8 @@ namespace SportsAnalyzer.Models
       var list = new List<TeamLeagueStanding>();
       foreach (var xmlTeamLeagueStanding in xmlList)
       {
-        list.Add(new TeamLeagueStanding(xmlTeamLeagueStanding));
+        if (xmlTeamLeagueStanding != null)
+          list.Add(new TeamLeagueStanding(xmlTeamLeagueStanding));
       }
       return list;
     }
@@ -80,6 +81,9 @@ namespace SportsAnalyzer.Models
 
     public void ConvertFromXmlTeamStanding(XMLSoccerCOM.TeamLeagueStanding teamStanding)
     {
+      if (teamStanding == null)
+        return;
+
       Team_Id = teamStanding.Team_Id;
 
       Team = teamStanding.Team;
@@ -97,6 +101,9 @@ namespace SportsAnalyzer.Models
 
     public bool IsEqualToXmlTeamStanding(XMLSoccerCOM.TeamLeagueStanding teamStanding)
     {
+      if (teamStanding == null)
+        return false;
+
       if (Team_Id != teamStanding.Team_Id)
         return false;
       if (Team != teamStanding.Team)

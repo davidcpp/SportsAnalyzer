@@ -10,7 +10,8 @@ namespace SportsAnalyzer.Models
       var list = new List<FootballMatch>();
       foreach (var xmlMatch in xmlList)
       {
-        list.Add(new FootballMatch(xmlMatch));
+        if (xmlMatch != null)
+          list.Add(new FootballMatch(xmlMatch));
       }
       return list;
     }
@@ -43,33 +44,53 @@ namespace SportsAnalyzer.Models
 
     public void ConvertFromXmlSoccerMatch(XMLSoccerCOM.Match match)
     {
-      Date = match.Date;
+      if (match == null)
+        return;
+
       Round = match.Round;
       AwayTeam = match.AwayTeam;
       AwayGoals = match.AwayGoals;
-      AwayGoalDetails = string.Join(";", match.AwayGoalDetails);
+      AwayGoalDetails = match.AwayGoalDetails != null ?
+        string.Join(";", match.AwayGoalDetails) : string.Empty;
       HomeTeam = match.HomeTeam;
       HomeGoals = match.HomeGoals;
-      HomeGoalDetails = string.Join(";", match.HomeGoalDetails);
+      HomeGoalDetails = match.HomeGoalDetails != null ?
+        string.Join(";", match.HomeGoalDetails) : string.Empty;
     }
 
     public bool IsEqualToXmlMatch(XMLSoccerCOM.Match match)
     {
+      if (match == null)
+        return false;
+
       if (Date != match.Date)
         return false;
       if (AwayTeam != match.AwayTeam)
         return false;
       if (AwayGoals != match.AwayGoals)
         return false;
-      if (AwayGoalDetails.Equals(match.AwayGoalDetails.ToString()))
+      if (match.AwayGoalDetails == null)
+      {
+        if (AwayGoalDetails?.Length != 0 && AwayGoalDetails != null)
+          return false;
+      }
+      else if (AwayGoalDetails != match.AwayGoalDetails.ToString())
+      {
         return false;
+      }
       if (HomeTeam != match.HomeTeam)
         return false;
       if (HomeGoals != match.HomeGoals)
         return false;
-      if (HomeGoalDetails.Equals(match.HomeGoalDetails.ToString()))
+      if (match.HomeGoalDetails == null)
+      {
+        if (HomeGoalDetails?.Length != 0 && HomeGoalDetails != null)
+          return false;
+      }
+      else if (HomeGoalDetails != match.HomeGoalDetails.ToString())
+      {
         return false;
-
+      }
       return true;
     }
 

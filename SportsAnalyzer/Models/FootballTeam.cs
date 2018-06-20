@@ -10,7 +10,8 @@ namespace SportsAnalyzer.Models
       var list = new List<FootballTeam>();
       foreach (var xmlTeam in xmlList)
       {
-        list.Add(new FootballTeam(xmlTeam));
+        if (xmlTeam != null)
+          list.Add(new FootballTeam(xmlTeam));
       }
       return list;
     }
@@ -61,6 +62,9 @@ namespace SportsAnalyzer.Models
 
     public void ConvertFromXmlSoccerTeam(XMLSoccerCOM.Team team)
     {
+      if (team == null)
+        return;
+
       Team_Id = team.Team_Id;
       Name = team.Name;
       Country = team.Country;
@@ -71,6 +75,9 @@ namespace SportsAnalyzer.Models
 
     public bool IsEqualToXmlTeam(XMLSoccerCOM.Team team)
     {
+      if (team == null)
+        return false;
+
       if (Team_Id != team.Team_Id)
         return false;
       if (Name != team.Name)

@@ -121,10 +121,11 @@ namespace SportsAnalyzer.Models
       }
 
       MatchesNumber = SelectedMatches.Count;
-      GoalsSum = SelectedMatches.Sum((match) => match.HomeGoals.Value + match.AwayGoals.Value);
+      GoalsSum = SelectedMatches.Sum((match) => match.HomeGoals ?? 0)
+        + SelectedMatches.Sum((match) => match.AwayGoals ?? 0);
       GoalsAvg = Round(GoalsSum / MatchesNumber, 2);
-      GoalsAvgHome = Round(SelectedMatches.Average((match) => match.HomeGoals.Value), 2);
-      GoalsAvgAway = Round(SelectedMatches.Average((match) => match.AwayGoals.Value), 2);
+      GoalsAvgHome = Round(SelectedMatches.Average((match) => match.HomeGoals ?? 0), 2);
+      GoalsAvgAway = Round(SelectedMatches.Average((match) => match.AwayGoals ?? 0), 2);
 
       var regexGoalTime = new Regex("\\d{1,}");
       foreach (var match in SelectedMatches)
@@ -210,13 +211,13 @@ namespace SportsAnalyzer.Models
 
     public void SetRounds(IEnumerable<int> rounds)
     {
-      RoundsNumbersInts = rounds.ToList();
+      RoundsNumbersInts = rounds?.ToList() ?? new List<int>();
       SetSelectedMatches();
     }
 
     public void SetMatches(IEnumerable<FootballMatch> matches)
     {
-      AllMatches = matches.ToList();
+      AllMatches = matches?.ToList() ?? new List<FootballMatch>();
       LeagueRoundsNumber = AllMatches.Select(x => x.Round).Max() ?? LeagueRoundsNumber;
     }
 
