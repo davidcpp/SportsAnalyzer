@@ -229,7 +229,7 @@ $(".form-check-input").change(function () {
   }
 });
 
-function GetChartData(chart, URI, index, teamName) {
+function GetGoalsInIntervals(chart, URI, index, teamName) {
   var statsRequestData = GetStatsRequestData(teamName);
   $.post(URI, statsRequestData, null, "json")
     .done(function (data) {
@@ -256,6 +256,6 @@ $("#changeRounds").click(function () {
       teamName = dataset.label;
     }
 
-    GetChartData(window.goalsInIntervalsChart, goalsIntervalsURI, i, teamName);
+    GetGoalsInIntervals(window.goalsInIntervalsChart, goalsIntervalsURI, i, teamName);
   }
 });
