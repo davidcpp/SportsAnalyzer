@@ -111,6 +111,10 @@ namespace SportsAnalyzer.Models
       set { timeIntervalsLimits = value; }
     }
 
+    // Number of matches with a given number of goals
+    // MatchGoalsPct[numberOfGoals] = numberOfMatches
+    public IDictionary<int, double> MatchGoalsPct = new Dictionary<int, double>();
+
     /* Methods */
 
     public void CalculateAll()
@@ -150,11 +154,24 @@ namespace SportsAnalyzer.Models
             GoalsInIntervals[(int)Ceiling(goalTime / MatchIntervalLength) - 1]++;
           }
         }
+
+        int matchGoals = match.HomeGoals ?? 0; 
+        matchGoals += match.AwayGoals ?? 0;
+        if (!MatchGoalsPct.ContainsKey(matchGoals))
+          MatchGoalsPct.Add(matchGoals, 0);
+        MatchGoalsPct[matchGoals]++;
       }
 
       for (int i = 0; i < NumberOfMatchIntervals; i++)
       {
         GoalsInIntervalsPercent[i] = Round((GoalsInIntervals[i] / GoalsSum) * 100, 2);
+      }
+
+      int index = 0;
+      for (var i=0; i< MatchGoalsPct.Count; i++ )
+      {
+        index = MatchGoalsPct.Keys.ElementAt(i);
+        MatchGoalsPct[index] = Round((MatchGoalsPct[index] / MatchesNumber) * 100, 2);
       }
     }
 

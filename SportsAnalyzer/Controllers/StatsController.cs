@@ -51,6 +51,24 @@ namespace SportsAnalyzer.Controllers
       return Ok(stats.GoalsInIntervalsPercent);
     }
 
+    [HttpPost]
+    public IHttpActionResult MatchGoals(StatsRequestModel statsRequest)
+    {
+      if (IsDataOutOfDate(MatchesLastUpdateTime))
+      {
+        RefreshMatchesData(statsRequest.LeagueName,
+          statsRequest.SeasonYear,
+          _xmlSoccerRequester,
+          db);
+      }
+      Statistics stats = new Statistics(statsRequest.SeasonYear,
+        statsRequest.LeagueName,
+        statsRequest.TeamName);
+      stats.CalcStatsForRounds(db, statsRequest.Rounds.ToList());
+
+      return Ok(stats.MatchGoalsPct);
+    }
+
     public class StatsRequestModel
     {
       public int[] Rounds { get; set; }

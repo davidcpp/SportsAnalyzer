@@ -7,6 +7,10 @@ var goalsIntervalsURI = webApiUri + "/goalsintervals";
 var goalsInIntervalsTitle = "Minutes Intervales of scored goals"
 var goalsInIntervalsXLabel = "Time intervals [min.]";
 var goalsInIntervalsYLabel = "Percent of goals";
+var matchGoalsURI = webApiUri + "/matchgoals";
+var matchGoalsTitle = "Percent of Matches with a given number of goals";
+var matchGoalsXLabel = "Number of goals";
+var matchGoalsYLabel = "Percent of matches";
 var leagueName, seasonYear;
 
 var myChartColors = [window.chartColors.blue,
@@ -58,13 +62,22 @@ function AddChartDataset(chart, URI, teamName, id) {
   var statsRequestData = GetStatsRequestData(teamName);
   $.post(URI, statsRequestData, null, "json")
     .done(function (data) {
+      var newData;
+      if (URI == matchGoalsURI) {
+        let chartData;
+        chartData = GetMatchGoalsData(data);
+        newData = chartData.data;
+      }
+      else {
+        newData = data;
+      }
 
       var dataset = {
         label: teamName,
         backgroundColor: color(myChartColors[id]).alpha(0.5).rgbString(),
         borderColor: myChartColors[id],
         borderWidth: 1,
-        data: data
+        data: newData
       };
 
       // calling RemoveChartDataset method in case of delay in receiving results from WebApi
@@ -214,7 +227,17 @@ $(document).ready(function () {
     goalsInIntervalsPercent,
     goalsInIntervalsXLabel,
     goalsInIntervalsYLabel);
+
   ConfirmSelectedRounds();
+  window.matchGoalsChart = CreateChart(
+    "matchGoalsChartArea",
+    matchGoalsTitle,
+    [],
+    [],
+    matchGoalsXLabel,
+    matchGoalsYLabel);
+
+  GetMatchGoals(window.matchGoalsChart, "*", matchGoalsURI);
 });
 
 $(".form-check-input").change(function () {
@@ -222,10 +245,12 @@ $(".form-check-input").change(function () {
   var id = $(this).val();
 
   if ($(this).prop("checked")) {
-    AddChartDataset(window.goalsInIntervalsChart, goalsIntervalsURI, teamName, id);
+    AddChartDataset(window.goalsInIntervalsChart, goalsIntervalsURI, teamName, id, );
+    AddChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
   }
   else {
     RemoveChartDataset(window.goalsInIntervalsChart, teamName);
+    RemoveChartDataset(window.matchGoalsChart, teamName);
   }
 });
 
@@ -257,5 +282,48 @@ $("#changeRounds").click(function () {
     }
 
     GetGoalsInIntervals(window.goalsInIntervalsChart, goalsIntervalsURI, i, teamName);
+    GetMatchGoals(window.matchGoalsChart, teamName, matchGoalsURI, i);
   }
 });
+
+function GetMatchGoalsData(data) {
+  // matchGoals[numberOfGoals] = numberOfMatches
+  var matchGoals = [];
+  var goals = Object.keys(data);
+  var matches = Object.values(data);
+  var maxGoals = goals[goals.length - 1];
+
+  for (var i = 0; i < goals.length; i++) {
+    matchGoals[parseInt(goals[i])] = parseFloat(matches[i]);
+  }
+
+  for (var i = 0; i <= maxGoals; i++) {
+    goals[i] = i;
+    if (matchGoals[i] == undefined)
+      matchGoals[i] = 0;
+  }
+  chartData = new ChartData(matchGoals, goals);
+  return chartData;
+}
+
+function GetMatchGoals(chart, teamName, URI, index = 0) {
+  var statsRequestData = GetStatsRequestData(teamName);
+  $.post(URI, statsRequestData, null, "json")
+    .done(function (data) {
+      var chartData = GetMatchGoalsData(data);
+      if (index === 0) {
+        chart.data.labels = chartData.labels;
+      }
+      UpdateChartData(chart, chartData.data, index)
+    })
+    .fail(function (jqXHR, textStatus, err) {
+      console.log('Error: ' + err);
+    });
+}
+
+class ChartData {
+  constructor(data, labels) {
+    this.data = data;
+    this.labels = labels;
+  }
+}
