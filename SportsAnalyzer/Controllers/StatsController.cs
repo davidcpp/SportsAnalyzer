@@ -36,12 +36,6 @@ namespace SportsAnalyzer.Controllers
     [HttpPost]
     public IHttpActionResult GetDataset(StatsRequestModel statsRequest)
     {
-      if (statsRequest.LeagueName == DefaultLeagueShortName
-        || statsRequest.LeagueName == DefaultLeagueId)
-      {
-        statsRequest.LeagueName = DefaultLeagueFullName;
-      }
-
       if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
         RefreshMatchesData(statsRequest.LeagueName,
