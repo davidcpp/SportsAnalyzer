@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 namespace SportsAnalyzer
@@ -99,7 +100,7 @@ namespace SportsAnalyzer
       ClearDBSet(xmlSocDB.FootballTeams);
 
       xmlSocDB.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
-      xmlSocDB.SaveChanges();
+      SaveChangesInDatabase(xmlSocDB);
     }
 
     public static void RefreshTableData(string league,
@@ -116,7 +117,7 @@ namespace SportsAnalyzer
       ClearDBSet(xmlSocDB.LeagueTable);
 
       xmlSocDB.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
-      xmlSocDB.SaveChanges();
+      SaveChangesInDatabase(xmlSocDB);
     }
 
     public static void RefreshMatchesData(string leagueName,
@@ -133,7 +134,26 @@ namespace SportsAnalyzer
       ClearDBSet(xmlSocDB.LeagueMatches);
 
       xmlSocDB.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
-      xmlSocDB.SaveChanges();
+
+      SaveChangesInDatabase(xmlSocDB);
+    }
+
+    private static void SaveChangesInDatabase(XmlSocDB db)
+    {
+      bool saveFailed;
+      do
+      {
+        saveFailed = false;
+        try
+        {
+          db.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+          saveFailed = true;
+          ex.Entries.Single().Reload();
+        }
+      } while (saveFailed);
     }
 
     public static void CalcStats(this Statistics statistics,
