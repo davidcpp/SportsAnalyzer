@@ -34,7 +34,7 @@ namespace SportsAnalyzer.Controllers
     }
 
     [HttpPost]
-    public IHttpActionResult GetDataset(StatsRequestModel statsRequest)
+    public IHttpActionResult GoalsIntervals(StatsRequestModel statsRequest)
     {
       if (IsDataOutOfDate(MatchesLastUpdateTime))
       {

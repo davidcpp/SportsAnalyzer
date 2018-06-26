@@ -16,7 +16,7 @@ namespace SportsAnalyzer
 
       config.Routes.MapHttpRoute(
           name: "DefaultApi",
-          routeTemplate: "Football/api/{controller}"
+          routeTemplate: "Football/api/{controller}/{action}"
       );
     }
   }

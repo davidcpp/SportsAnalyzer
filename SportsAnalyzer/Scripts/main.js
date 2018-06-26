@@ -3,6 +3,10 @@ var timeIntervalsTexts = [];
 var goalsInIntervalsPercent;
 var selectedRounds = [];
 var webApiUri = 'api/stats';
+var goalsIntervalsURI = webApiUri + "/goalsintervals";
+var goalsInIntervalsTitle = "Minutes Intervales of scored goals"
+var goalsInIntervalsXLabel = "Time intervals [min.]";
+var goalsInIntervalsYLabel = "Percent of goals";
 var leagueName, seasonYear;
 
 var myChartColors = [window.chartColors.blue,
@@ -17,18 +21,18 @@ goalsInIntervalsPercent = eval($("#mainScript").attr("data-goals-in-intervals-pe
 leagueName = eval($("#mainScript").attr("data-league-name"));
 seasonYear = eval($("#mainScript").attr("data-season-year"));
 
-function RemoveChartDataset(teamName) {
-  for (var i = 0; i < window.myChart.data.datasets.length; i++) {
-    if (window.myChart.data.datasets[i].label === teamName) {
-      window.myChart.data.datasets.splice(i, 1);
+function RemoveChartDataset(chart, teamName) {
+  for (var i = 0; i < chart.data.datasets.length; i++) {
+    if (chart.data.datasets[i].label === teamName) {
+      chart.data.datasets.splice(i, 1);
     }
   }
-  window.myChart.update();
+  chart.update();
 }
 
 function UpdateChart(chart, chartDisplaySize) {
   UpdateChartFontSizes(chart, chartDisplaySize);
-  window.myChart.update();
+  chart.update();
 }
 
 function ConfirmSelectedRounds() {
@@ -50,9 +54,9 @@ function GetStatsRequestData(teamName) {
   };
 }
 
-function AddChartDataset(teamName, id) {
+function AddChartDataset(chart, URI, teamName, id) {
   var statsRequestData = GetStatsRequestData(teamName);
-  $.post(webApiUri, statsRequestData, null, "json")
+  $.post(URI, statsRequestData, null, "json")
     .done(function (data) {
 
       var dataset = {
@@ -64,17 +68,17 @@ function AddChartDataset(teamName, id) {
       };
 
       // calling RemoveChartDataset method in case of delay in receiving results from WebApi
-      RemoveChartDataset(teamName);
-      window.myChart.data.datasets.push(dataset);
-      window.myChart.update();
+      RemoveChartDataset(chart, teamName);
+      chart.data.datasets.push(dataset);
+      chart.update();
     })
     .fail(function (jqXHR, textStatus, err) {
       console.log('Error: ' + err);
     });
 }
 
-function GetChartDisplaySize() {
-  var canvasChart = document.getElementById('myChart');
+function GetChartDisplaySize(chartName) {
+  var canvasChart = document.getElementById(chartName);
 
   chartDisplaySize = {
     width: parseFloat(canvasChart.style.width),
@@ -112,22 +116,20 @@ function OnResizeChart(chart, chartSize) {
   UpdateChart(chart, chartSize);
 }
 
-function CreateChart() {
-  PrepareChartData();
-
-  var ctx = $("#myChart");
-  window.myChart = new Chart(ctx, {
+function CreateChart(chartName, title, labels, data, xAxisLabel, yAxisLabel) {
+  var ctx = $("#" + chartName);
+  var chart = new Chart(ctx, {
     // The type of chart we want to create
     type: 'bar',
     // The data for our dataset
     data: {
-      labels: timeIntervalsTexts,
+      labels: labels,
       datasets: [{
         label: leagueName,
         backgroundColor: color(myChartColors[0]).alpha(0.5).rgbString(),
         borderColor: myChartColors[0],
         borderWidth: 1,
-        data: goalsInIntervalsPercent
+        data: data
       }]
     },
     // Configuration options go here
@@ -145,7 +147,7 @@ function CreateChart() {
         display: true,
         fontSize: varTitleFontSize,
         fontColor: window.chartColors.black,
-        text: 'Minutes Intervales of scored goals'
+        text: title
       },
       tooltips: {
         titleFontSize: tooltipsFontSize,
@@ -167,7 +169,7 @@ function CreateChart() {
         yAxes: [{
           scaleLabel: {
             display: true,
-            labelString: 'Percent of goals',
+            labelString: yAxisLabel,
             fontColor: window.chartColors.blue,
             fontSize: labelsFontSize
           },
@@ -182,7 +184,7 @@ function CreateChart() {
         xAxes: [{
           scaleLabel: {
             display: true,
-            labelString: 'Time intervals [min.]',
+            labelString: xAxisLabel,
             fontColor: window.chartColors.blue,
             fontSize: labelsFontSize
           },
@@ -196,14 +198,22 @@ function CreateChart() {
       }
     }
   });
-  window.myChart.options.onResize = OnResizeChart;
+  chart.options.onResize = OnResizeChart;
 
-  chartDisplaySize = GetChartDisplaySize();
-  UpdateChart(window.myChart, chartDisplaySize);
+  chartDisplaySize = GetChartDisplaySize(chartName);
+  UpdateChart(chart, chartDisplaySize);
+  return chart;
 }
 
 $(document).ready(function () {
-  CreateChart();
+  PrepareChartData();
+  window.goalsInIntervalsChart = CreateChart(
+    "goalsInIntervalsChartArea",
+    goalsInIntervalsTitle,
+    timeIntervalsTexts,
+    goalsInIntervalsPercent,
+    goalsInIntervalsXLabel,
+    goalsInIntervalsYLabel);
   ConfirmSelectedRounds();
 });
 
@@ -212,36 +222,40 @@ $(".form-check-input").change(function () {
   var id = $(this).val();
 
   if ($(this).prop("checked")) {
-    AddChartDataset(teamName, id);
+    AddChartDataset(window.goalsInIntervalsChart, goalsIntervalsURI, teamName, id);
   }
   else {
-    RemoveChartDataset(teamName);
+    RemoveChartDataset(window.goalsInIntervalsChart, teamName);
   }
 });
 
-function GetChartData(index, teamName) {
+function GetChartData(chart, URI, index, teamName) {
   var statsRequestData = GetStatsRequestData(teamName);
-  $.post(webApiUri, statsRequestData, null, "json")
-    .done(function (newData) {
-      window.myChart.data.datasets[index].data = newData;
-      window.myChart.update();
+  $.post(URI, statsRequestData, null, "json")
+    .done(function (data) {
+      UpdateChartData(chart, data, index);
     })
     .fail(function (jqXHR, textStatus, err) {
       console.log('Error: ' + err);
     });
 }
 
+function UpdateChartData(chart, data, index) {
+  chart.data.datasets[index].data = data;
+  chart.update();
+}
+
 $("#changeRounds").click(function () {
   ConfirmSelectedRounds();
 
-  for (var i = 0; i < window.myChart.data.datasets.length; i++) {
-    var datasetData = window.myChart.data.datasets[i].data;
-
+  for (var i = 0; i < window.goalsInIntervalsChart.data.datasets.length; i++) {
+    var dataset = window.goalsInIntervalsChart.data.datasets[i];
     var teamName = "*";
-    if (window.myChart.data.datasets[i].label !== leagueName) {
-      var teamName = window.myChart.data.datasets[i].label;
+
+    if (dataset.label !== leagueName) {
+      teamName = dataset.label;
     }
 
-    GetChartData(i, teamName);
+    GetChartData(window.goalsInIntervalsChart, goalsIntervalsURI, i, teamName);
   }
 });
