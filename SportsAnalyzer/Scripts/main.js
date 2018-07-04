@@ -237,7 +237,7 @@ $(document).ready(function () {
     matchGoalsXLabel,
     matchGoalsYLabel);
 
-  GetMatchGoals(window.matchGoalsChart, "*", matchGoalsURI);
+  GetMatchGoals(window.matchGoalsChart, "*");
 });
 
 $(".form-check-input").change(function () {
@@ -254,9 +254,9 @@ $(".form-check-input").change(function () {
   }
 });
 
-function GetGoalsInIntervals(chart, URI, index, teamName) {
+function GetGoalsInIntervals(chart, index, teamName) {
   var statsRequestData = GetStatsRequestData(teamName);
-  $.post(URI, statsRequestData, null, "json")
+  $.post(goalsIntervalsURI, statsRequestData, null, "json")
     .done(function (data) {
       UpdateChartData(chart, data, index);
     })
@@ -281,13 +281,12 @@ $("#changeRounds").click(function () {
       teamName = dataset.label;
     }
 
-    GetGoalsInIntervals(window.goalsInIntervalsChart, goalsIntervalsURI, i, teamName);
-    GetMatchGoals(window.matchGoalsChart, teamName, matchGoalsURI, i);
+    GetGoalsInIntervals(window.goalsInIntervalsChart, i, teamName);
+    GetMatchGoals(window.matchGoalsChart, teamName, i);
   }
 });
 
 function GetIntegerLabeledData(data, minLabel = 0) {
-  // matchGoals[numberOfGoals] = numberOfMatches
   var resultArray = [];
   var labels = Object.keys(data);
   var values = Object.values(data);
@@ -306,9 +305,9 @@ function GetIntegerLabeledData(data, minLabel = 0) {
   return chartData;
 }
 
-function GetMatchGoals(chart, teamName, URI, index = 0) {
+function GetMatchGoals(chart, teamName, index = 0) {
   var statsRequestData = GetStatsRequestData(teamName);
-  $.post(URI, statsRequestData, null, "json")
+  $.post(matchGoalsURI, statsRequestData, null, "json")
     .done(function (data) {
       var chartData = GetIntegerLabeledData(data);
       if (index === 0) {
