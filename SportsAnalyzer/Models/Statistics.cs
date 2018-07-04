@@ -78,7 +78,7 @@ namespace SportsAnalyzer.Models
     {
       get
       {
-        return goalsInIntervals ?? 
+        return goalsInIntervals ??
           (goalsInIntervals = new double[(int)NumberOfMatchIntervals]);
       }
       set { goalsInIntervals = value; }
@@ -88,7 +88,7 @@ namespace SportsAnalyzer.Models
     {
       get
       {
-        return goalsInIntervalsPercent ?? 
+        return goalsInIntervalsPercent ??
           (goalsInIntervalsPercent = new double[(int)NumberOfMatchIntervals]);
       }
       set { goalsInIntervalsPercent = value; }
@@ -155,7 +155,7 @@ namespace SportsAnalyzer.Models
           }
         }
 
-        int matchGoals = match.HomeGoals ?? 0; 
+        int matchGoals = match.HomeGoals ?? 0;
         matchGoals += match.AwayGoals ?? 0;
         if (!MatchGoalsPct.ContainsKey(matchGoals))
           MatchGoalsPct.Add(matchGoals, 0);
@@ -207,7 +207,7 @@ namespace SportsAnalyzer.Models
       {
         Number = currentMatchRound,
         StartDate = startDate,
-        EndDate = AllMatches.Count > 0 ? 
+        EndDate = AllMatches.Count > 0 ?
           (AllMatches.Last().Date ?? DateTime.MinValue) : (DateTime.MinValue)
       });
 

@@ -2,7 +2,7 @@ namespace SportsAnalyzer.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class InitialCreate : DbMigration
     {
         public override void Up()
@@ -20,7 +20,7 @@ namespace SportsAnalyzer.Migrations
                         WIKILink = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
-            
+
             CreateTable(
                 "dbo.TeamLeagueStandings",
                 c => new
@@ -37,7 +37,7 @@ namespace SportsAnalyzer.Migrations
                         Goals_Against = c.Int(nullable: false),
                         Goal_Difference = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.Id);        
+                .PrimaryKey(t => t.Id);
         }
 
         public override void Down()

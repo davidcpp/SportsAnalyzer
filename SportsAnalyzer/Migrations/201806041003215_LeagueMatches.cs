@@ -2,7 +2,7 @@ namespace SportsAnalyzer.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class LeagueMatches : DbMigration
     {
         public override void Up()
@@ -20,9 +20,8 @@ namespace SportsAnalyzer.Migrations
                         HomeGoals = c.Int(),
                     })
                 .PrimaryKey(t => t.Id);
-            
         }
-        
+
         public override void Down()
         {
             DropTable("dbo.FootballMatches");
