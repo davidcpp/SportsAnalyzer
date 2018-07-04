@@ -65,7 +65,7 @@ function AddChartDataset(chart, URI, teamName, id) {
       var newData;
       if (URI == matchGoalsURI) {
         let chartData;
-        chartData = GetMatchGoalsData(data);
+        chartData = GetIntegerLabeledData(data);
         newData = chartData.data;
       }
       else {
@@ -286,23 +286,23 @@ $("#changeRounds").click(function () {
   }
 });
 
-function GetMatchGoalsData(data) {
+function GetIntegerLabeledData(data, minLabel = 0) {
   // matchGoals[numberOfGoals] = numberOfMatches
-  var matchGoals = [];
-  var goals = Object.keys(data);
-  var matches = Object.values(data);
-  var maxGoals = goals[goals.length - 1];
+  var resultArray = [];
+  var labels = Object.keys(data);
+  var values = Object.values(data);
+  var maxLabel = labels[labels.length - 1];
 
-  for (var i = 0; i < goals.length; i++) {
-    matchGoals[parseInt(goals[i])] = parseFloat(matches[i]);
+  for (var i = 0; i < labels.length; i++) {
+    resultArray[parseInt(labels[i])] = parseFloat(values[i]);
   }
 
-  for (var i = 0; i <= maxGoals; i++) {
-    goals[i] = i;
-    if (matchGoals[i] == undefined)
-      matchGoals[i] = 0;
+  for (var i = minLabel; i <= maxLabel; i++) {
+    labels[i] = i;
+    if (resultArray[i] == undefined)
+      resultArray[i] = 0;
   }
-  chartData = new ChartData(matchGoals, goals);
+  chartData = new ChartData(resultArray, labels);
   return chartData;
 }
 
@@ -310,7 +310,7 @@ function GetMatchGoals(chart, teamName, URI, index = 0) {
   var statsRequestData = GetStatsRequestData(teamName);
   $.post(URI, statsRequestData, null, "json")
     .done(function (data) {
-      var chartData = GetMatchGoalsData(data);
+      var chartData = GetIntegerLabeledData(data);
       if (index === 0) {
         chart.data.labels = chartData.labels;
       }
