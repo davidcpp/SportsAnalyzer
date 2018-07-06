@@ -122,6 +122,12 @@
     <input type="button" value="Chose rounds" class="btn btn-primary btn-block" id="changeRounds" />
   </div>
 </div>
+
+<h2 class="text-center mx-1 mb-3">Standings statistics</h2>
+
+<div id="roundPointsChartDiv" class="mb-3">
+  <canvas id="roundPointsChartArea"></canvas>
+</div>
 @{
   double[] GoalsInIntervalsPercent = Model.GoalsInIntervalsPercent;
   double[] TimeIntervalsLimits = Model.TimeIntervalsLimits;
