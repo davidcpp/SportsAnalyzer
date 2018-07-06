@@ -69,6 +69,26 @@ namespace SportsAnalyzer.Controllers
       return Ok(stats.MatchGoalsPct);
     }
 
+    [HttpPost]
+    public IHttpActionResult RoundPoints(StatsRequestModel statsRequest)
+    {
+      if (IsDataOutOfDate(MatchesLastUpdateTime))
+      {
+        RefreshMatchesData(statsRequest.LeagueName,
+          statsRequest.SeasonYear,
+          _xmlSoccerRequester,
+          db);
+      }
+      Statistics stats = new Statistics(statsRequest.SeasonYear,
+        statsRequest.LeagueName,
+        statsRequest.TeamName);
+      stats.SetMatches(db.LeagueMatches.ToList());
+      stats.SetRoundsRange("first", "last");
+      stats.CalculateRoundPoints();
+
+      return Ok(stats.RoundPoints);
+    }
+
     public class StatsRequestModel
     {
       public int[] Rounds { get; set; }
