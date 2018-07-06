@@ -114,6 +114,9 @@ namespace SportsAnalyzer.Models
     // Number of matches with a given number of goals
     // MatchGoalsPct[numberOfGoals] = numberOfMatches
     public IDictionary<int, double> MatchGoalsPct = new Dictionary<int, double>();
+    // Number of points in the given round for the given team
+    // RoundPoints[numberOfRound] = numberOfPoints
+    public IDictionary<int, int> RoundPoints = new Dictionary<int, int>();
 
     /* Methods */
 
@@ -168,10 +171,40 @@ namespace SportsAnalyzer.Models
       }
 
       int index = 0;
-      for (var i=0; i< MatchGoalsPct.Count; i++ )
+      for (var i = 0; i < MatchGoalsPct.Count; i++)
       {
         index = MatchGoalsPct.Keys.ElementAt(i);
         MatchGoalsPct[index] = Round((MatchGoalsPct[index] / MatchesNumber) * 100, 2);
+      }
+    }
+
+    public void CalculateRoundPoints()
+    {
+      if (TeamName == DefaultTeamName)
+        return;
+
+      int roundPoints = 0;
+      int matchRound = 0, prevMatchRound = 0;
+
+      foreach (var match in SelectedMatches.OrderBy(match => match.Round ?? 0))
+      {
+        matchRound = match.Round ?? 0;
+        if (prevMatchRound == matchRound || matchRound == 0)
+          continue;
+
+        if (match.HomeTeam == TeamName)
+        {
+          roundPoints += match.HomeGoals > match.AwayGoals ? 3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
+        }
+        else
+        {
+          roundPoints += match.HomeGoals < match.AwayGoals ? 3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
+        }
+
+        if (!RoundPoints.ContainsKey(matchRound))
+          RoundPoints.Add(matchRound, roundPoints);
+
+        prevMatchRound = matchRound;
       }
     }
 
