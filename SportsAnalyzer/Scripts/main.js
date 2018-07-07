@@ -82,9 +82,12 @@ function AddChartDataset(chart, URI, teamName, id) {
   $.post(URI, statsRequestData, null, "json")
     .done(function (data) {
       var newData;
-      if (URI == matchGoalsURI) {
+      if (URI === matchGoalsURI || URI === roundPointsURI) {
         let chartData;
         chartData = GetIntegerLabeledData(data);
+        if (URI === roundPointsURI) {
+          chart.data.labels = chartData.labels;
+        }
         newData = chartData.data;
       }
       else {
@@ -277,10 +280,12 @@ $(".form-check-input").change(function () {
   if ($(this).prop("checked")) {
     AddChartDataset(window.goalsInIntervalsChart, goalsIntervalsURI, teamName, id, );
     AddChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
+    AddChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
   }
   else {
     RemoveChartDataset(window.goalsInIntervalsChart, teamName);
     RemoveChartDataset(window.matchGoalsChart, teamName);
+    RemoveChartDataset(window.roundPointsChart, teamName);
   }
 });
 
