@@ -127,11 +127,12 @@ function OnResizeChart(chart, chartSize) {
   UpdateChart(chart, chartSize);
 }
 
-function CreateChart(chartName, title, labels, data, xAxisLabel, yAxisLabel) {
+function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAxisLabel, typeOfChart,
+  yAxisTicksEnding, tooltipTitlePrefix, tooltipLabelEnding) {
   var ctx = $("#" + chartName);
   var chart = new Chart(ctx, {
     // The type of chart we want to create
-    type: 'bar',
+    type: typeOfChart,
     // The data for our dataset
     data: {
       labels: labels,
@@ -163,7 +164,12 @@ function CreateChart(chartName, title, labels, data, xAxisLabel, yAxisLabel) {
       tooltips: {
         titleFontSize: tooltipsFontSize,
         bodyFontSize: tooltipsFontSize,
+        mode: 'index',
         callbacks: {
+          title: function (tooltipItems, data) {
+            var title = tooltipTitlePrefix + tooltipItems[0].xLabel;
+            return title;
+          },
           label: function (tooltipItem, data) {
             var label = data.datasets[tooltipItem.datasetIndex].label || '';
 
@@ -171,7 +177,7 @@ function CreateChart(chartName, title, labels, data, xAxisLabel, yAxisLabel) {
               label += ': ';
             }
             label += tooltipItem.yLabel;
-            label += "%";
+            label += tooltipLabelEnding;
             return label;
           }
         }
@@ -185,10 +191,12 @@ function CreateChart(chartName, title, labels, data, xAxisLabel, yAxisLabel) {
             fontSize: labelsFontSize
           },
           ticks: {
+            suggestedMin: minY,
+            suggestedMax: maxY,
             beginAtZero: true,
             fontSize: ticksFontSize,
             callback: function (value, index, values) {
-              return value + '%';
+              return value + yAxisTicksEnding;
             }
           }
         }],
@@ -222,8 +230,10 @@ $(document).ready(function () {
     goalsInIntervalsTitle,
     timeIntervalsTexts,
     goalsInIntervalsPercent,
+    0, 100,
     goalsInIntervalsXLabel,
-    goalsInIntervalsYLabel);
+    goalsInIntervalsYLabel,
+    "bar", "%", "Minutes interval: ", "%");
 
   ConfirmSelectedRounds();
   window.matchGoalsChart = CreateChart(
@@ -231,8 +241,10 @@ $(document).ready(function () {
     matchGoalsTitle,
     [],
     [],
+    0, 100,
     matchGoalsXLabel,
-    matchGoalsYLabel);
+    matchGoalsYLabel,
+    "bar", "%", "Goals number: ", "%");
 
   GetMatchGoals(window.matchGoalsChart, "*");
 });
