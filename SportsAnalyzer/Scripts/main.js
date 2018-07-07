@@ -11,6 +11,10 @@ var matchGoalsURI = webApiUri + "/matchgoals";
 var matchGoalsTitle = "Percent of Matches with a given number of goals";
 var matchGoalsXLabel = "Number of goals";
 var matchGoalsYLabel = "Percent of matches";
+var roundPointsURI = webApiUri + "/roundpoints";
+var roundPointsTitle = "Number of points after a given round"
+var roundPointsXLabel = "Number of round";
+var roundPointsYLabel = "Number of points";
 var leagueName, seasonYear;
 
 var color = Chart.helpers.color;
@@ -254,6 +258,16 @@ $(document).ready(function () {
     "bar", "%", "Goals number: ", "%");
 
   GetMatchGoals(window.matchGoalsChart, "*");
+
+  window.roundPointsChart = CreateChart(
+    "roundPointsChartArea",
+    roundPointsTitle,
+    null,
+    null,
+    0, 100,
+    roundPointsXLabel,
+    roundPointsYLabel,
+    "line", "pts", "Round: ", "pts");
 });
 
 $(".form-check-input").change(function () {
