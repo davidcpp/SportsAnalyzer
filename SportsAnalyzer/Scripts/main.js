@@ -99,7 +99,9 @@ function AddChartDataset(chart, URI, teamName, id) {
         backgroundColor: color(myChartColors[id]).alpha(0.5).rgbString(),
         borderColor: myChartColors[id],
         borderWidth: 1,
-        data: newData
+        data: newData,
+        fill: false,
+        lineTension: 0
       };
 
       // calling RemoveChartDataset method in case of delay in receiving results from WebApi
