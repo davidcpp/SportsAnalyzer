@@ -283,7 +283,7 @@ $("#changeRounds").click(function () {
   }
 });
 
-function GetIntegerLabeledData(data, minLabel = 0) {
+function GetIntegerLabeledData(data) {
   var resultArray = [];
   var labels = Object.keys(data);
   var values = Object.values(data);
@@ -293,7 +293,7 @@ function GetIntegerLabeledData(data, minLabel = 0) {
     resultArray[parseInt(labels[i])] = parseFloat(values[i]);
   }
 
-  for (var i = minLabel; i <= maxLabel; i++) {
+  for (var i = 0; i <= maxLabel; i++) {
     labels[i] = i;
     if (resultArray[i] == undefined)
       resultArray[i] = 0;
