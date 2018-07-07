@@ -20,6 +20,19 @@ window.chartColors.red,
 window.chartColors.orange,
 window.chartColors.yellow];
 
+function GenerateStartDatasetArray(data) {
+  if (Array.isArray(data)) {
+    return [{
+      label: leagueName,
+      backgroundColor: color(myChartColors[0]).alpha(0.5).rgbString(),
+      borderColor: myChartColors[0],
+      borderWidth: 1,
+      data: data
+    }];
+  }
+  return [];
+}
+
 // Getting data of the Model passed from the Stats view
 
 timeIntervalsTexts = eval($("#mainScript").attr("data-time-intervals-all-text"));
@@ -136,13 +149,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
     // The data for our dataset
     data: {
       labels: labels,
-      datasets: [{
-        label: leagueName,
-        backgroundColor: color(myChartColors[0]).alpha(0.5).rgbString(),
-        borderColor: myChartColors[0],
-        borderWidth: 1,
-        data: data
-      }]
+      datasets: GenerateStartDatasetArray(data)
     },
     // Configuration options go here
     options: {
