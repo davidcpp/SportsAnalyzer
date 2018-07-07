@@ -13,6 +13,8 @@ var matchGoalsXLabel = "Number of goals";
 var matchGoalsYLabel = "Percent of matches";
 var leagueName, seasonYear;
 
+var color = Chart.helpers.color;
+
 var myChartColors = [window.chartColors.blue,
 window.chartColors.red,
 window.chartColors.orange,
@@ -121,10 +123,6 @@ function UpdateChartFontSizes(chart, chartSize) {
   }
 }
 
-function PrepareChartData() {
-  color = Chart.helpers.color;
-}
-
 function OnResizeChart(chart, chartSize) {
   UpdateChart(chart, chartSize);
 }
@@ -219,7 +217,6 @@ function CreateChart(chartName, title, labels, data, xAxisLabel, yAxisLabel) {
 }
 
 $(document).ready(function () {
-  PrepareChartData();
   window.goalsInIntervalsChart = CreateChart(
     "goalsInIntervalsChartArea",
     goalsInIntervalsTitle,
