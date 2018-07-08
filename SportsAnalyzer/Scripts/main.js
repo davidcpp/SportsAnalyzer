@@ -309,6 +309,24 @@ function UpdateChartData(chart, data, index) {
   chart.update();
 }
 
+$("#teamsList").change(function () {
+  $("#teamsList > option").each(function () {
+    var teamName = $(this).text();
+    var id = $(this).val();
+
+    if ($(this).prop("selected")) {
+      AddChartDataset(window.goalsInIntervalsChart, goalsIntervalsURI, teamName, id, );
+      AddChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
+      AddChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
+    }
+    else {
+      RemoveChartDataset(window.goalsInIntervalsChart, teamName);
+      RemoveChartDataset(window.matchGoalsChart, teamName);
+      RemoveChartDataset(window.roundPointsChart, teamName);
+    }
+  });
+});
+
 $("#changeRounds").click(function () {
   ConfirmSelectedRounds();
 
