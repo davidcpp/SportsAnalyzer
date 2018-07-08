@@ -83,25 +83,13 @@
       Select team
     </h4>
     <hr class="hr-col" />
-    <fieldset id="teamsChecks">
-      <legend>
-        Teams
-      </legend>
-      <div class="row mx-1">
-        <div class="form-check col-12">
-          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="1">
-          <label class="form-check-label" for="inlineCheckbox1">Hearts</label>
-        </div>
-        <div class="form-check col-12">
-          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="2">
-          <label class="form-check-label" for="inlineCheckbox2">Rangers</label>
-        </div>
-        <div class="form-check col-12">
-          <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="3">
-          <label class="form-check-label" for="inlineCheckbox3">Celtic</label>
-        </div>
-      </div>
-    </fieldset>
+    <div class="row mx-1">
+      @Html.LabelFor(model => model.TeamsSelectList,
+        htmlAttributes: new { @class = "" })
+
+      @Html.ListBoxFor(model => model.TeamItems,
+        Model.TeamsSelectList, new { @class = "form-control", @id = "teamsList" })
+    </div>
   </div>
 
   <div class="col-8 col-sm-5 col-md-4 col-lg-3 col-form">
