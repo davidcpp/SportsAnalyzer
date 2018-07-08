@@ -275,22 +275,6 @@ $(document).ready(function () {
     "line", "pts", "Round: ", "pts");
 });
 
-$(".form-check-input").change(function () {
-  var teamName = $("label[for='" + $(this).attr('id') + "']").text();
-  var id = $(this).val();
-
-  if ($(this).prop("checked")) {
-    AddChartDataset(window.goalsInIntervalsChart, goalsIntervalsURI, teamName, id, );
-    AddChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
-    AddChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
-  }
-  else {
-    RemoveChartDataset(window.goalsInIntervalsChart, teamName);
-    RemoveChartDataset(window.matchGoalsChart, teamName);
-    RemoveChartDataset(window.roundPointsChart, teamName);
-  }
-});
-
 function GetGoalsInIntervals(chart, index, teamName) {
   var statsRequestData = GetStatsRequestData(teamName);
   $.post(goalsIntervalsURI, statsRequestData, null, "json")
