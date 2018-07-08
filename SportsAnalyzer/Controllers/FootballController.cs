@@ -101,7 +101,8 @@ namespace SportsAnalyzer.Controllers
       }
       var stats = new Statistics(seasonYear, league);
       stats.CalcStats(db, startRound, endRound);
-      stats.CreateRoundsSelectList();
+      stats.CreateTeamsSelectList();
+      stats.CreateRoundsSelectList();    
       return View(stats);
     }
   }
