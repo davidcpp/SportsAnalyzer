@@ -19,10 +19,28 @@ var leagueName, seasonYear;
 
 var color = Chart.helpers.color;
 
-var myChartColors = [window.chartColors.blue,
-window.chartColors.red,
-window.chartColors.orange,
-window.chartColors.yellow];
+var myChartColors = [
+  '#4dc9f6',
+  '#f67019',
+  '#000000',
+  '#6B8E23',
+  '#acc236',
+  '#B22222',
+  '#00a950',
+  '#58595b',
+  '#FF6347',
+  '#00FFFF',
+  '#FF00FF',
+  '#FFFF00',
+  '#0000FF',
+  '#00FF00',
+  '#FF0000',
+  '#8A2BE2',
+  '#A52A2A',
+  '#6495ED',
+  '#BDB76B',
+  '#FFA500'
+];
 
 function GenerateStartDatasetArray(data) {
   if (Array.isArray(data)) {
