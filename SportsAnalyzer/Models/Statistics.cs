@@ -41,9 +41,13 @@ namespace SportsAnalyzer.Models
     public List<FootballMatch> SelectedMatches { get; private set; }
     public List<Round> RoundsNumbers { get; set; } = new List<Round>();
     public List<int> RoundsNumbersInts { get; set; } = new List<int>();
+    public List<SelectListItem> TeamItems{ get; set; } = new List<SelectListItem>();
 
     [Display(Name = "Chose rounds")]
     public MultiSelectList RoundsSelectList { get; private set; }
+
+    [Display(Name = "Chose teams")]
+    public MultiSelectList TeamsSelectList { get; private set; }
 
     public int SeasonYear { get; set; }
     public int LeagueRoundsNumber { get; private set; } = DefaultRoundsNumber;
@@ -206,6 +210,27 @@ namespace SportsAnalyzer.Models
 
         prevMatchRound = matchRound;
       }
+    }
+
+    public void CreateTeamsSelectList()
+    {
+      var teamNames = new HashSet<string>(
+        AllMatches.Select(match => match.HomeTeam)).ToList();
+      teamNames.Sort();
+
+      for (int i = 0; i < teamNames.Count; i++)
+      {
+        var teamItem = new SelectListItem
+        {
+          Value = (i+1).ToString(),
+          Text = teamNames[i]
+        };
+        TeamItems.Add(teamItem);
+      }
+
+      TeamsSelectList = new MultiSelectList(TeamItems.OrderBy(item => item.Text),
+        "Value",
+        "Text");
     }
 
     public void CreateRoundsSelectList()
