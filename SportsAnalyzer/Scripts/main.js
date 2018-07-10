@@ -42,6 +42,17 @@ var myChartColors = [
   '#FFA500'
 ];
 
+var teamStandings = {}
+
+$("#teamsList > option").each(function () {
+  var teamName = $(this).text();
+  teamStandings[teamName] = {
+    points: [],
+    opposingTeams: [],
+    matchResults: []
+  };
+});
+
 function GenerateStartDatasetArray(data) {
   if (Array.isArray(data)) {
     return [{
