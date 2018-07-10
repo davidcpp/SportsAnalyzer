@@ -120,7 +120,14 @@ namespace SportsAnalyzer.Models
     public IDictionary<int, double> MatchGoalsPct = new Dictionary<int, double>();
     // Number of points in the given round for the given team
     // RoundPoints[numberOfRound] = numberOfPoints
-    public IDictionary<int, int> RoundPoints = new Dictionary<int, int>();
+    public IDictionary<int, RoundResult> RoundPoints = new Dictionary<int, RoundResult>();
+
+    public class RoundResult
+    {
+      public int Points { get; set; }
+      public string OpposingTeams { get; set; }
+      public string MatchResult { get; set; }
+    };
 
     /* Methods */
 
@@ -205,8 +212,15 @@ namespace SportsAnalyzer.Models
           roundPoints += match.HomeGoals < match.AwayGoals ? 3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
         }
 
+        var roundResult = new RoundResult
+        {
+          Points = roundPoints,
+          OpposingTeams = match.HomeTeam + " - " + match.AwayTeam,
+          MatchResult = match.HomeGoals + ":" + match.AwayGoals
+        };
+
         if (!RoundPoints.ContainsKey(matchRound))
-          RoundPoints.Add(matchRound, roundPoints);
+          RoundPoints.Add(matchRound, roundResult);
 
         prevMatchRound = matchRound;
       }

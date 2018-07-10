@@ -113,9 +113,13 @@ function AddChartDataset(chart, URI, teamName, id) {
       var newData;
       if (URI === matchGoalsURI || URI === roundPointsURI) {
         let chartData;
-        chartData = GetIntegerLabeledData(data);
+
         if (URI === roundPointsURI) {
+          chartData = GetRoundPointsData(teamName, data);
           chart.data.labels = chartData.labels;
+        }
+        else {
+          chartData = GetIntegerLabeledData(data);
         }
         newData = chartData.data;
       }
