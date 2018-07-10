@@ -225,8 +225,6 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
             fontSize: labelsFontSize
           },
           ticks: {
-            suggestedMin: minY,
-            suggestedMax: maxY,
             beginAtZero: true,
             fontSize: ticksFontSize,
             callback: function (value, index, values) {
@@ -251,6 +249,12 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
       }
     }
   });
+
+  if (maxY != 0) {
+    chart.options.scales.yAxes[0].ticks.suggestedMin = minY;
+    chart.options.scales.yAxes[0].ticks.suggestedMax = maxY;
+  }
+
   chart.options.onResize = OnResizeChart;
 
   chartDisplaySize = GetChartDisplaySize(chartName);
@@ -264,7 +268,7 @@ $(document).ready(function () {
     goalsInIntervalsTitle,
     timeIntervalsTexts,
     goalsInIntervalsPercent,
-    0, 100,
+    0, 0,
     goalsInIntervalsXLabel,
     goalsInIntervalsYLabel,
     "bar", "%", "Minutes interval: ", "%");
@@ -275,7 +279,7 @@ $(document).ready(function () {
     matchGoalsTitle,
     [],
     [],
-    0, 100,
+    0, 0,
     matchGoalsXLabel,
     matchGoalsYLabel,
     "bar", "%", "Goals number: ", "%");
@@ -287,7 +291,7 @@ $(document).ready(function () {
     roundPointsTitle,
     null,
     null,
-    0, 100,
+    0, 20,
     roundPointsXLabel,
     roundPointsYLabel,
     "line", "pts", "Round: ", "pts");
