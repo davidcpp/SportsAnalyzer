@@ -361,6 +361,32 @@ $("#changeRounds").click(function () {
   }
 });
 
+function GetRoundPointsData(teamName, data) {
+  var resultArray = [];
+  var labels = Object.keys(data);
+  var values = Object.values(data);
+  var maxLabel = labels[labels.length - 1];
+
+  for (var i = 0; i < labels.length; i++) {
+    resultArray[parseInt(labels[i])] = parseInt(values[i].Points);
+    teamStandings[teamName].points[parseInt(labels[i])] = values[i].Points;
+    teamStandings[teamName].opposingTeams[parseInt(labels[i])] = values[i].OpposingTeams;
+    teamStandings[teamName].matchResults[parseInt(labels[i])] = values[i].MatchResult;
+  }
+
+  for (var i = 0; i <= maxLabel; i++) {
+    labels[i] = i;
+    if (resultArray[i] == undefined) {
+      resultArray[i] = 0;
+      teamStandings[teamName].points[i] = 0;
+      teamStandings[teamName].opposingTeams[i] = "";
+      teamStandings[teamName].matchResults[i] = "";
+    }
+  }
+  chartData = new ChartData(resultArray, labels);
+  return chartData;
+}
+
 function GetIntegerLabeledData(data) {
   var resultArray = [];
   var labels = Object.keys(data);
