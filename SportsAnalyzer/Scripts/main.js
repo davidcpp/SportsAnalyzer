@@ -118,9 +118,12 @@ function AddChartDataset(chart, URI, teamName, id) {
         borderColor: myChartColors[id],
         borderWidth: 1,
         data: newData,
-        fill: false,
-        lineTension: 0
       };
+
+      if (URI === roundPointsURI) {
+        dataset.fill = false;
+        dataset.lineTension = 0;
+      }
 
       // calling RemoveChartDataset method in case of delay in receiving results from WebApi
       RemoveChartDataset(chart, teamName);
