@@ -49,6 +49,13 @@ var myChartColors = [
 
 var teamStandings = {}
 
+// Getting data of the Model passed from the Stats view
+
+timeIntervalsTexts = eval($("#mainScript").attr("data-time-intervals-all-text"));
+goalsInIntervalsPercent = eval($("#mainScript").attr("data-goals-in-intervals-percent"));
+leagueName = eval($("#mainScript").attr("data-league-name"));
+seasonYear = eval($("#mainScript").attr("data-season-year"));
+
 $("#teamsList > option").each(function () {
   var teamName = $(this).text();
   teamStandings[teamName] = {
@@ -70,13 +77,6 @@ function GenerateStartDatasetArray(data) {
   }
   return [];
 }
-
-// Getting data of the Model passed from the Stats view
-
-timeIntervalsTexts = eval($("#mainScript").attr("data-time-intervals-all-text"));
-goalsInIntervalsPercent = eval($("#mainScript").attr("data-goals-in-intervals-percent"));
-leagueName = eval($("#mainScript").attr("data-league-name"));
-seasonYear = eval($("#mainScript").attr("data-season-year"));
 
 function RemoveChartDataset(chart, teamName) {
   for (var i = 0; i < chart.data.datasets.length; i++) {
