@@ -122,13 +122,6 @@ namespace SportsAnalyzer.Models
     // RoundPoints[numberOfRound] = numberOfPoints
     public IDictionary<int, RoundResult> RoundPoints = new Dictionary<int, RoundResult>();
 
-    public class RoundResult
-    {
-      public int Points { get; set; }
-      public string OpposingTeams { get; set; }
-      public string MatchResult { get; set; }
-    };
-
     /* Methods */
 
     public void CalculateAll()
@@ -339,6 +332,13 @@ namespace SportsAnalyzer.Models
           .ToList();
       }
     }
+
+    public class RoundResult
+    {
+      public int Points { get; set; }
+      public string OpposingTeams { get; set; }
+      public string MatchResult { get; set; }
+    };
   }
 
   public class Round
