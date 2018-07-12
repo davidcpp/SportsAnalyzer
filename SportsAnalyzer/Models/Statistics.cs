@@ -333,6 +333,15 @@ namespace SportsAnalyzer.Models
       }
     }
 
+    public class Round
+    {
+      [Required]
+      public int Number { get; set; }
+
+      public DateTime StartDate { get; set; }
+      public DateTime EndDate { get; set; }
+    }
+
     public class RoundResult
     {
       public int Points { get; set; }
@@ -341,12 +350,5 @@ namespace SportsAnalyzer.Models
     };
   }
 
-  public class Round
-  {
-    [Required]
-    public int Number { get; set; }
 
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
-  }
 }
