@@ -49,6 +49,55 @@ var myChartColors = [
 
 var teamStandings = {}
 
+var chartDefaultConfig = {
+  responsive: true,
+  maintainAspectRatio: false,
+  legend: {
+    position: 'top',
+    labels: {
+      fontSize: legendFontSize,
+      boxWidth: 30
+    }
+  },
+  title: {
+    display: true,
+    fontSize: varTitleFontSize,
+    fontColor: window.chartColors.black,
+    text: 'Default Chart'
+  },
+  tooltips: {
+    titleFontSize: tooltipsFontSize,
+    bodyFontSize: tooltipsFontSize,
+    mode: 'index',
+  },
+  scales: {
+    yAxes: [{
+      scaleLabel: {
+        display: true,
+        fontColor: window.chartColors.blue,
+        fontSize: labelsFontSize
+      },
+      ticks: {
+        beginAtZero: true,
+        fontSize: ticksFontSize,
+      }
+    }],
+    xAxes: [{
+      scaleLabel: {
+        display: true,
+        fontColor: window.chartColors.blue,
+        fontSize: labelsFontSize
+      },
+      ticks: {
+        fontSize: ticksFontSize
+      },
+      gridLines: {
+        offsetGridLines: true
+      }
+    }]
+  }
+}
+
 // Getting data of the Model passed from the Stats view
 
 timeIntervalsTexts = eval($("#mainScript").attr("data-time-intervals-all-text"));
@@ -203,75 +252,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
       datasets: GenerateStartDatasetArray(data)
     },
     // Configuration options go here
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      legend: {
-        position: 'top',
-        labels: {
-          fontSize: legendFontSize,
-          boxWidth: 30
-        }
-      },
-      title: {
-        display: true,
-        fontSize: varTitleFontSize,
-        fontColor: window.chartColors.black,
-        text: title
-      },
-      tooltips: {
-        titleFontSize: tooltipsFontSize,
-        bodyFontSize: tooltipsFontSize,
-        mode: 'index',
-        callbacks: {
-          title: function (tooltipItems, data) {
-            var title = tooltipTitlePrefix + tooltipItems[0].xLabel;
-            return title;
-          },
-          label: function (tooltipItem, data) {
-            var label = data.datasets[tooltipItem.datasetIndex].label || '';
-
-            if (label) {
-              label += ': ';
-            }
-            label += tooltipItem.yLabel;
-            label += tooltipLabelEnding;
-            return label;
-          }
-        }
-      },
-      scales: {
-        yAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: yAxisLabel,
-            fontColor: window.chartColors.blue,
-            fontSize: labelsFontSize
-          },
-          ticks: {
-            beginAtZero: true,
-            fontSize: ticksFontSize,
-            callback: function (value, index, values) {
-              return value + yAxisTicksEnding;
-            }
-          }
-        }],
-        xAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: xAxisLabel,
-            fontColor: window.chartColors.blue,
-            fontSize: labelsFontSize
-          },
-          ticks: {
-            fontSize: ticksFontSize
-          },
-          gridLines: {
-            offsetGridLines: true
-          }
-        }]
-      }
-    }
+    options: chartDefaultConfig
   });
 
   if (maxY != 0) {
@@ -297,7 +278,29 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
       return label;
     }
   }
+  else {
+    chart.options.tooltips.callbacks.label = function (tooltipItem, data) {
+      var label = data.datasets[tooltipItem.datasetIndex].label || '';
 
+      if (label) {
+        label += ': ';
+      }
+      label += tooltipItem.yLabel;
+      label += tooltipLabelEnding;
+      return label;
+    };
+  }
+
+  chart.options.title.text = title;
+  chart.options.tooltips.callbacks.title = function (tooltipItems, data) {
+    var title = tooltipTitlePrefix + tooltipItems[0].xLabel;
+    return title;
+  };
+  chart.options.scales.yAxes[0].scaleLabel.labelString = yAxisLabel;
+  chart.options.scales.xAxes[0].scaleLabel.labelString = xAxisLabel;
+  chart.options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+    return value + yAxisTicksEnding;
+  };
   chart.options.onResize = OnResizeChart;
 
   chartDisplaySize = GetChartDisplaySize(chartName);
