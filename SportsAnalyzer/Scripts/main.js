@@ -1,24 +1,29 @@
 ﻿var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
+
 var timeIntervalsTexts = [];
-var goalsInIntervalsPercent;
+var goalsInIntervalsPercent = [];
 var selectedRounds = [];
+
 var webApiUri = 'api/stats';
+
 var goalsIntervalsURI = webApiUri + "/goalsintervals";
 var goalsInIntervalsTitle = "Minutes Intervales of scored goals"
 var goalsInIntervalsXLabel = "Time interval [min.]";
 var goalsInIntervalsYLabel = "Percent of goals";
+
 var matchGoalsURI = webApiUri + "/matchgoals";
 var matchGoalsTitle = "Percent of Matches with a given number of goals";
 var matchGoalsXLabel = "Number of goals";
 var matchGoalsYLabel = "Percent of matches";
+
 var roundPointsURI = webApiUri + "/roundpoints";
 var roundPointsTitle = "Number of points after a given round"
 var roundPointsXLabel = "Number of round";
 var roundPointsYLabel = "Number of points";
+
 var leagueName, seasonYear;
 
 var color = Chart.helpers.color;
-
 var myChartColors = [
   '#4dc9f6',
   '#f67019',
