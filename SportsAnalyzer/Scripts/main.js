@@ -6,7 +6,7 @@ var selectedRounds = [];
 
 var webApiUri = 'api/stats';
 
-var goalsIntervalsURI = webApiUri + "/goalsintervals";
+var goalsInIntervalsURI = webApiUri + "/goalsintervals";
 var goalsInIntervalsTitle = "Minutes Intervales of scored goals"
 var goalsInIntervalsXLabel = "Time interval [min.]";
 var goalsInIntervalsYLabel = "Percent of goals";
@@ -342,7 +342,7 @@ $(document).ready(function () {
 
 function GetGoalsInIntervals(chart, index, teamName) {
   var statsRequestData = GetStatsRequestData(teamName);
-  $.post(goalsIntervalsURI, statsRequestData, null, "json")
+  $.post(goalsInIntervalsURI, statsRequestData, null, "json")
     .done(function (data) {
       UpdateChartData(chart, data, index);
     })
@@ -362,7 +362,7 @@ $("#teamsList").change(function () {
     var id = $(this).val();
 
     if ($(this).prop("selected")) {
-      AddChartDataset(window.goalsInIntervalsChart, goalsIntervalsURI, teamName, id, );
+      AddChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id, );
       AddChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
       AddChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
     }
