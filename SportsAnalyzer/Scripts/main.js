@@ -274,6 +274,25 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
     chart.options.scales.yAxes[0].ticks.suggestedMax = maxY;
   }
 
+  if (title == roundPointsTitle) {
+    chart.options.tooltips.callbacks.label = function (tooltipItem, data) {
+      var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+      if (label) {
+        label += ': ';
+      }
+      label += tooltipItem.yLabel;
+      label += tooltipLabelEnding;
+
+      let teamName = data.datasets[tooltipItem.datasetIndex].label;
+      let roundNumber = parseInt(tooltipItem.xLabel);
+      label += " | " + teamStandings[teamName].opposingTeams[roundNumber]
+        + " " + teamStandings[teamName].matchResults[roundNumber];
+
+      return label;
+    }
+  }
+
   chart.options.onResize = OnResizeChart;
 
   chartDisplaySize = GetChartDisplaySize(chartName);
