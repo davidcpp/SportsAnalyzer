@@ -189,6 +189,7 @@ namespace SportsAnalyzer.Models
 
       int roundPoints = 0;
       int matchRound = 0, prevMatchRound = 0;
+      string opponent;
 
       foreach (var match in SelectedMatches.OrderBy(match => match.Round ?? 0))
       {
@@ -199,15 +200,18 @@ namespace SportsAnalyzer.Models
         if (match.HomeTeam == TeamName)
         {
           roundPoints += match.HomeGoals > match.AwayGoals ? 3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
+          opponent = match.AwayTeam;
         }
         else
         {
           roundPoints += match.HomeGoals < match.AwayGoals ? 3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
+          opponent = match.HomeTeam;
         }
 
         var roundResult = new RoundResult
         {
           Points = roundPoints,
+          Opponent = opponent,
           OpposingTeams = match.HomeTeam + " - " + match.AwayTeam,
           MatchResult = match.HomeGoals + ":" + match.AwayGoals
         };
@@ -345,6 +349,7 @@ namespace SportsAnalyzer.Models
     public class RoundResult
     {
       public int Points { get; set; }
+      public string Opponent { get; set; }
       public string OpposingTeams { get; set; }
       public string MatchResult { get; set; }
     };

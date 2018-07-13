@@ -109,6 +109,7 @@ $("#teamsList > option").each(function () {
   var teamName = $(this).text();
   teamStandings[teamName] = {
     points: [],
+    opponentCrests: [],
     opposingTeams: [],
     matchResults: []
   };
@@ -193,6 +194,7 @@ function AddChartDataset(chart, URI, teamName, id) {
         dataset.fill = false;
         dataset.lineTension = 0;
         dataset.borderWidth = 2;
+        dataset.pointStyle = teamStandings[teamName].opponentCrests;
       }
 
       // calling RemoveChartDataset method in case of delay in receiving results from WebApi
@@ -400,8 +402,12 @@ function GetRoundPointsData(teamName, data) {
   var maxLabel = labels[labels.length - 1];
 
   for (var i = 0; i < labels.length; i++) {
+    var opponentCrest = new Image();
+    opponentCrest.src = values[i].Opponent + ".png";
+
     resultArray[parseInt(labels[i])] = parseInt(values[i].Points);
     teamStandings[teamName].points[parseInt(labels[i])] = values[i].Points;
+    teamStandings[teamName].opponentCrests[parseInt(labels[i])] = opponentCrest;
     teamStandings[teamName].opposingTeams[parseInt(labels[i])] = values[i].OpposingTeams;
     teamStandings[teamName].matchResults[parseInt(labels[i])] = values[i].MatchResult;
   }
@@ -409,8 +415,12 @@ function GetRoundPointsData(teamName, data) {
   for (var i = 0; i <= maxLabel; i++) {
     labels[i] = i;
     if (resultArray[i] == undefined) {
+      var blankCrest = new Image();
+      blankCrest.src = "blank.png";
+
       resultArray[i] = 0;
       teamStandings[teamName].points[i] = 0;
+      teamStandings[teamName].opponentCrests[i] = blankCrest;
       teamStandings[teamName].opposingTeams[i] = "";
       teamStandings[teamName].matchResults[i] = "";
     }
