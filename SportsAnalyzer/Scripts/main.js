@@ -48,6 +48,7 @@ var myChartColors = [
 ];
 
 var teamStandings = {}
+var selectedTeams = {};
 
 var chartDefaultConfig = {
   responsive: true,
@@ -107,6 +108,7 @@ seasonYear = eval($("#mainScript").attr("data-season-year"));
 
 $("#teamsList > option").each(function () {
   var teamName = $(this).text();
+  selectedTeams[teamName] = false;
   teamStandings[teamName] = {
     points: [],
     opponentCrests: [],
@@ -367,11 +369,15 @@ $("#teamsList").change(function () {
     var id = $(this).val();
 
     if ($(this).prop("selected")) {
-      AddChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id, );
-      AddChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
-      AddChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
+      if (selectedTeams[teamName] === false) {
+        selectedTeams[teamName] = true;
+        AddChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id, );
+        AddChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
+        AddChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
+      }
     }
-    else {
+    else if (selectedTeams[teamName] === true) {
+      selectedTeams[teamName] = false;
       RemoveChartDataset(window.goalsInIntervalsChart, teamName);
       RemoveChartDataset(window.matchGoalsChart, teamName);
       RemoveChartDataset(window.roundPointsChart, teamName);
