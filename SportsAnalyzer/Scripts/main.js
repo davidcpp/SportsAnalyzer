@@ -196,7 +196,8 @@ function AddChartDataset(chart, URI, teamName, id) {
         dataset.fill = false;
         dataset.lineTension = 0;
         dataset.borderWidth = 2;
-        dataset.pointStyle = teamStandings[teamName].opponentCrests;
+        if (chart.data.datasets.length == 0)
+          dataset.pointStyle = teamStandings[teamName].opponentCrests;
       }
 
       // calling RemoveChartDataset method in case of delay in receiving results from WebApi
