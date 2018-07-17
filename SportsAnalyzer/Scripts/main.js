@@ -200,7 +200,7 @@ function AddChartDataset(chart, URI, teamName, id) {
           dataset.pointStyle = teamStandings[teamName].opponentCrests;
       }
 
-      // calling RemoveChartDataset method in case of delay in receiving results from WebApi
+      // calling RemoveChartDataset method for case of delay in receiving results from WebApi
       RemoveChartDataset(chart, teamName);
       chart.data.datasets.push(dataset);
       chart.update();
