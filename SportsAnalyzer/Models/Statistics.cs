@@ -122,6 +122,12 @@ namespace SportsAnalyzer.Models
     // RoundPoints[numberOfRound] = numberOfPoints
     public IDictionary<int, RoundResult> RoundPoints = new Dictionary<int, RoundResult>();
 
+    // TablePositions[teamName][roundNumber] = position of the team in the table after roundNumber
+    public static IDictionary<string, Dictionary<int, int>> TablePositions
+      = new Dictionary<string, Dictionary<int, int>>();
+
+    private static bool TableCalculated = false;
+
     /* Methods */
 
     public void CalculateAll()
@@ -182,10 +188,118 @@ namespace SportsAnalyzer.Models
       }
     }
 
+    /// <summary> Calculate team positions in the table for all rounds </summary>
+    public void CalculateTablePositions()
+    {
+      var teamsSet = new HashSet<string>(AllMatches.Select(match => match.HomeTeam));
+
+      int matchRound, prevMatchRound = 0, matchesInRoundCounter = 0;
+      int maxMatchesInRound = teamsSet.Count / 2;
+      var teamLeagueStandings = new Dictionary<string, TeamLeagueStanding>();
+
+      foreach (var match in AllMatches.OrderBy(match => match.Round ?? 0))
+      {
+        InitTeamStandings(teamLeagueStandings, match);
+
+        matchRound = match.Round ?? 0;
+
+        if (matchRound == 0)
+          continue;
+
+        if (matchRound != prevMatchRound)
+          matchesInRoundCounter = 0;
+
+        matchesInRoundCounter++;
+        prevMatchRound = matchRound;
+
+        UpdateStandingsAfterRound(teamLeagueStandings, match);
+
+        if (matchesInRoundCounter < maxMatchesInRound)
+          continue;
+
+        // Calculating teams positions in the league table
+
+        var standingsInOrder = GetTeamsOrder(teamLeagueStandings);
+        SetTeamTablePositions(standingsInOrder, matchRound);
+      }
+      TableCalculated = true;
+    }
+
+    /// <summary> Init standings objects of match teams </summary>
+    private void InitTeamStandings(Dictionary<string, TeamLeagueStanding> standings,
+      FootballMatch match)
+    {
+      if (!standings.ContainsKey(match.HomeTeam))
+      {
+        standings[match.HomeTeam] = new TeamLeagueStanding
+        {
+          Team = match.HomeTeam
+        };
+      }
+
+      if (!standings.ContainsKey(match.AwayTeam))
+      {
+        standings[match.AwayTeam] = new TeamLeagueStanding
+        {
+          Team = match.AwayTeam
+        };
+      }
+    }
+
+    /// <summary> Set goals and points for teams after match between them </summary>
+    private void UpdateStandingsAfterRound(Dictionary<string, TeamLeagueStanding> standings,
+      FootballMatch match)
+    {
+      standings[match.HomeTeam].Goals_For += match.HomeGoals ?? 0;
+      standings[match.HomeTeam].Goals_Against += match.AwayGoals ?? 0;
+      standings[match.HomeTeam].Goal_Difference = standings[match.HomeTeam].Goals_For
+        - standings[match.HomeTeam].Goals_Against;
+      standings[match.HomeTeam].Points += match.HomeGoals > match.AwayGoals ?
+        3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
+
+      standings[match.AwayTeam].Goals_For += match.AwayGoals ?? 0;
+      standings[match.AwayTeam].Goals_Against += match.HomeGoals ?? 0;
+      standings[match.AwayTeam].Goal_Difference = standings[match.AwayTeam].Goals_For
+        - standings[match.AwayTeam].Goals_Against;
+      standings[match.AwayTeam].Points += match.AwayGoals > match.HomeGoals ?
+        3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
+    }
+
+    /// <summary> Calculate order of teams in the league table after the given round</summary>
+    private static List<TeamLeagueStanding> GetTeamsOrder(
+      Dictionary<string, TeamLeagueStanding> standings)
+    {
+      var result = standings.Values
+        .OrderBy(standing => standing.Points)
+        .ThenBy(standing => standing.Goal_Difference)
+        .ThenBy(standing => standing.Goals_For).ToList();
+
+      result.Reverse();
+      return result;
+    }
+
+    /// <summary> Set positions of teams in the league table after the given round</summary>
+    private static void SetTeamTablePositions(List<TeamLeagueStanding> standingsInOrder,
+      int matchRound)
+    {
+      for (int i = 0; i < standingsInOrder.Count; i++)
+      {
+        var teamName = standingsInOrder[i].Team;
+        if (!TablePositions.ContainsKey(teamName))
+          TablePositions[teamName] = new Dictionary<int, int>();
+
+        // Position int the table of the given team after matchRound
+        TablePositions[teamName][matchRound] = i + 1;
+      }
+    }
+
     public void CalculateRoundPoints()
     {
       if (TeamName == DefaultTeamName)
         return;
+
+      if (!TableCalculated)
+        CalculateTablePositions();
 
       int roundPoints = 0;
       int matchRound = 0, prevMatchRound = 0;
@@ -211,6 +325,7 @@ namespace SportsAnalyzer.Models
         var roundResult = new RoundResult
         {
           Points = roundPoints,
+          TablePosition = TablePositions[TeamName][matchRound],
           Opponent = opponent,
           OpposingTeams = match.HomeTeam + " - " + match.AwayTeam,
           MatchResult = match.HomeGoals + ":" + match.AwayGoals
@@ -349,6 +464,7 @@ namespace SportsAnalyzer.Models
     public class RoundResult
     {
       public int Points { get; set; }
+      public int TablePosition { get; set; }
       public string Opponent { get; set; }
       public string OpposingTeams { get; set; }
       public string MatchResult { get; set; }

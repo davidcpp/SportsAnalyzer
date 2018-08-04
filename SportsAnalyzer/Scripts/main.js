@@ -111,11 +111,59 @@ $("#teamsList > option").each(function () {
   selectedTeams[teamName] = false;
   teamStandings[teamName] = {
     points: [],
+    tablePositions: [],
     opponentCrests: [],
     opposingTeams: [],
     matchResults: []
   };
 });
+
+Chart.plugins.register({
+  afterDatasetsDraw: AddTablePositionsOnChart
+});
+
+function AddTablePositionsOnChart(chart) {
+  var ctx = chart.chart.ctx;
+
+  // drawing the team's position in the table only on the round points chart
+  if (chart.options.title.text != roundPointsTitle)
+    return;
+
+  chart.data.datasets.forEach(function (dataset, i) {
+    // table position will be shown only for the first team on the chart
+    if (i > 0)
+      return;
+
+    var teamName = dataset.label;
+    var meta = chart.getDatasetMeta(i);
+    if (!meta.hidden) {
+      meta.data.forEach(function (element, index) {
+        var numberOfRound = chart.data.labels[index];
+        var dataString = teamStandings[teamName].tablePositions[numberOfRound];
+
+        if (dataString == undefined)
+          return;
+
+        dataString = dataString.toString();
+        // Draw the text in black, with the specified font
+        ctx.fillStyle = 'rgb(0, 0, 0)';
+
+        var fontSize = 14;
+        var fontStyle = 'normal';
+        var fontFamily = 'Arial';
+        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+        // Make sure alignment settings are correct
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        var padding = 10;
+        var position = element.tooltipPosition();
+        ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+      });
+    }
+  });
+}
 
 function GenerateStartDatasetArray(data) {
   if (Array.isArray(data)) {
@@ -414,6 +462,7 @@ function GetRoundPointsData(teamName, data) {
 
     resultArray[parseInt(labels[i])] = parseInt(values[i].Points);
     teamStandings[teamName].points[parseInt(labels[i])] = values[i].Points;
+    teamStandings[teamName].tablePositions[parseInt(labels[i])] = values[i].TablePosition;
     teamStandings[teamName].opponentCrests[parseInt(labels[i])] = opponentCrest;
     teamStandings[teamName].opposingTeams[parseInt(labels[i])] = values[i].OpposingTeams;
     teamStandings[teamName].matchResults[parseInt(labels[i])] = values[i].MatchResult;
