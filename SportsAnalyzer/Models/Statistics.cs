@@ -470,6 +470,4 @@ namespace SportsAnalyzer.Models
       public string MatchResult { get; set; }
     };
   }
-
-
 }
