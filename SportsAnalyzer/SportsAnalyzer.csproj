@@ -152,8 +152,9 @@
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
-    <Reference Include="XMLSoccerCOM">
-      <HintPath>..\..\..\..\..\biblioteki\XMLSoccerCOM Library\XMLSoccerCOM.dll</HintPath>
+    <Reference Include="XMLSoccerCOM, Version=0.9.7.4, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\XMLSoccerCOM Library\XMLSoccerCOM.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
