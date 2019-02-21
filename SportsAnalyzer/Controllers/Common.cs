@@ -57,7 +57,7 @@ namespace SportsAnalyzer
     public const string DefaultLeagueId = "3";
     public const string DefaultTeamName = "*";
 
-    public const int DefaultSeasonYear = 2017;
+    public const int DefaultSeasonYear = 2018;
     public const int DefaultRoundsNumber = 33;
     public const int RequestsBreakMinutes = 5;
     public const int RequestsBreakSeconds = 15;
