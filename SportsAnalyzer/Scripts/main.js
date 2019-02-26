@@ -1,54 +1,56 @@
-﻿var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
+﻿// variables from model/API
+var timeIntervalsTexts = [],
+  goalsInIntervalsPercent = [],
+  leagueName, seasonYear,
+  teamStandings = {};
 
-var timeIntervalsTexts = [];
-var goalsInIntervalsPercent = [];
-var selectedRounds = [];
+// variables from user input
+var selectedRounds = [],
+  selectedTeams = {};
 
 var webApiUri = 'api/stats';
 
-var goalsInIntervalsURI = webApiUri + "/goalsintervals";
-var goalsInIntervalsTitle = "Minutes Intervales of scored goals"
-var goalsInIntervalsXLabel = "Time interval [min.]";
-var goalsInIntervalsYLabel = "Percent of goals";
+// variables for charts titles
+var goalsInIntervalsURI = webApiUri + "/goalsintervals",
+  goalsInIntervalsTitle = "Minutes Intervales of scored goals",
+  goalsInIntervalsXLabel = "Time interval [min.]",
+  goalsInIntervalsYLabel = "Percent of goals";
 
-var matchGoalsURI = webApiUri + "/matchgoals";
-var matchGoalsTitle = "Percent of Matches with a given number of goals";
-var matchGoalsXLabel = "Number of goals";
-var matchGoalsYLabel = "Percent of matches";
+var matchGoalsURI = webApiUri + "/matchgoals",
+  matchGoalsTitle = "Percent of Matches with a given number of goals",
+  matchGoalsXLabel = "Number of goals",
+  matchGoalsYLabel = "Percent of matches";
 
-var roundPointsURI = webApiUri + "/roundpoints";
-var roundPointsTitle = "Number of points after a given round"
-var roundPointsXLabel = "Number of round";
-var roundPointsYLabel = "Number of points";
+var roundPointsURI = webApiUri + "/roundpoints",
+  roundPointsTitle = "Number of points after a given round",
+  roundPointsXLabel = "Number of round",
+  roundPointsYLabel = "Number of points";
 
-var leagueName, seasonYear;
-
-var color = Chart.helpers.color;
-var myChartColors = [
-  '#4dc9f6',
-  '#f67019',
-  '#000000',
-  '#6B8E23',
-  '#acc236',
-  '#B22222',
-  '#00a950',
-  '#58595b',
-  '#FF6347',
-  '#00FFFF',
-  '#FF00FF',
-  '#FFFF00',
-  '#0000FF',
-  '#00FF00',
-  '#FF0000',
-  '#8A2BE2',
-  '#A52A2A',
-  '#6495ED',
-  '#BDB76B',
-  '#FFA500'
-];
-
-var teamStandings = {}
-var selectedTeams = {};
+// charts style variables
+var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize,
+  color = Chart.helpers.color,
+  myChartColors = [
+    '#4dc9f6',
+    '#f67019',
+    '#000000',
+    '#6B8E23',
+    '#acc236',
+    '#B22222',
+    '#00a950',
+    '#58595b',
+    '#FF6347',
+    '#00FFFF',
+    '#FF00FF',
+    '#FFFF00',
+    '#0000FF',
+    '#00FF00',
+    '#FF0000',
+    '#8A2BE2',
+    '#A52A2A',
+    '#6495ED',
+    '#BDB76B',
+    '#FFA500'
+  ];
 
 var chartDefaultConfig = {
   responsive: true,
