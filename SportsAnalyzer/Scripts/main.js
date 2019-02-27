@@ -359,7 +359,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
   };
   chart.options.onResize = OnResizeChart;
 
-  chartDisplaySize = GetChartDisplaySize(chartName);
+  const chartDisplaySize = GetChartDisplaySize(chartName);
   UpdateChart(chart, chartDisplaySize);
   return chart;
 }
