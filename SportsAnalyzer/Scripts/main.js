@@ -484,8 +484,7 @@ function GetRoundPointsData(teamName, data) {
       teamStandings[teamName].matchResults[i] = "";
     }
   }
-  chartData = new ChartData(resultArray, labels);
-  return chartData;
+  return new ChartData(resultArray, labels);
 }
 
 function GetIntegerLabeledData(data) {
@@ -503,8 +502,7 @@ function GetIntegerLabeledData(data) {
     if (resultArray[i] == undefined)
       resultArray[i] = 0;
   }
-  chartData = new ChartData(resultArray, labels);
-  return chartData;
+  return new ChartData(resultArray, labels);
 }
 
 function GetMatchGoals(chart, teamName, index = 0) {
