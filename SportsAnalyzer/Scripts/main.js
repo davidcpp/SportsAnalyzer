@@ -14,17 +14,20 @@ const webApiUri = 'api/stats';
 const goalsInIntervalsURI = webApiUri + "/goalsintervals",
   goalsInIntervalsTitle = "Minutes Intervales of scored goals",
   goalsInIntervalsXLabel = "Time interval [min.]",
-  goalsInIntervalsYLabel = "Percent of goals";
+  goalsInIntervalsYLabel = "Percent of goals",
+  goalsInIntervalsTooltipTitle = "Interval: ";
 
 const matchGoalsURI = webApiUri + "/matchgoals",
   matchGoalsTitle = "Percent of Matches with a given number of goals",
   matchGoalsXLabel = "Number of goals",
-  matchGoalsYLabel = "Percent of matches";
+  matchGoalsYLabel = "Percent of matches",
+  matchGoalsTooltipTitle = "Goals: ";
 
 const roundPointsURI = webApiUri + "/roundpoints",
   roundPointsTitle = "Number of points after a given round",
   roundPointsXLabel = "Number of round",
-  roundPointsYLabel = "Number of points";
+  roundPointsYLabel = "Number of points",
+  roundPointsTooltipTitle = "Round: ";
 
 // charts style variables
 var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
@@ -370,7 +373,7 @@ $(document).ready(function () {
     0, 0,
     goalsInIntervalsXLabel,
     goalsInIntervalsYLabel,
-    "bar", "%", "Minutes interval: ", "%");
+    "bar", "%", goalsInIntervalsTooltipTitle, "%");
 
   ConfirmSelectedRounds();
   window.matchGoalsChart = CreateChart(
@@ -381,7 +384,7 @@ $(document).ready(function () {
     0, 0,
     matchGoalsXLabel,
     matchGoalsYLabel,
-    "bar", "%", "Goals number: ", "%");
+    "bar", "%", matchGoalsTooltipTitle, "%");
 
   GetMatchGoals(window.matchGoalsChart, "*");
 
@@ -393,7 +396,7 @@ $(document).ready(function () {
     0, 20,
     roundPointsXLabel,
     roundPointsYLabel,
-    "line", "pts", "Round: ", "pts");
+    "line", "pts", roundPointsTooltipTitle, "pts");
 });
 
 function GetGoalsInIntervals(chart, index, teamName) {
