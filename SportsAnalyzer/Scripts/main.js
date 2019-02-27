@@ -71,7 +71,7 @@ const chartDefaultConfig = {
   tooltips: {
     titleFontSize: tooltipsFontSize,
     bodyFontSize: tooltipsFontSize,
-    mode: 'index',
+    mode: 'index'
   },
   scales: {
     yAxes: [{
@@ -82,7 +82,7 @@ const chartDefaultConfig = {
       },
       ticks: {
         beginAtZero: true,
-        fontSize: ticksFontSize,
+        fontSize: ticksFontSize
       }
     }],
     xAxes: [{
@@ -240,7 +240,7 @@ function AddChartDataset(chart, URI, teamName, id) {
         backgroundColor: color(myChartColors[id]).alpha(0.5).rgbString(),
         borderColor: myChartColors[id],
         borderWidth: 1,
-        data: newData,
+        data: newData
       };
 
       if (URI === roundPointsURI) {
@@ -423,7 +423,7 @@ $("#teamsList").change(function () {
     if ($(this).prop("selected")) {
       if (selectedTeams[teamName] === false) {
         selectedTeams[teamName] = true;
-        AddChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id, );
+        AddChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id);
         AddChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
         AddChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
       }
