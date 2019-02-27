@@ -15,19 +15,19 @@ const goalsInIntervalsURI = webApiUri + "/goalsintervals",
   goalsInIntervalsTitle = "Minutes Intervales of scored goals",
   goalsInIntervalsXLabel = "Time interval [min.]",
   goalsInIntervalsYLabel = "Percent of goals",
-  goalsInIntervalsTooltipTitle = "Interval: ";
+  goalsInIntervalsTooltipTitle = "Interval";
 
 const matchGoalsURI = webApiUri + "/matchgoals",
   matchGoalsTitle = "Percent of Matches with a given number of goals",
   matchGoalsXLabel = "Number of goals",
   matchGoalsYLabel = "Percent of matches",
-  matchGoalsTooltipTitle = "Goals: ";
+  matchGoalsTooltipTitle = "Goals";
 
 const roundPointsURI = webApiUri + "/roundpoints",
   roundPointsTitle = "Number of points after a given round",
   roundPointsXLabel = "Number of round",
   roundPointsYLabel = "Number of points",
-  roundPointsTooltipTitle = "Round: ";
+  roundPointsTooltipTitle = "Round";
 
 // charts style variables
 var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
@@ -349,7 +349,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
 
   chart.options.title.text = title;
   chart.options.tooltips.callbacks.title = function (tooltipItems, data) {
-    const title = tooltipTitlePrefix + tooltipItems[0].xLabel;
+    const title = tooltipTitlePrefix + ": " + tooltipItems[0].xLabel;
     return title;
   };
   chart.options.scales.yAxes[0].scaleLabel.labelString = yAxisLabel;
