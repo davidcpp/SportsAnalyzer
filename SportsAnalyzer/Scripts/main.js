@@ -93,9 +93,6 @@ const chartDefaultConfig = {
       },
       ticks: {
         fontSize: ticksFontSize
-      },
-      gridLines: {
-        offsetGridLines: true
       }
     }]
   }
