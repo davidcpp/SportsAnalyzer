@@ -30,7 +30,7 @@ const roundPointsURI = webApiUri + "/roundpoints",
   roundPointsTooltipTitle = "Round";
 
 // charts style variables
-var varTitleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
+var titleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
 const color = Chart.helpers.color,
   myChartColors = [
     '#4dc9f6',
@@ -67,7 +67,7 @@ const chartDefaultConfig = {
   },
   title: {
     display: true,
-    fontSize: varTitleFontSize,
+    fontSize: titleFontSize,
     fontColor: window.chartColors.black,
     text: 'Default Chart'
   },
@@ -274,14 +274,14 @@ function GetChartDisplaySize(chartName) {
 function UpdateChartFontSizes(chart, chartSize) {
   if (typeof chartSize !== "undefined") {
     legendFontSize = Math.round(0.01 * chartSize.width + 8);
-    varTitleFontSize = Math.round(0.015 * chartSize.width + 8);
+    titleFontSize = Math.round(0.015 * chartSize.width + 8);
     tooltipsFontSize = Math.round(0.005 * chartSize.width + 10);
     labelsFontSize = Math.round(0.005 * chartSize.width + 10);
     ticksFontSize = Math.round(0.005 * chartSize.width + 10);
   }
 
   if (typeof chart !== "undefined") {
-    chart.options.title.fontSize = varTitleFontSize;
+    chart.options.title.fontSize = titleFontSize;
     chart.options.legend.labels.fontSize = legendFontSize;
     chart.options.tooltips.titleFontSize = tooltipsFontSize;
     chart.options.tooltips.bodyFontSize = tooltipsFontSize;
