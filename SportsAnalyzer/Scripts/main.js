@@ -264,7 +264,7 @@ function AddChartDataset(chart, URI, teamName, id) {
 function GetChartDisplaySize(chartName) {
   const canvasChart = document.getElementById(chartName);
 
-  chartDisplaySize = {
+  var chartDisplaySize = {
     width: parseFloat(canvasChart.style.width),
     height: parseFloat(canvasChart.style.height)
   };
