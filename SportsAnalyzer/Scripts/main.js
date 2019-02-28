@@ -1,4 +1,6 @@
-﻿// variables from model/API
+﻿"use strict";
+
+// variables from model/API
 var timeIntervalsTexts = [],
   goalsInIntervalsPercent = [],
   leagueName, seasonYear,
