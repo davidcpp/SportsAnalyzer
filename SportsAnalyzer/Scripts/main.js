@@ -457,20 +457,21 @@ $('#changeRounds').click(function () {
 
 function GetRoundPointsData(teamName, data) {
   var resultArray = [],
-    labels = Object.keys(data);
+    labels = Object.keys(data).map(element => parseInt(element));
   const values = Object.values(data),
     maxLabel = labels[labels.length - 1];
 
   for (let i = 0; i < labels.length; i++) {
     let opponentCrest = new Image();
     opponentCrest.src = values[i].Opponent + '.png';
+    const curRound = labels[i];
 
-    resultArray[parseInt(labels[i])] = parseInt(values[i].Points);
-    teamStandings[teamName].points[parseInt(labels[i])] = values[i].Points;
-    teamStandings[teamName].tablePositions[parseInt(labels[i])] = values[i].TablePosition;
-    teamStandings[teamName].opponentCrests[parseInt(labels[i])] = opponentCrest;
-    teamStandings[teamName].opposingTeams[parseInt(labels[i])] = values[i].OpposingTeams;
-    teamStandings[teamName].matchResults[parseInt(labels[i])] = values[i].MatchResult;
+    resultArray[curRound] = parseInt(values[i].Points);
+    teamStandings[teamName].points[curRound] = values[i].Points;
+    teamStandings[teamName].tablePositions[curRound] = values[i].TablePosition;
+    teamStandings[teamName].opponentCrests[curRound] = opponentCrest;
+    teamStandings[teamName].opposingTeams[curRound] = values[i].OpposingTeams;
+    teamStandings[teamName].matchResults[curRound] = values[i].MatchResult;
   }
 
   for (let i = 0; i <= maxLabel; i++) {
