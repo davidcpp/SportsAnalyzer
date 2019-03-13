@@ -1,4 +1,4 @@
-﻿"use strict";
+﻿'use strict';
 
 // variables from model/API
 var timeIntervalsTexts = [],
@@ -13,23 +13,23 @@ var selectedRounds = [],
 const webApiUri = 'api/stats';
 
 // variables for charts titles
-const goalsInIntervalsURI = webApiUri + "/goalsintervals",
-  goalsInIntervalsTitle = "Minutes Intervales of scored goals",
-  goalsInIntervalsXLabel = "Time interval [min.]",
-  goalsInIntervalsYLabel = "Percent of goals",
-  goalsInIntervalsTooltipTitle = "Interval";
+const goalsInIntervalsURI = webApiUri + '/goalsintervals',
+  goalsInIntervalsTitle = 'Minutes Intervales of scored goals',
+  goalsInIntervalsXLabel = 'Time interval [min.]',
+  goalsInIntervalsYLabel = 'Percent of goals',
+  goalsInIntervalsTooltipTitle = 'Interval';
 
-const matchGoalsURI = webApiUri + "/matchgoals",
-  matchGoalsTitle = "Percent of Matches with a given number of goals",
-  matchGoalsXLabel = "Number of goals",
-  matchGoalsYLabel = "Percent of matches",
-  matchGoalsTooltipTitle = "Goals";
+const matchGoalsURI = webApiUri + '/matchgoals',
+  matchGoalsTitle = 'Percent of Matches with a given number of goals',
+  matchGoalsXLabel = 'Number of goals',
+  matchGoalsYLabel = 'Percent of matches',
+  matchGoalsTooltipTitle = 'Goals';
 
-const roundPointsURI = webApiUri + "/roundpoints",
-  roundPointsTitle = "Number of points after a given round",
-  roundPointsXLabel = "Number of round",
-  roundPointsYLabel = "Number of points",
-  roundPointsTooltipTitle = "Round";
+const roundPointsURI = webApiUri + '/roundpoints',
+  roundPointsTitle = 'Number of points after a given round',
+  roundPointsXLabel = 'Number of round',
+  roundPointsYLabel = 'Number of points',
+  roundPointsTooltipTitle = 'Round';
 
 // charts style variables
 var titleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
@@ -105,12 +105,12 @@ const chartDefaultConfig = {
 
 // Getting data of the Model passed from the Stats view
 
-timeIntervalsTexts = eval($("#mainScript").attr("data-time-intervals-all-text"));
-goalsInIntervalsPercent = eval($("#mainScript").attr("data-goals-in-intervals-percent"));
-leagueName = eval($("#mainScript").attr("data-league-name"));
-seasonYear = eval($("#mainScript").attr("data-season-year"));
+timeIntervalsTexts = eval($('#mainScript').attr('data-time-intervals-all-text'));
+goalsInIntervalsPercent = eval($('#mainScript').attr('data-goals-in-intervals-percent'));
+leagueName = eval($('#mainScript').attr('data-league-name'));
+seasonYear = eval($('#mainScript').attr('data-season-year'));
 
-$("#teamsList > option").each(function () {
+$('#teamsList > option').each(function () {
   const teamName = $(this).text();
   selectedTeams[teamName] = false;
   teamStandings[teamName] = {
@@ -202,23 +202,23 @@ function ConfirmSelectedRounds() {
   for (let i = 0; i < roundsSize; i++) {
     selectedRounds.pop();
   }
-  $("#roundsList :selected").each(function () {
+  $('#roundsList :selected').each(function () {
     selectedRounds.push($(this).val());
   });
 }
 
 function GetStatsRequestData(teamName) {
   return {
-    "TeamName": teamName,
-    "LeagueName": leagueName,
-    "SeasonYear": seasonYear,
-    "Rounds": selectedRounds
+    'TeamName': teamName,
+    'LeagueName': leagueName,
+    'SeasonYear': seasonYear,
+    'Rounds': selectedRounds
   };
 }
 
 function AddChartDataset(chart, URI, teamName, id) {
   const statsRequestData = GetStatsRequestData(teamName);
-  $.post(URI, statsRequestData, null, "json")
+  $.post(URI, statsRequestData, null, 'json')
     .done(function (data) {
       var newData;
       if (URI === matchGoalsURI || URI === roundPointsURI) {
@@ -274,7 +274,7 @@ function GetChartDisplaySize(chartName) {
 }
 
 function UpdateChartFontSizes(chart, chartSize) {
-  if (typeof chartSize !== "undefined") {
+  if (typeof chartSize !== 'undefined') {
     legendFontSize = Math.round(0.01 * chartSize.width + 8);
     titleFontSize = Math.round(0.015 * chartSize.width + 8);
     tooltipsFontSize = Math.round(0.005 * chartSize.width + 10);
@@ -282,7 +282,7 @@ function UpdateChartFontSizes(chart, chartSize) {
     ticksFontSize = Math.round(0.005 * chartSize.width + 10);
   }
 
-  if (typeof chart !== "undefined") {
+  if (typeof chart !== 'undefined') {
     chart.options.title.fontSize = titleFontSize;
     chart.options.legend.labels.fontSize = legendFontSize;
     chart.options.tooltips.titleFontSize = tooltipsFontSize;
@@ -300,7 +300,7 @@ function OnResizeChart(chart, chartSize) {
 
 function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAxisLabel, typeOfChart,
   yAxisTicksEnding, tooltipTitlePrefix, tooltipLabelEnding) {
-  const ctx = $("#" + chartName);
+  const ctx = $('#' + chartName);
   var chart = new Chart(ctx, {
     // The type of chart we want to create
     type: typeOfChart,
@@ -330,8 +330,8 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
 
       const teamName = data.datasets[tooltipItem.datasetIndex].label,
         roundNumber = parseInt(tooltipItem.xLabel);
-      label += " | " + teamStandings[teamName].opposingTeams[roundNumber]
-        + " " + teamStandings[teamName].matchResults[roundNumber];
+      label += ' | ' + teamStandings[teamName].opposingTeams[roundNumber]
+        + ' ' + teamStandings[teamName].matchResults[roundNumber];
 
       return label;
     }
@@ -351,7 +351,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
 
   chart.options.title.text = title;
   chart.options.tooltips.callbacks.title = function (tooltipItems, data) {
-    const title = tooltipTitlePrefix + ": " + tooltipItems[0].xLabel;
+    const title = tooltipTitlePrefix + ': ' + tooltipItems[0].xLabel;
     return title;
   };
   chart.options.scales.yAxes[0].scaleLabel.labelString = yAxisLabel;
@@ -368,42 +368,42 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
 
 $(document).ready(function () {
   window.goalsInIntervalsChart = CreateChart(
-    "goalsInIntervalsChartArea",
+    'goalsInIntervalsChartArea',
     goalsInIntervalsTitle,
     timeIntervalsTexts,
     goalsInIntervalsPercent,
     0, 0,
     goalsInIntervalsXLabel,
     goalsInIntervalsYLabel,
-    "bar", "%", goalsInIntervalsTooltipTitle, "%");
+    'bar', '%', goalsInIntervalsTooltipTitle, '%');
 
   ConfirmSelectedRounds();
   window.matchGoalsChart = CreateChart(
-    "matchGoalsChartArea",
+    'matchGoalsChartArea',
     matchGoalsTitle,
     [],
     [],
     0, 0,
     matchGoalsXLabel,
     matchGoalsYLabel,
-    "bar", "%", matchGoalsTooltipTitle, "%");
+    'bar', '%', matchGoalsTooltipTitle, '%');
 
-  GetMatchGoals(window.matchGoalsChart, "*");
+  GetMatchGoals(window.matchGoalsChart, '*');
 
   window.roundPointsChart = CreateChart(
-    "roundPointsChartArea",
+    'roundPointsChartArea',
     roundPointsTitle,
     null,
     null,
     0, 20,
     roundPointsXLabel,
     roundPointsYLabel,
-    "line", "pts", roundPointsTooltipTitle, "pts");
+    'line', 'pts', roundPointsTooltipTitle, 'pts');
 });
 
 function GetGoalsInIntervals(chart, index, teamName) {
   var statsRequestData = GetStatsRequestData(teamName);
-  $.post(goalsInIntervalsURI, statsRequestData, null, "json")
+  $.post(goalsInIntervalsURI, statsRequestData, null, 'json')
     .done(function (data) {
       UpdateChartData(chart, data, index);
     })
@@ -417,12 +417,12 @@ function UpdateChartData(chart, data, index) {
   chart.update();
 }
 
-$("#teamsList").change(function () {
-  $("#teamsList > option").each(function () {
+$('#teamsList').change(function () {
+  $('#teamsList > option').each(function () {
     const teamName = $(this).text(),
       id = $(this).val();
 
-    if ($(this).prop("selected")) {
+    if ($(this).prop('selected')) {
       if (selectedTeams[teamName] === false) {
         selectedTeams[teamName] = true;
         AddChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id);
@@ -439,12 +439,12 @@ $("#teamsList").change(function () {
   });
 });
 
-$("#changeRounds").click(function () {
+$('#changeRounds').click(function () {
   ConfirmSelectedRounds();
 
   for (let i = 0; i < window.goalsInIntervalsChart.data.datasets.length; i++) {
     const dataset = window.goalsInIntervalsChart.data.datasets[i];
-    var teamName = "*";
+    var teamName = '*';
 
     if (dataset.label !== leagueName) {
       teamName = dataset.label;
@@ -463,7 +463,7 @@ function GetRoundPointsData(teamName, data) {
 
   for (let i = 0; i < labels.length; i++) {
     let opponentCrest = new Image();
-    opponentCrest.src = values[i].Opponent + ".png";
+    opponentCrest.src = values[i].Opponent + '.png';
 
     resultArray[parseInt(labels[i])] = parseInt(values[i].Points);
     teamStandings[teamName].points[parseInt(labels[i])] = values[i].Points;
@@ -477,13 +477,13 @@ function GetRoundPointsData(teamName, data) {
     labels[i] = i;
     if (resultArray[i] == undefined) {
       let blankCrest = new Image();
-      blankCrest.src = "blank.png";
+      blankCrest.src = 'blank.png';
 
       resultArray[i] = 0;
       teamStandings[teamName].points[i] = 0;
       teamStandings[teamName].opponentCrests[i] = blankCrest;
-      teamStandings[teamName].opposingTeams[i] = "";
-      teamStandings[teamName].matchResults[i] = "";
+      teamStandings[teamName].opposingTeams[i] = '';
+      teamStandings[teamName].matchResults[i] = '';
     }
   }
   return new ChartData(resultArray, labels);
@@ -509,7 +509,7 @@ function GetIntegerLabeledData(data) {
 
 function GetMatchGoals(chart, teamName, index = 0) {
   const statsRequestData = GetStatsRequestData(teamName);
-  $.post(matchGoalsURI, statsRequestData, null, "json")
+  $.post(matchGoalsURI, statsRequestData, null, 'json')
     .done(function (data) {
       const chartData = GetIntegerLabeledData(data);
       if (index === 0) {
