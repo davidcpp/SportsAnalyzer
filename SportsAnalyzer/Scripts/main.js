@@ -456,8 +456,7 @@ $('#changeRounds').click(function () {
 });
 
 function GetRoundPointsData(teamName, data) {
-  var resultArray = [],
-    labels = Object.keys(data).map(element => parseInt(element));
+  var labels = Object.keys(data).map(element => parseInt(element));
   const values = Object.values(data),
     maxLabel = labels[labels.length - 1];
 
@@ -466,7 +465,6 @@ function GetRoundPointsData(teamName, data) {
     opponentCrest.src = values[i].Opponent + '.png';
     const curRound = labels[i];
 
-    resultArray[curRound] = parseInt(values[i].Points);
     teamStandings[teamName].points[curRound] = values[i].Points;
     teamStandings[teamName].tablePositions[curRound] = values[i].TablePosition;
     teamStandings[teamName].opponentCrests[curRound] = opponentCrest;
@@ -476,18 +474,17 @@ function GetRoundPointsData(teamName, data) {
 
   for (let i = 0; i <= maxLabel; i++) {
     labels[i] = i;
-    if (resultArray[i] == undefined) {
+    if (teamStandings[teamName].points[i] == undefined) {
       let blankCrest = new Image();
       blankCrest.src = 'blank.png';
 
-      resultArray[i] = 0;
       teamStandings[teamName].points[i] = 0;
       teamStandings[teamName].opponentCrests[i] = blankCrest;
       teamStandings[teamName].opposingTeams[i] = '';
       teamStandings[teamName].matchResults[i] = '';
     }
   }
-  return new ChartData(resultArray, labels);
+  return new ChartData(teamStandings[teamName].points, labels);
 }
 
 function GetIntegerLabeledData(data) {
