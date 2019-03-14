@@ -377,7 +377,6 @@ $(document).ready(function () {
     goalsInIntervalsYLabel,
     'bar', '%', goalsInIntervalsTooltipTitle, '%');
 
-  ConfirmSelectedRounds();
   window.matchGoalsChart = CreateChart(
     'matchGoalsChartArea',
     matchGoalsTitle,
@@ -388,6 +387,7 @@ $(document).ready(function () {
     matchGoalsYLabel,
     'bar', '%', matchGoalsTooltipTitle, '%');
 
+  ConfirmSelectedRounds();
   GetMatchGoals(window.matchGoalsChart, '*');
 
   window.roundPointsChart = CreateChart(
