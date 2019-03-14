@@ -209,10 +209,10 @@ function ConfirmSelectedRounds() {
 
 function GetStatsRequestData(teamName) {
   return {
-    'TeamName': teamName,
-    'LeagueName': leagueName,
-    'SeasonYear': seasonYear,
-    'Rounds': selectedRounds
+    teamName,
+    leagueName,
+    seasonYear,
+    rounds: selectedRounds
   };
 }
 
