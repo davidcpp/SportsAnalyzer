@@ -402,7 +402,7 @@ $(document).ready(function () {
 });
 
 function GetGoalsInIntervals(chart, index, teamName) {
-  var statsRequestData = GetStatsRequestData(teamName);
+  const statsRequestData = GetStatsRequestData(teamName);
   $.post(goalsInIntervalsURI, statsRequestData, null, 'json')
     .done(function (data) {
       UpdateChartData(chart, data, index);
