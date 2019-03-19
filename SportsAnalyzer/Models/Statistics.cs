@@ -197,7 +197,10 @@ namespace SportsAnalyzer.Models
       int maxMatchesInRound = teamsSet.Count / 2;
       var teamLeagueStandings = new Dictionary<string, TeamLeagueStanding>();
 
-      foreach (var match in AllMatches.OrderBy(match => match.Round ?? 0))
+      var orderedMatches = AllMatches.OrderBy(match => match.Round ?? 0);
+      int lastRound = orderedMatches.LastOrDefault()?.Round ?? 0;
+
+      foreach (var match in orderedMatches)
       {
         InitTeamStandings(teamLeagueStandings, match);
 
@@ -214,8 +217,12 @@ namespace SportsAnalyzer.Models
 
         UpdateStandingsAfterRound(teamLeagueStandings, match);
 
-        if (matchesInRoundCounter < maxMatchesInRound)
+        // Calculating teams positions after whole round 
+        // or after each subsequent match in last round (for duration of the round case)
+        if (matchesInRoundCounter < maxMatchesInRound && matchRound != lastRound)
+        {
           continue;
+        }
 
         // Calculating teams positions in the league table
 
