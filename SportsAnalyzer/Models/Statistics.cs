@@ -289,12 +289,13 @@ namespace SportsAnalyzer.Models
     }
 
     /// <summary> Set positions of teams in the league table after the given round</summary>
-    private static void SetTeamTablePositions(List<TeamLeagueStanding> standingsInOrder,
+    private static void SetTeamTablePositions(IEnumerable<TeamLeagueStanding> standingsInOrder,
       int matchRound)
     {
-      for (int i = 0; i < standingsInOrder.Count; i++)
+      for (int i = 0; i < standingsInOrder.Count(); i++)
       {
-        var teamName = standingsInOrder[i].Team;
+        var teamName = standingsInOrder.ElementAt(i).Team;
+
         if (!TablePositions.ContainsKey(teamName))
           TablePositions[teamName] = new Dictionary<int, int>();
 
