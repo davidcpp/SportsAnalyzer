@@ -202,7 +202,10 @@ namespace SportsAnalyzer.Models
 
       foreach (var match in orderedMatches)
       {
-        InitTeamStandings(teamLeagueStandings, match);
+        if (teamLeagueStandings.Count < teamsSet.Count)
+        {
+          InitTeamStandings(teamLeagueStandings, match);
+        }
 
         matchRound = match.Round ?? 0;
 
