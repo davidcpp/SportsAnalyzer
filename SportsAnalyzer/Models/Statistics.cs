@@ -218,7 +218,7 @@ namespace SportsAnalyzer.Models
         matchesInRoundCounter++;
         prevMatchRound = matchRound;
 
-        UpdateStandingsAfterRound(teamLeagueStandings, match);
+        UpdateStandingsAfterMatch(teamLeagueStandings, match);
 
         // Calculating teams positions after whole round 
         // or after each subsequent match in last round (for duration of the round case)
@@ -257,7 +257,7 @@ namespace SportsAnalyzer.Models
     }
 
     /// <summary> Set goals and points for teams after match between them </summary>
-    private void UpdateStandingsAfterRound(Dictionary<string, TeamLeagueStanding> standings,
+    private void UpdateStandingsAfterMatch(Dictionary<string, TeamLeagueStanding> standings,
       FootballMatch match)
     {
       standings[match.HomeTeam].Goals_For += match.HomeGoals ?? 0;
