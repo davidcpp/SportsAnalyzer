@@ -110,8 +110,8 @@ goalsInIntervalsPercent = eval($('#mainScript').attr('data-goals-in-intervals-pe
 leagueName = eval($('#mainScript').attr('data-league-name'));
 seasonYear = eval($('#mainScript').attr('data-season-year'));
 
-$('#teamsList > option').each(function () {
-  const teamName = $(this).text();
+$('#teamsList > option').each((ind, element) => {
+  const teamName = $(element).text();
   selectedTeams[teamName] = false;
   teamStandings[teamName] = {
     points: [],
@@ -133,7 +133,7 @@ function AddTablePositionsOnChart(chart) {
   if (chart.options.title.text != roundPointsTitle)
     return;
 
-  chart.data.datasets.forEach(function (dataset, i) {
+  chart.data.datasets.forEach((dataset, i) => {
     // table position will be shown only for the first team on the chart
     if (i > 0)
       return;
@@ -142,7 +142,7 @@ function AddTablePositionsOnChart(chart) {
       meta = chart.getDatasetMeta(i);
 
     if (!meta.hidden) {
-      meta.data.forEach(function (element, index) {
+      meta.data.forEach((element, index) => {
         const numberOfRound = chart.data.labels[index];
         var dataString = teamStandings[teamName].tablePositions[numberOfRound];
 
@@ -202,8 +202,9 @@ function ConfirmSelectedRounds() {
   for (let i = 0; i < roundsSize; i++) {
     selectedRounds.pop();
   }
-  $('#roundsList :selected').each(function () {
-    selectedRounds.push($(this).val());
+
+  $('#roundsList :selected').each((ind, element) => {
+    selectedRounds.push($(element).val());
   });
 }
 
@@ -219,7 +220,7 @@ function GetStatsRequestData(teamName) {
 function AddChartDataset(chart, URI, teamName, id) {
   const statsRequestData = GetStatsRequestData(teamName);
   $.post(URI, statsRequestData, null, 'json')
-    .done(function (data) {
+    .done((data) => {
       var newData;
       if (URI === matchGoalsURI || URI === roundPointsURI) {
         let chartData;
@@ -258,7 +259,7 @@ function AddChartDataset(chart, URI, teamName, id) {
       chart.data.datasets.push(dataset);
       chart.update();
     })
-    .fail(function (jqXHR, textStatus, err) {
+    .fail((jqXHR, textStatus, err) => {
       console.log('Error: ' + err);
     });
 }
@@ -319,7 +320,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
   }
 
   if (title == roundPointsTitle) {
-    chart.options.tooltips.callbacks.label = function (tooltipItem, data) {
+    chart.options.tooltips.callbacks.label = (tooltipItem, data) => {
       var label = data.datasets[tooltipItem.datasetIndex].label || '';
 
       if (label) {
@@ -337,7 +338,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
     }
   }
   else {
-    chart.options.tooltips.callbacks.label = function (tooltipItem, data) {
+    chart.options.tooltips.callbacks.label = (tooltipItem, data) => {
       var label = data.datasets[tooltipItem.datasetIndex].label || '';
 
       if (label) {
@@ -350,13 +351,13 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
   }
 
   chart.options.title.text = title;
-  chart.options.tooltips.callbacks.title = function (tooltipItems, data) {
+  chart.options.tooltips.callbacks.title = (tooltipItems, data) => {
     const title = tooltipTitlePrefix + ': ' + tooltipItems[0].xLabel;
     return title;
   };
   chart.options.scales.yAxes[0].scaleLabel.labelString = yAxisLabel;
   chart.options.scales.xAxes[0].scaleLabel.labelString = xAxisLabel;
-  chart.options.scales.yAxes[0].ticks.callback = function (value, index, values) {
+  chart.options.scales.yAxes[0].ticks.callback = (value, index, values) => {
     return value + yAxisTicksEnding;
   };
   chart.options.onResize = OnResizeChart;
@@ -366,7 +367,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
   return chart;
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   window.goalsInIntervalsChart = CreateChart(
     'goalsInIntervalsChartArea',
     goalsInIntervalsTitle,
@@ -404,10 +405,10 @@ $(document).ready(function () {
 function GetGoalsInIntervals(chart, index, teamName) {
   const statsRequestData = GetStatsRequestData(teamName);
   $.post(goalsInIntervalsURI, statsRequestData, null, 'json')
-    .done(function (data) {
+    .done((data) => {
       UpdateChartData(chart, data, index);
     })
-    .fail(function (jqXHR, textStatus, err) {
+    .fail((jqXHR, textStatus, err) => {
       console.log('Error: ' + err);
     });
 }
@@ -417,12 +418,12 @@ function UpdateChartData(chart, data, index) {
   chart.update();
 }
 
-$('#teamsList').change(function () {
-  $('#teamsList > option').each(function () {
-    const teamName = $(this).text(),
-      id = $(this).val();
+$('#teamsList').change(() => {
+  $('#teamsList > option').each((ind, element) => {
+    const teamName = $(element).text(),
+      id = $(element).val();
 
-    if ($(this).prop('selected')) {
+    if ($(element).prop('selected')) {
       if (selectedTeams[teamName] === false) {
         selectedTeams[teamName] = true;
         AddChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id);
@@ -439,7 +440,7 @@ $('#teamsList').change(function () {
   });
 });
 
-$('#changeRounds').click(function () {
+$('#changeRounds').click(() => {
   ConfirmSelectedRounds();
 
   for (let i = 0; i < window.goalsInIntervalsChart.data.datasets.length; i++) {
@@ -508,14 +509,14 @@ function GetIntegerLabeledData(data) {
 function GetMatchGoals(chart, teamName, index = 0) {
   const statsRequestData = GetStatsRequestData(teamName);
   $.post(matchGoalsURI, statsRequestData, null, 'json')
-    .done(function (data) {
+    .done((data) => {
       const chartData = GetIntegerLabeledData(data);
       if (index === 0) {
         chart.data.labels = chartData.labels;
       }
       UpdateChartData(chart, chartData.data, index)
     })
-    .fail(function (jqXHR, textStatus, err) {
+    .fail((jqXHR, textStatus, err) => {
       console.log('Error: ' + err);
     });
 }
