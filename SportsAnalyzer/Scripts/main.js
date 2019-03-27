@@ -184,11 +184,7 @@ function GenerateStartDatasetArray(data) {
 }
 
 function RemoveChartDataset(chart, teamName) {
-  for (let i = 0; i < chart.data.datasets.length; i++) {
-    if (chart.data.datasets[i].label === teamName) {
-      chart.data.datasets.splice(i, 1);
-    }
-  }
+  chart.data.datasets = chart.data.datasets.filter(dataset => dataset.label !== teamName);
   chart.update();
 }
 
@@ -443,8 +439,7 @@ $('#teamsList').change(() => {
 $('#changeRounds').click(() => {
   ConfirmSelectedRounds();
 
-  for (let i = 0; i < window.goalsInIntervalsChart.data.datasets.length; i++) {
-    const dataset = window.goalsInIntervalsChart.data.datasets[i];
+  window.goalsInIntervalsChart.data.datasets.forEach((dataset, i) => {
     var teamName = '*';
 
     if (dataset.label !== leagueName) {
@@ -453,7 +448,7 @@ $('#changeRounds').click(() => {
 
     GetGoalsInIntervals(window.goalsInIntervalsChart, i, teamName);
     GetMatchGoals(window.matchGoalsChart, teamName, i);
-  }
+  });
 });
 
 function GetRoundPointsData(teamName, data) {
@@ -461,17 +456,17 @@ function GetRoundPointsData(teamName, data) {
   const values = Object.values(data),
     maxLabel = labels[labels.length - 1];
 
-  for (let i = 0; i < labels.length; i++) {
+  labels.forEach((label, i) => {
     let opponentCrest = new Image();
     opponentCrest.src = values[i].Opponent + '.png';
-    const curRound = labels[i];
+    const curRound = label;
 
     teamStandings[teamName].points[curRound] = values[i].Points;
     teamStandings[teamName].tablePositions[curRound] = values[i].TablePosition;
     teamStandings[teamName].opponentCrests[curRound] = opponentCrest;
     teamStandings[teamName].opposingTeams[curRound] = values[i].OpposingTeams;
     teamStandings[teamName].matchResults[curRound] = values[i].MatchResult;
-  }
+  });
 
   for (let i = 0; i <= maxLabel; i++) {
     labels[i] = i;
@@ -494,9 +489,9 @@ function GetIntegerLabeledData(data) {
   const values = Object.values(data),
     maxLabel = labels[labels.length - 1];
 
-  for (let i = 0; i < labels.length; i++) {
-    resultArray[parseInt(labels[i])] = parseFloat(values[i]);
-  }
+  labels.forEach((label, i) => {
+    resultArray[parseInt(label)] = parseFloat(values[i]);
+  });
 
   for (let i = 0; i <= maxLabel; i++) {
     labels[i] = i;
