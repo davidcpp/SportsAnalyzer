@@ -54,7 +54,7 @@ const color = Chart.helpers.color,
     '#A52A2A',
     '#6495ED',
     '#BDB76B',
-    '#FFA500'
+    '#FFA500',
   ];
 
 const chartDefaultConfig = {
@@ -64,43 +64,43 @@ const chartDefaultConfig = {
     position: 'top',
     labels: {
       fontSize: legendFontSize,
-      boxWidth: 30
+      boxWidth: 30,
     }
   },
   title: {
     display: true,
     fontSize: titleFontSize,
     fontColor: window.chartColors.black,
-    text: 'Default Chart'
+    text: 'Default Chart',
   },
   tooltips: {
     titleFontSize: tooltipsFontSize,
     bodyFontSize: tooltipsFontSize,
-    mode: 'index'
+    mode: 'index',
   },
   scales: {
     yAxes: [{
       scaleLabel: {
         display: true,
         fontColor: window.chartColors.blue,
-        fontSize: labelsFontSize
+        fontSize: labelsFontSize,
       },
       ticks: {
         beginAtZero: true,
-        fontSize: ticksFontSize
+        fontSize: ticksFontSize,
       }
     }],
     xAxes: [{
       scaleLabel: {
         display: true,
         fontColor: window.chartColors.blue,
-        fontSize: labelsFontSize
+        fontSize: labelsFontSize,
       },
       ticks: {
-        fontSize: ticksFontSize
+        fontSize: ticksFontSize,
       }
     }]
-  }
+  },
 }
 
 // Getting data of the Model passed from the Stats view
@@ -118,7 +118,7 @@ $('#teamsList > option').each((ind, element) => {
     tablePositions: [],
     opponentCrests: [],
     opposingTeams: [],
-    matchResults: []
+    matchResults: [],
   };
 });
 
@@ -176,7 +176,7 @@ function GenerateStartDatasetArray(data) {
       backgroundColor: color(myChartColors[0]).alpha(0.5).rgbString(),
       borderColor: myChartColors[0],
       borderWidth: 1,
-      data: data
+      data: data,
     }];
   }
   return [];
@@ -205,7 +205,7 @@ function GetStatsRequestData(teamName) {
     teamName,
     leagueName,
     seasonYear,
-    rounds: selectedRounds
+    rounds: selectedRounds,
   };
 }
 
@@ -238,7 +238,7 @@ function AddChartDataset(chart, URI, teamName, id) {
         backgroundColor: color(myChartColors[id]).alpha(0.5).rgbString(),
         borderColor: myChartColors[id],
         borderWidth: 1,
-        data: newData
+        data: newData,
       };
 
       if (URI === roundPointsURI) {
@@ -264,7 +264,7 @@ function GetChartDisplaySize(chartName) {
 
   var chartDisplaySize = {
     width: parseFloat(canvasChart.style.width),
-    height: parseFloat(canvasChart.style.height)
+    height: parseFloat(canvasChart.style.height),
   };
   return chartDisplaySize;
 }
@@ -303,10 +303,10 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
     // The data for our dataset
     data: {
       labels: labels,
-      datasets: GenerateStartDatasetArray(data)
+      datasets: GenerateStartDatasetArray(data),
     },
     // Configuration options go here
-    options: chartDefaultConfig
+    options: chartDefaultConfig,
   });
 
   if (maxY != 0) {
