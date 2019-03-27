@@ -294,8 +294,8 @@ function onResizeChart(chart, chartSize) {
   updateChart(chart, chartSize);
 }
 
-function createChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAxisLabel, typeOfChart,
-  yAxisTicksEnding, tooltipTitlePrefix, tooltipLabelEnding) {
+function createChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAxisLabel,
+  typeOfChart, yAxisTicksEnding, tooltipTitlePrefix, tooltipLabelEnding) {
   const ctx = $('#' + chartName);
   let chart = new Chart(ctx, {
     // The type of chart we want to create
@@ -370,7 +370,8 @@ $(document).ready(() => {
     0, 0,
     goalsInIntervalsXLabel,
     goalsInIntervalsYLabel,
-    'bar', '%', goalsInIntervalsTooltipTitle, '%');
+    'bar', '%',
+    goalsInIntervalsTooltipTitle, '%');
 
   window.matchGoalsChart = createChart(
     'matchGoalsChartArea',
@@ -380,7 +381,8 @@ $(document).ready(() => {
     0, 0,
     matchGoalsXLabel,
     matchGoalsYLabel,
-    'bar', '%', matchGoalsTooltipTitle, '%');
+    'bar', '%',
+    matchGoalsTooltipTitle, '%');
 
   confirmSelectedRounds();
   getMatchGoals(window.matchGoalsChart, '*');
@@ -393,7 +395,8 @@ $(document).ready(() => {
     0, 20,
     roundPointsXLabel,
     roundPointsYLabel,
-    'line', 'pts', roundPointsTooltipTitle, 'pts');
+    'line', 'pts',
+    roundPointsTooltipTitle, 'pts');
 });
 
 function getGoalsInIntervals(chart, index, teamName) {
