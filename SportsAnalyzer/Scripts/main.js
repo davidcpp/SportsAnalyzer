@@ -143,8 +143,7 @@ function AddTablePositionsOnChart(chart) {
 
     if (!meta.hidden) {
       meta.data.forEach((element, index) => {
-        const numberOfRound = chart.data.labels[index];
-        var dataString = teamStandings[teamName].tablePositions[numberOfRound];
+        var dataString = teamStandings[teamName].tablePositions[index];
 
         if (dataString == undefined)
           return;
@@ -317,8 +316,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
 
   if (title == roundPointsTitle) {
     chart.options.tooltips.callbacks.label = (tooltipItem, data) => {
-      const teamName = data.datasets[tooltipItem.datasetIndex].label,
-        roundNumber = parseInt(tooltipItem.xLabel);
+      const teamName = data.datasets[tooltipItem.datasetIndex].label;
       var label = teamName || '';
 
       if (label) {
@@ -327,8 +325,8 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
       label += tooltipItem.yLabel;
       label += tooltipLabelEnding;
 
-      label += ' | ' + teamStandings[teamName].opposingTeams[roundNumber]
-        + ' ' + teamStandings[teamName].matchResults[roundNumber];
+      label += ' | ' + teamStandings[teamName].opposingTeams[tooltipItem.index]
+        + ' ' + teamStandings[teamName].matchResults[tooltipItem.index];
 
       return label;
     }
@@ -454,22 +452,22 @@ $('#changeRounds').click(() => {
 function GetRoundPointsData(teamName, data) {
   var labels = Object.keys(data).map(element => parseInt(element));
   const values = Object.values(data),
-    maxLabel = labels[labels.length - 1];
+    maxRound = labels[labels.length - 1];
 
   labels.forEach((label, i) => {
     let opponentCrest = new Image();
     opponentCrest.src = values[i].Opponent + '.png';
-    const curRound = label;
 
-    teamStandings[teamName].points[curRound] = values[i].Points;
-    teamStandings[teamName].tablePositions[curRound] = values[i].TablePosition;
-    teamStandings[teamName].opponentCrests[curRound] = opponentCrest;
-    teamStandings[teamName].opposingTeams[curRound] = values[i].OpposingTeams;
-    teamStandings[teamName].matchResults[curRound] = values[i].MatchResult;
+    teamStandings[teamName].points[i] = values[i].Points;
+    teamStandings[teamName].tablePositions[i] = values[i].TablePosition;
+    teamStandings[teamName].opponentCrests[i] = opponentCrest;
+    teamStandings[teamName].opposingTeams[i] = values[i].OpposingTeams;
+    teamStandings[teamName].matchResults[i] = values[i].MatchResult;
   });
 
-  for (let i = 0; i <= maxLabel; i++) {
-    labels[i] = i;
+  for (let round = 1; round <= maxRound; round++) {
+    let i = round - 1;
+    labels[i] = round;
     if (teamStandings[teamName].points[i] == undefined) {
       let blankCrest = new Image();
       blankCrest.src = 'blank.png';
