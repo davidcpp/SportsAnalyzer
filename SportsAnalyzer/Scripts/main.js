@@ -220,10 +220,13 @@ function AddChartDataset(chart, URI, teamName, id) {
 
         if (URI === roundPointsURI) {
           chartData = GetRoundPointsData(teamName, data);
-          chart.data.labels = chartData.labels;
         }
         else {
           chartData = GetIntegerLabeledData(data);
+        }
+
+        if (chartData.labels.length > chart.data.labels.length) {
+          chart.data.labels = chartData.labels;
         }
         newData = chartData.data;
       }
