@@ -194,10 +194,7 @@ function UpdateChart(chart, chartDisplaySize) {
 }
 
 function ConfirmSelectedRounds() {
-  const roundsSize = selectedRounds.length;
-  for (let i = 0; i < roundsSize; i++) {
-    selectedRounds.pop();
-  }
+  selectedRounds = [];
 
   $('#roundsList :selected').each((ind, element) => {
     selectedRounds.push($(element).val());
