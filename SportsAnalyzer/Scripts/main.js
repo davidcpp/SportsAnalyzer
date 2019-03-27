@@ -1,13 +1,13 @@
 ﻿'use strict';
 
 // variables from model/API
-var timeIntervalsTexts = [],
+let timeIntervalsTexts = [],
   goalsInIntervalsPercent = [],
   leagueName, seasonYear,
   teamStandings = {};
 
 // variables from user input
-var selectedRounds = [],
+let selectedRounds = [],
   selectedTeams = {};
 
 const webApiUri = 'api/stats';
@@ -32,7 +32,7 @@ const roundPointsURI = webApiUri + '/roundpoints',
   roundPointsTooltipTitle = 'Round';
 
 // charts style variables
-var titleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
+let titleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
 const color = Chart.helpers.color,
   myChartColors = [
     '#4dc9f6',
@@ -127,7 +127,7 @@ Chart.plugins.register({
 });
 
 function AddTablePositionsOnChart(chart) {
-  var ctx = chart.chart.ctx;
+  let ctx = chart.chart.ctx;
 
   // drawing the team's position in the table only on the round points chart
   if (chart.options.title.text != roundPointsTitle)
@@ -143,7 +143,7 @@ function AddTablePositionsOnChart(chart) {
 
     if (!meta.hidden) {
       meta.data.forEach((element, index) => {
-        var dataString = teamStandings[teamName].tablePositions[index];
+        let dataString = teamStandings[teamName].tablePositions[index];
 
         if (dataString == undefined)
           return;
@@ -213,7 +213,7 @@ function AddChartDataset(chart, URI, teamName, id) {
   const statsRequestData = GetStatsRequestData(teamName);
   $.post(URI, statsRequestData, null, 'json')
     .done((data) => {
-      var newData;
+      let newData;
       if (URI === matchGoalsURI || URI === roundPointsURI) {
         let chartData;
 
@@ -233,7 +233,7 @@ function AddChartDataset(chart, URI, teamName, id) {
         newData = data;
       }
 
-      var dataset = {
+      let dataset = {
         label: teamName,
         backgroundColor: color(myChartColors[id]).alpha(0.5).rgbString(),
         borderColor: myChartColors[id],
@@ -262,7 +262,7 @@ function AddChartDataset(chart, URI, teamName, id) {
 function GetChartDisplaySize(chartName) {
   const canvasChart = document.getElementById(chartName);
 
-  var chartDisplaySize = {
+  let chartDisplaySize = {
     width: parseFloat(canvasChart.style.width),
     height: parseFloat(canvasChart.style.height),
   };
@@ -297,7 +297,7 @@ function OnResizeChart(chart, chartSize) {
 function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAxisLabel, typeOfChart,
   yAxisTicksEnding, tooltipTitlePrefix, tooltipLabelEnding) {
   const ctx = $('#' + chartName);
-  var chart = new Chart(ctx, {
+  let chart = new Chart(ctx, {
     // The type of chart we want to create
     type: typeOfChart,
     // The data for our dataset
@@ -317,7 +317,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
   if (title == roundPointsTitle) {
     chart.options.tooltips.callbacks.label = (tooltipItem, data) => {
       const teamName = data.datasets[tooltipItem.datasetIndex].label;
-      var label = teamName || '';
+      let label = teamName || '';
 
       if (label) {
         label += ': ';
@@ -333,7 +333,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
   }
   else {
     chart.options.tooltips.callbacks.label = (tooltipItem, data) => {
-      var label = data.datasets[tooltipItem.datasetIndex].label || '';
+      let label = data.datasets[tooltipItem.datasetIndex].label || '';
 
       if (label) {
         label += ': ';
@@ -438,7 +438,7 @@ $('#changeRounds').click(() => {
   ConfirmSelectedRounds();
 
   window.goalsInIntervalsChart.data.datasets.forEach((dataset, i) => {
-    var teamName = '*';
+    let teamName = '*';
 
     if (dataset.label !== leagueName) {
       teamName = dataset.label;
@@ -450,7 +450,7 @@ $('#changeRounds').click(() => {
 });
 
 function GetRoundPointsData(teamName, data) {
-  var labels = Object.keys(data).map(element => parseInt(element));
+  let labels = Object.keys(data).map(element => parseInt(element));
   const values = Object.values(data),
     maxRound = labels[labels.length - 1];
 
@@ -482,7 +482,7 @@ function GetRoundPointsData(teamName, data) {
 }
 
 function GetIntegerLabeledData(data) {
-  var resultArray = [],
+  let resultArray = [],
     labels = Object.keys(data);
   const values = Object.values(data),
     maxLabel = labels[labels.length - 1];
