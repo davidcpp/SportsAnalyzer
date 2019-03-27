@@ -457,15 +457,15 @@ function getRoundPointsData(teamName, data) {
   const values = Object.values(data),
     maxRound = labels[labels.length - 1];
 
-  labels.forEach((label, i) => {
+  values.forEach((value, i) => {
     let opponentCrest = new Image();
-    opponentCrest.src = values[i].Opponent + '.png';
+    opponentCrest.src = value.Opponent + '.png';
 
-    teamStandings[teamName].points[i] = values[i].Points;
-    teamStandings[teamName].tablePositions[i] = values[i].TablePosition;
+    teamStandings[teamName].points[i] = value.Points;
+    teamStandings[teamName].tablePositions[i] = value.TablePosition;
     teamStandings[teamName].opponentCrests[i] = opponentCrest;
-    teamStandings[teamName].opposingTeams[i] = values[i].OpposingTeams;
-    teamStandings[teamName].matchResults[i] = values[i].MatchResult;
+    teamStandings[teamName].opposingTeams[i] = value.OpposingTeams;
+    teamStandings[teamName].matchResults[i] = value.MatchResult;
   });
 
   for (let round = 1; round <= maxRound; round++) {
