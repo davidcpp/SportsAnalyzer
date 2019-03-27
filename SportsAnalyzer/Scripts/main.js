@@ -123,10 +123,10 @@ $('#teamsList > option').each((ind, element) => {
 });
 
 Chart.plugins.register({
-  afterDatasetsDraw: AddTablePositionsOnChart
+  afterDatasetsDraw: addTablePositionsOnChart
 });
 
-function AddTablePositionsOnChart(chart) {
+function addTablePositionsOnChart(chart) {
   let ctx = chart.chart.ctx;
 
   // drawing the team's position in the table only on the round points chart
@@ -169,7 +169,7 @@ function AddTablePositionsOnChart(chart) {
   });
 }
 
-function GenerateStartDatasetArray(data) {
+function generateStartDatasetArray(data) {
   if (Array.isArray(data)) {
     return [{
       label: leagueName,
@@ -182,17 +182,17 @@ function GenerateStartDatasetArray(data) {
   return [];
 }
 
-function RemoveChartDataset(chart, teamName) {
+function removeChartDataset(chart, teamName) {
   chart.data.datasets = chart.data.datasets.filter(dataset => dataset.label !== teamName);
   chart.update();
 }
 
-function UpdateChart(chart, chartDisplaySize) {
-  UpdateChartFontSizes(chart, chartDisplaySize);
+function updateChart(chart, chartDisplaySize) {
+  updateChartFontSizes(chart, chartDisplaySize);
   chart.update();
 }
 
-function ConfirmSelectedRounds() {
+function confirmSelectedRounds() {
   selectedRounds = [];
 
   $('#roundsList :selected').each((ind, element) => {
@@ -200,7 +200,7 @@ function ConfirmSelectedRounds() {
   });
 }
 
-function GetStatsRequestData(teamName) {
+function getStatsRequestData(teamName) {
   return {
     teamName,
     leagueName,
@@ -209,8 +209,8 @@ function GetStatsRequestData(teamName) {
   };
 }
 
-function AddChartDataset(chart, URI, teamName, id) {
-  const statsRequestData = GetStatsRequestData(teamName);
+function addChartDataset(chart, URI, teamName, id) {
+  const statsRequestData = getStatsRequestData(teamName);
   $.post(URI, statsRequestData, null, 'json')
     .done((data) => {
       let newData;
@@ -218,10 +218,10 @@ function AddChartDataset(chart, URI, teamName, id) {
         let chartData;
 
         if (URI === roundPointsURI) {
-          chartData = GetRoundPointsData(teamName, data);
+          chartData = getRoundPointsData(teamName, data);
         }
         else {
-          chartData = GetIntegerLabeledData(data);
+          chartData = getIntegerLabeledData(data);
         }
 
         if (chartData.labels.length > chart.data.labels.length) {
@@ -250,7 +250,7 @@ function AddChartDataset(chart, URI, teamName, id) {
       }
 
       // calling RemoveChartDataset method for case of delay in receiving results from WebApi
-      RemoveChartDataset(chart, teamName);
+      removeChartDataset(chart, teamName);
       chart.data.datasets.push(dataset);
       chart.update();
     })
@@ -259,7 +259,7 @@ function AddChartDataset(chart, URI, teamName, id) {
     });
 }
 
-function GetChartDisplaySize(chartName) {
+function getChartDisplaySize(chartName) {
   const canvasChart = document.getElementById(chartName);
 
   let chartDisplaySize = {
@@ -269,7 +269,7 @@ function GetChartDisplaySize(chartName) {
   return chartDisplaySize;
 }
 
-function UpdateChartFontSizes(chart, chartSize) {
+function updateChartFontSizes(chart, chartSize) {
   if (typeof chartSize !== 'undefined') {
     legendFontSize = Math.round(0.01 * chartSize.width + 8);
     titleFontSize = Math.round(0.015 * chartSize.width + 8);
@@ -290,11 +290,11 @@ function UpdateChartFontSizes(chart, chartSize) {
   }
 }
 
-function OnResizeChart(chart, chartSize) {
-  UpdateChart(chart, chartSize);
+function onResizeChart(chart, chartSize) {
+  updateChart(chart, chartSize);
 }
 
-function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAxisLabel, typeOfChart,
+function createChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAxisLabel, typeOfChart,
   yAxisTicksEnding, tooltipTitlePrefix, tooltipLabelEnding) {
   const ctx = $('#' + chartName);
   let chart = new Chart(ctx, {
@@ -303,7 +303,7 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
     // The data for our dataset
     data: {
       labels: labels,
-      datasets: GenerateStartDatasetArray(data),
+      datasets: generateStartDatasetArray(data),
     },
     // Configuration options go here
     options: chartDefaultConfig,
@@ -354,15 +354,15 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
   chart.options.scales.yAxes[0].ticks.callback = (value, index, values) => {
     return value + yAxisTicksEnding;
   };
-  chart.options.onResize = OnResizeChart;
+  chart.options.onResize = onResizeChart;
 
-  const chartDisplaySize = GetChartDisplaySize(chartName);
-  UpdateChart(chart, chartDisplaySize);
+  const chartDisplaySize = getChartDisplaySize(chartName);
+  updateChart(chart, chartDisplaySize);
   return chart;
 }
 
 $(document).ready(() => {
-  window.goalsInIntervalsChart = CreateChart(
+  window.goalsInIntervalsChart = createChart(
     'goalsInIntervalsChartArea',
     goalsInIntervalsTitle,
     timeIntervalsTexts,
@@ -372,7 +372,7 @@ $(document).ready(() => {
     goalsInIntervalsYLabel,
     'bar', '%', goalsInIntervalsTooltipTitle, '%');
 
-  window.matchGoalsChart = CreateChart(
+  window.matchGoalsChart = createChart(
     'matchGoalsChartArea',
     matchGoalsTitle,
     [],
@@ -382,10 +382,10 @@ $(document).ready(() => {
     matchGoalsYLabel,
     'bar', '%', matchGoalsTooltipTitle, '%');
 
-  ConfirmSelectedRounds();
-  GetMatchGoals(window.matchGoalsChart, '*');
+  confirmSelectedRounds();
+  getMatchGoals(window.matchGoalsChart, '*');
 
-  window.roundPointsChart = CreateChart(
+  window.roundPointsChart = createChart(
     'roundPointsChartArea',
     roundPointsTitle,
     null,
@@ -396,18 +396,18 @@ $(document).ready(() => {
     'line', 'pts', roundPointsTooltipTitle, 'pts');
 });
 
-function GetGoalsInIntervals(chart, index, teamName) {
-  const statsRequestData = GetStatsRequestData(teamName);
+function getGoalsInIntervals(chart, index, teamName) {
+  const statsRequestData = getStatsRequestData(teamName);
   $.post(goalsInIntervalsURI, statsRequestData, null, 'json')
     .done((data) => {
-      UpdateChartData(chart, data, index);
+      updateChartData(chart, data, index);
     })
     .fail((jqXHR, textStatus, err) => {
       console.log('Error: ' + err);
     });
 }
 
-function UpdateChartData(chart, data, index) {
+function updateChartData(chart, data, index) {
   chart.data.datasets[index].data = data;
   chart.update();
 }
@@ -420,22 +420,22 @@ $('#teamsList').change(() => {
     if ($(element).prop('selected')) {
       if (selectedTeams[teamName] === false) {
         selectedTeams[teamName] = true;
-        AddChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id);
-        AddChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
-        AddChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
+        addChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id);
+        addChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
+        addChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
       }
     }
     else if (selectedTeams[teamName] === true) {
       selectedTeams[teamName] = false;
-      RemoveChartDataset(window.goalsInIntervalsChart, teamName);
-      RemoveChartDataset(window.matchGoalsChart, teamName);
-      RemoveChartDataset(window.roundPointsChart, teamName);
+      removeChartDataset(window.goalsInIntervalsChart, teamName);
+      removeChartDataset(window.matchGoalsChart, teamName);
+      removeChartDataset(window.roundPointsChart, teamName);
     }
   });
 });
 
 $('#changeRounds').click(() => {
-  ConfirmSelectedRounds();
+  confirmSelectedRounds();
 
   window.goalsInIntervalsChart.data.datasets.forEach((dataset, i) => {
     let teamName = '*';
@@ -444,12 +444,12 @@ $('#changeRounds').click(() => {
       teamName = dataset.label;
     }
 
-    GetGoalsInIntervals(window.goalsInIntervalsChart, i, teamName);
-    GetMatchGoals(window.matchGoalsChart, teamName, i);
+    getGoalsInIntervals(window.goalsInIntervalsChart, i, teamName);
+    getMatchGoals(window.matchGoalsChart, teamName, i);
   });
 });
 
-function GetRoundPointsData(teamName, data) {
+function getRoundPointsData(teamName, data) {
   let labels = Object.keys(data).map(element => parseInt(element));
   const values = Object.values(data),
     maxRound = labels[labels.length - 1];
@@ -481,7 +481,7 @@ function GetRoundPointsData(teamName, data) {
   return new ChartData(teamStandings[teamName].points, labels);
 }
 
-function GetIntegerLabeledData(data) {
+function getIntegerLabeledData(data) {
   let resultArray = [],
     labels = Object.keys(data);
   const values = Object.values(data),
@@ -499,15 +499,15 @@ function GetIntegerLabeledData(data) {
   return new ChartData(resultArray, labels);
 }
 
-function GetMatchGoals(chart, teamName, index = 0) {
-  const statsRequestData = GetStatsRequestData(teamName);
+function getMatchGoals(chart, teamName, index = 0) {
+  const statsRequestData = getStatsRequestData(teamName);
   $.post(matchGoalsURI, statsRequestData, null, 'json')
     .done((data) => {
-      const chartData = GetIntegerLabeledData(data);
+      const chartData = getIntegerLabeledData(data);
       if (index === 0) {
         chart.data.labels = chartData.labels;
       }
-      UpdateChartData(chart, chartData.data, index)
+      updateChartData(chart, chartData.data, index)
     })
     .fail((jqXHR, textStatus, err) => {
       console.log('Error: ' + err);
