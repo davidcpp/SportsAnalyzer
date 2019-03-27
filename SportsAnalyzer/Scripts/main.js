@@ -317,7 +317,9 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
 
   if (title == roundPointsTitle) {
     chart.options.tooltips.callbacks.label = (tooltipItem, data) => {
-      var label = data.datasets[tooltipItem.datasetIndex].label || '';
+      const teamName = data.datasets[tooltipItem.datasetIndex].label,
+        roundNumber = parseInt(tooltipItem.xLabel);
+      var label = teamName || '';
 
       if (label) {
         label += ': ';
@@ -325,8 +327,6 @@ function CreateChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
       label += tooltipItem.yLabel;
       label += tooltipLabelEnding;
 
-      const teamName = data.datasets[tooltipItem.datasetIndex].label,
-        roundNumber = parseInt(tooltipItem.xLabel);
       label += ' | ' + teamStandings[teamName].opposingTeams[roundNumber]
         + ' ' + teamStandings[teamName].matchResults[roundNumber];
 
