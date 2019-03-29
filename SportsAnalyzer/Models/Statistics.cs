@@ -191,16 +191,16 @@ namespace SportsAnalyzer.Models
     /// <summary> Calculate team positions in the table for all rounds </summary>
     public void CalculateTablePositions()
     {
-      var teamsSet = new HashSet<string>(AllMatches.Select(match => match.HomeTeam));
+      var teamsNames = new HashSet<string>(AllMatches.Select(match => match.HomeTeam));
 
       int matchRound, prevMatchRound = 0, matchesInRoundCounter = 0;
-      int maxMatchesInRound = teamsSet.Count / 2;
+      int maxMatchesInRound = teamsNames.Count / 2;
       var teamLeagueStandings = new Dictionary<string, TeamLeagueStanding>();
 
       var orderedMatches = AllMatches.OrderBy(match => match.Round ?? 0);
       int lastRound = orderedMatches.LastOrDefault()?.Round ?? 0;
 
-      InitAllTeamsStandings(teamLeagueStandings, teamsSet);
+      InitAllTeamsStandings(teamLeagueStandings, teamsNames);
 
       foreach (var match in orderedMatches)
       {
