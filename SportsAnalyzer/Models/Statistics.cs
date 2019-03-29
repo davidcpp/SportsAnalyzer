@@ -200,13 +200,10 @@ namespace SportsAnalyzer.Models
       var orderedMatches = AllMatches.OrderBy(match => match.Round ?? 0);
       int lastRound = orderedMatches.LastOrDefault()?.Round ?? 0;
 
+      InitAllTeamsStandings(teamLeagueStandings, teamsSet);
+
       foreach (var match in orderedMatches)
       {
-        if (teamLeagueStandings.Count < teamsSet.Count)
-        {
-          InitTeamStandings(teamLeagueStandings, match);
-        }
-
         matchRound = match.Round ?? 0;
 
         if (matchRound == 0)
@@ -235,24 +232,19 @@ namespace SportsAnalyzer.Models
       TableCalculated = true;
     }
 
-    /// <summary> Init standings objects of match teams </summary>
-    private void InitTeamStandings(Dictionary<string, TeamLeagueStanding> standings,
-      FootballMatch match)
+    /// <summary> Init standings objects for teamsNames </summary>
+    private void InitAllTeamsStandings(Dictionary<string, TeamLeagueStanding> standings,
+       HashSet<string> teamsNames)
     {
-      if (!standings.ContainsKey(match.HomeTeam))
+      foreach (var teamName in teamsNames)
       {
-        standings[match.HomeTeam] = new TeamLeagueStanding
+        if (!standings.ContainsKey(teamName))
         {
-          Team = match.HomeTeam
-        };
-      }
-
-      if (!standings.ContainsKey(match.AwayTeam))
-      {
-        standings[match.AwayTeam] = new TeamLeagueStanding
-        {
-          Team = match.AwayTeam
-        };
+          standings[teamName] = new TeamLeagueStanding
+          {
+            Team = teamName
+          };
+        }
       }
     }
 
