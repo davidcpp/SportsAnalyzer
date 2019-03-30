@@ -212,15 +212,12 @@ namespace SportsAnalyzer.Models
         // Calculating teams positions after all played matches in a given round - even incomplete
         // - Check if there are still any matches in a given round
         var nextMatch = orderedMatches.ElementAtOrDefault(i + 1);
-        if (nextMatch?.Round == match.Round)
+        if (nextMatch?.Round != match.Round)
         {
-          continue;
+          // Calculating teams positions in the league table
+          var standingsInOrder = GetTeamsOrder(teamLeagueStandings);
+          SetTeamTablePositions(standingsInOrder, matchRound);
         }
-
-        // Calculating teams positions in the league table
-
-        var standingsInOrder = GetTeamsOrder(teamLeagueStandings);
-        SetTeamTablePositions(standingsInOrder, matchRound);
       }
       TableCalculated = true;
     }
