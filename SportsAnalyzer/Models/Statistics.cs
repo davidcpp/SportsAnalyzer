@@ -193,33 +193,26 @@ namespace SportsAnalyzer.Models
     {
       var teamsNames = new HashSet<string>(AllMatches.Select(match => match.HomeTeam));
 
-      int matchRound, prevMatchRound = 0, matchesInRoundCounter = 0;
-      int maxMatchesInRound = teamsNames.Count / 2;
+      int matchRound;
       var teamLeagueStandings = new Dictionary<string, TeamLeagueStanding>();
-
       var orderedMatches = AllMatches.OrderBy(match => match.Round ?? 0);
-      int lastRound = orderedMatches.LastOrDefault()?.Round ?? 0;
 
       InitAllTeamsStandings(teamLeagueStandings, teamsNames);
 
-      foreach (var match in orderedMatches)
+      for (int i = 0; i < orderedMatches.Count(); i++)
       {
+        var match = orderedMatches.ElementAt(i);
         matchRound = match.Round ?? 0;
 
         if (matchRound == 0)
           continue;
 
-        if (matchRound != prevMatchRound)
-          matchesInRoundCounter = 0;
-
-        matchesInRoundCounter++;
-        prevMatchRound = matchRound;
-
         UpdateStandingsAfterMatch(teamLeagueStandings, match);
 
-        // Calculating teams positions after whole round 
-        // or after each subsequent match in last round (for duration of the round case)
-        if (matchesInRoundCounter < maxMatchesInRound && matchRound != lastRound)
+        // Calculating teams positions after all played matches in a given round - even incomplete
+        // - Check if there are still any matches in a given round
+        var nextMatch = orderedMatches.ElementAtOrDefault(i + 1);
+        if (nextMatch?.Round == match.Round)
         {
           continue;
         }
