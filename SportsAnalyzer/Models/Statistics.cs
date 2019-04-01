@@ -426,7 +426,7 @@ namespace SportsAnalyzer.Models
     public void SetMatches(IEnumerable<FootballMatch> matches)
     {
       AllMatches = matches?.ToList() ?? new List<FootballMatch>();
-      LeagueRoundsNumber = AllMatches.Select(x => x.Round).Max() ?? LeagueRoundsNumber;
+      LeagueRoundsNumber = AllMatches.Max(x => x.Round) ?? LeagueRoundsNumber;
     }
 
     private void SetSelectedMatches()
