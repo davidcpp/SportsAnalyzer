@@ -115,6 +115,7 @@ namespace SportsAnalyzer.Models
       set { timeIntervalsLimits = value; }
     }
 
+    public IDictionary<int, double> MatchGoals = new Dictionary<int, double>();
     // Number of matches with a given number of goals
     // MatchGoalsPct[numberOfGoals] = numberOfMatches
     public IDictionary<int, double> MatchGoalsPct = new Dictionary<int, double>();
@@ -181,9 +182,9 @@ namespace SportsAnalyzer.Models
 
         int matchGoals = match.HomeGoals ?? 0;
         matchGoals += match.AwayGoals ?? 0;
-        if (!MatchGoalsPct.ContainsKey(matchGoals))
-          MatchGoalsPct.Add(matchGoals, 0);
-        MatchGoalsPct[matchGoals]++;
+        if (!MatchGoals.ContainsKey(matchGoals))
+          MatchGoals.Add(matchGoals, 0);
+        MatchGoals[matchGoals]++;
       }
 
       for (int i = 0; i < NumberOfMatchIntervals; i++)
@@ -192,10 +193,11 @@ namespace SportsAnalyzer.Models
       }
 
       int index = 0;
-      for (var i = 0; i < MatchGoalsPct.Count; i++)
+
+      for (var i = 0; i < MatchGoals.Count; i++)
       {
-        index = MatchGoalsPct.Keys.ElementAt(i);
-        MatchGoalsPct[index] = Round((MatchGoalsPct[index] / MatchesNumber) * 100, 2);
+        index = MatchGoals.Keys.ElementAt(i);
+        MatchGoalsPct[index] = Round((MatchGoals[index] / MatchesNumber) * 100, 2);
       }
     }
 
