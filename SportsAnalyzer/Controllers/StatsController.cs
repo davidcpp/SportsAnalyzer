@@ -43,7 +43,7 @@ namespace SportsAnalyzer.Controllers
           _xmlSoccerRequester,
           db);
       }
-      Statistics stats = new Statistics(statsRequest.SeasonYear,
+      var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
       stats.CalcStatsForRounds(db, statsRequest.Rounds.ToList());
@@ -61,7 +61,7 @@ namespace SportsAnalyzer.Controllers
           _xmlSoccerRequester,
           db);
       }
-      Statistics stats = new Statistics(statsRequest.SeasonYear,
+      var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
       stats.CalcStatsForRounds(db, statsRequest.Rounds.ToList());
@@ -79,7 +79,7 @@ namespace SportsAnalyzer.Controllers
           _xmlSoccerRequester,
           db);
       }
-      Statistics stats = new Statistics(statsRequest.SeasonYear,
+      var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
       stats.SetMatches(db.LeagueMatches.ToList());
