@@ -192,12 +192,13 @@ namespace SportsAnalyzer.Models
         GoalsInIntervalsPercent[i] = Round((GoalsInIntervals[i] / scoredGoalsSum) * 100, 2);
       }
 
-      int index = 0;
-
-      for (var i = 0; i < MatchGoals.Count; i++)
+      int numberOfGoals = 0;
+      double numberOfMatches = 0;
+      foreach (var item in MatchGoals)
       {
-        index = MatchGoals.Keys.ElementAt(i);
-        MatchGoalsPct[index] = Round((MatchGoals[index] / MatchesNumber) * 100, 2);
+        numberOfGoals = item.Key;
+        numberOfMatches = item.Value;
+        MatchGoalsPct[numberOfGoals] = Round((numberOfMatches / MatchesNumber) * 100, 2);
       }
     }
 
