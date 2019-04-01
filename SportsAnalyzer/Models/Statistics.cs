@@ -145,26 +145,37 @@ namespace SportsAnalyzer.Models
       GoalsAvgAway = Round(SelectedMatches.Average((match) => match.AwayGoals ?? 0), 2);
 
       var regexGoalTime = new Regex("\\d{1,}");
+      double scoredGoalsSum = 0;
       foreach (var match in SelectedMatches)
       {
         var homeGoalDetails = match.HomeGoalDetails.Split(new char[] { ';' });
         var awayGoalDetails = match.AwayGoalDetails.Split(new char[] { ';' });
 
-        foreach (var detailedGoal in homeGoalDetails)
+        if (TeamName == match.HomeTeam || TeamName == DefaultTeamName)
         {
-          if (double.TryParse(regexGoalTime.Match(detailedGoal).Value, out double goalTime))
+          scoredGoalsSum += match.HomeGoals ?? 0;
+
+          foreach (var detailedGoal in homeGoalDetails)
           {
-            // surely there isn't IndexOutOfRangeException - goalTime is equal to 90 at most 
-            GoalsInIntervals[(int)Ceiling(goalTime / MatchIntervalLength) - 1]++;
+            if (double.TryParse(regexGoalTime.Match(detailedGoal).Value, out double goalTime))
+            {
+              // surely there isn't IndexOutOfRangeException - goalTime is equal to 90 at most 
+              GoalsInIntervals[(int)Ceiling(goalTime / MatchIntervalLength) - 1]++;
+            }
           }
         }
 
-        foreach (var detailedGoal in awayGoalDetails)
+        if (TeamName == match.AwayTeam || TeamName == DefaultTeamName)
         {
-          if (double.TryParse(regexGoalTime.Match(detailedGoal).Value, out double goalTime))
+          scoredGoalsSum += match.AwayGoals ?? 0;
+
+          foreach (var detailedGoal in awayGoalDetails)
           {
-            // surely there isn't IndexOutOfRangeException - goalTime is equal to 90 at most 
-            GoalsInIntervals[(int)Ceiling(goalTime / MatchIntervalLength) - 1]++;
+            if (double.TryParse(regexGoalTime.Match(detailedGoal).Value, out double goalTime))
+            {
+              // surely there isn't IndexOutOfRangeException - goalTime is equal to 90 at most 
+              GoalsInIntervals[(int)Ceiling(goalTime / MatchIntervalLength) - 1]++;
+            }
           }
         }
 
@@ -177,7 +188,7 @@ namespace SportsAnalyzer.Models
 
       for (int i = 0; i < NumberOfMatchIntervals; i++)
       {
-        GoalsInIntervalsPercent[i] = Round((GoalsInIntervals[i] / GoalsSum) * 100, 2);
+        GoalsInIntervalsPercent[i] = Round((GoalsInIntervals[i] / scoredGoalsSum) * 100, 2);
       }
 
       int index = 0;
