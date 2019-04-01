@@ -46,7 +46,9 @@ namespace SportsAnalyzer.Controllers
       var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
-      stats.CalcStatsForRounds(db, statsRequest.Rounds.ToList());
+      stats.SetMatches(db.LeagueMatches.ToList());
+      stats.SetRounds(statsRequest.Rounds.ToList());
+      stats.CalculateGoalsInIntervals();
 
       return Ok(stats.GoalsInIntervalsPercent);
     }
@@ -64,7 +66,9 @@ namespace SportsAnalyzer.Controllers
       var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
-      stats.CalcStatsForRounds(db, statsRequest.Rounds.ToList());
+      stats.SetMatches(db.LeagueMatches.ToList());
+      stats.SetRounds(statsRequest.Rounds.ToList());
+      stats.CalculateMatchGoals();
 
       return Ok(stats.MatchGoalsPct);
     }

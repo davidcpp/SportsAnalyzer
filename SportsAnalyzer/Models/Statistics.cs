@@ -131,7 +131,7 @@ namespace SportsAnalyzer.Models
 
     /* Methods */
 
-    public void CalculateAll()
+    public void CalculateBasicStats()
     {
       if (SelectedMatches == null || SelectedMatches.Count == 0)
       {
@@ -144,6 +144,14 @@ namespace SportsAnalyzer.Models
       GoalsAvg = Round(GoalsSum / MatchesNumber, 2);
       GoalsAvgHome = Round(SelectedMatches.Average((match) => match.HomeGoals ?? 0), 2);
       GoalsAvgAway = Round(SelectedMatches.Average((match) => match.AwayGoals ?? 0), 2);
+    }
+
+    public void CalculateGoalsInIntervals()
+    {
+      if (SelectedMatches == null || SelectedMatches.Count == 0)
+      {
+        return;
+      }
 
       var regexGoalTime = new Regex("\\d{1,}");
       double scoredGoalsSum = 0;
@@ -179,17 +187,28 @@ namespace SportsAnalyzer.Models
             }
           }
         }
-
-        int matchGoals = match.HomeGoals ?? 0;
-        matchGoals += match.AwayGoals ?? 0;
-        if (!MatchGoals.ContainsKey(matchGoals))
-          MatchGoals.Add(matchGoals, 0);
-        MatchGoals[matchGoals]++;
       }
 
       for (int i = 0; i < NumberOfMatchIntervals; i++)
       {
         GoalsInIntervalsPercent[i] = Round((GoalsInIntervals[i] / scoredGoalsSum) * 100, 2);
+      }
+    }
+
+    public void CalculateMatchGoals()
+    {
+      if (SelectedMatches == null || SelectedMatches.Count == 0)
+      {
+        return;
+      }
+
+      foreach (var match in SelectedMatches)
+      {
+        int matchGoals = match.HomeGoals ?? 0;
+        matchGoals += match.AwayGoals ?? 0;
+        if (!MatchGoals.ContainsKey(matchGoals))
+          MatchGoals.Add(matchGoals, 0);
+        MatchGoals[matchGoals]++;
       }
 
       int numberOfGoals = 0;
@@ -198,7 +217,7 @@ namespace SportsAnalyzer.Models
       {
         numberOfGoals = item.Key;
         numberOfMatches = item.Value;
-        MatchGoalsPct[numberOfGoals] = Round((numberOfMatches / MatchesNumber) * 100, 2);
+        MatchGoalsPct[numberOfGoals] = Round((numberOfMatches / SelectedMatches.Count) * 100, 2);
       }
     }
 

@@ -162,16 +162,8 @@ namespace SportsAnalyzer
     {
       statistics.SetMatches(xmlSocDB.LeagueMatches.ToList());
       statistics.SetRoundsRange(startRound, endRound);
-      statistics.CalculateAll();
-    }
-
-    public static void CalcStatsForRounds(this Statistics stats,
-      XmlSocDB xmlSocDB,
-      IEnumerable<int> selectedRounds)
-    {
-      stats.SetMatches(xmlSocDB.LeagueMatches.ToList());
-      stats.SetRounds(selectedRounds);
-      stats.CalculateAll();
+      statistics.CalculateBasicStats();
+      statistics.CalculateGoalsInIntervals();
     }
   }
 }
