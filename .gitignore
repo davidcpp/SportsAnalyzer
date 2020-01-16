@@ -267,6 +267,7 @@ GCopReport.json
 .vscode/launch.json
 postponed/
 Screenshots/
+Scripts_unnecessary/
 
 # Notes
 *.txt
