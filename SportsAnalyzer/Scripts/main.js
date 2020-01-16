@@ -475,7 +475,12 @@ function getRoundPointsData(teamName, data) {
       let blankCrest = new Image();
       blankCrest.src = 'blank.png';
 
-      teamStandings[teamName].points[i] = 0;
+      if (i == 0) {
+        teamStandings[teamName].points[i] = 0;
+      }
+      else {
+        teamStandings[teamName].points[i] = teamStandings[teamName].points[i - 1];
+      }
       teamStandings[teamName].opponentCrests[i] = blankCrest;
       teamStandings[teamName].opposingTeams[i] = '';
       teamStandings[teamName].matchResults[i] = '';
