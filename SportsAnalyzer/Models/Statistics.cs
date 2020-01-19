@@ -275,17 +275,17 @@ namespace SportsAnalyzer.Models
     private void UpdateStandingsAfterMatch(Dictionary<string, TeamLeagueStanding> standings,
       FootballMatch match)
     {
-      standings[match.HomeTeam].Goals_For += match.HomeGoals ?? 0;
-      standings[match.HomeTeam].Goals_Against += match.AwayGoals ?? 0;
-      standings[match.HomeTeam].Goal_Difference = standings[match.HomeTeam].Goals_For
-        - standings[match.HomeTeam].Goals_Against;
+      standings[match.HomeTeam].GoalsFor += match.HomeGoals ?? 0;
+      standings[match.HomeTeam].GoalsAgainst += match.AwayGoals ?? 0;
+      standings[match.HomeTeam].GoalsDifference = standings[match.HomeTeam].GoalsFor
+        - standings[match.HomeTeam].GoalsAgainst;
       standings[match.HomeTeam].Points += match.HomeGoals > match.AwayGoals ?
         3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
 
-      standings[match.AwayTeam].Goals_For += match.AwayGoals ?? 0;
-      standings[match.AwayTeam].Goals_Against += match.HomeGoals ?? 0;
-      standings[match.AwayTeam].Goal_Difference = standings[match.AwayTeam].Goals_For
-        - standings[match.AwayTeam].Goals_Against;
+      standings[match.AwayTeam].GoalsFor += match.AwayGoals ?? 0;
+      standings[match.AwayTeam].GoalsAgainst += match.HomeGoals ?? 0;
+      standings[match.AwayTeam].GoalsDifference = standings[match.AwayTeam].GoalsFor
+        - standings[match.AwayTeam].GoalsAgainst;
       standings[match.AwayTeam].Points += match.AwayGoals > match.HomeGoals ?
         3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
     }
@@ -296,8 +296,8 @@ namespace SportsAnalyzer.Models
     {
       var result = standings.Values
         .OrderBy(standing => standing.Points)
-        .ThenBy(standing => standing.Goal_Difference)
-        .ThenBy(standing => standing.Goals_For).ToList();
+        .ThenBy(standing => standing.GoalsDifference)
+        .ThenBy(standing => standing.GoalsFor).ToList();
 
       result.Reverse();
       return result;

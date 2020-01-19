@@ -59,14 +59,14 @@ namespace SportsAnalyzer.Models
 
     [Required]
     [Display(Name = "Goals For")]
-    public int Goals_For { get; set; }
+    public int GoalsFor { get; set; }
 
     [Required]
     [Display(Name = "Goals Against")]
-    public int Goals_Against { get; set; }
+    public int GoalsAgainst { get; set; }
 
     [Display(Name = "Goals Difference")]
-    public int Goal_Difference { get; set; }
+    public int GoalsDifference { get; set; }
 
     /* Constructors */
 
@@ -94,9 +94,9 @@ namespace SportsAnalyzer.Models
       Draw = teamStanding.Lost;
       Lost = teamStanding.Lost;
 
-      Goals_For = teamStanding.Goals_For;
-      Goals_Against = teamStanding.Goals_Against;
-      Goal_Difference = teamStanding.Goal_Difference;
+      GoalsFor = teamStanding.Goals_For;
+      GoalsAgainst = teamStanding.Goals_Against;
+      GoalsDifference = teamStanding.Goal_Difference;
     }
 
     public bool IsEqualToXmlTeamStanding(XMLSoccerCOM.TeamLeagueStanding teamStanding)
@@ -118,11 +118,11 @@ namespace SportsAnalyzer.Models
         return false;
       if (Lost != teamStanding.Lost)
         return false;
-      if (Goals_For != teamStanding.Goals_For)
+      if (GoalsFor != teamStanding.Goals_For)
         return false;
-      if (Goals_Against != teamStanding.Goals_Against)
+      if (GoalsAgainst != teamStanding.Goals_Against)
         return false;
-      if (Goal_Difference != teamStanding.Goal_Difference)
+      if (GoalsDifference != teamStanding.Goal_Difference)
         return false;
 
       return true;
