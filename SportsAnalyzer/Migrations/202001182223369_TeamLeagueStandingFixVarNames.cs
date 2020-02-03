@@ -1,8 +1,7 @@
 ﻿namespace SportsAnalyzer.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class TeamLeagueStandingFixVarNames : DbMigration
     {
         public override void Up()
@@ -14,7 +13,7 @@
             DropColumn("dbo.TeamLeagueStandings", "Goals_Against");
             DropColumn("dbo.TeamLeagueStandings", "Goal_Difference");
         }
-        
+
         public override void Down()
         {
             AddColumn("dbo.TeamLeagueStandings", "Goal_Difference", c => c.Int(nullable: false));

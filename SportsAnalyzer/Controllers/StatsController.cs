@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Http;
+﻿using System.Web.Http;
 using SportsAnalyzer.Models;
 using SportsAnalyzer.DAL;
 using System.Linq;
