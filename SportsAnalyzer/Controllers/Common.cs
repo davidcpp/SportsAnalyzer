@@ -25,7 +25,7 @@ namespace SportsAnalyzer
   public class XmlSoccerRequester : IXmlSoccerRequester
   {
     private const string apiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
-    private XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(apiKey);
+    private readonly XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(apiKey);
 
     public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
       string league, int seasonStartYear)

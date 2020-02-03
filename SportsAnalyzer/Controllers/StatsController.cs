@@ -10,7 +10,7 @@ namespace SportsAnalyzer.Controllers
 {
   public class StatsController : ApiController
   {
-    private XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
+    private readonly XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 

@@ -10,7 +10,7 @@ namespace SportsAnalyzer.Controllers
 {
   public class FootballController : Controller
   {
-    private IXmlSoccerAPI_DBContext db;
+    private readonly IXmlSoccerAPI_DBContext db;
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 
