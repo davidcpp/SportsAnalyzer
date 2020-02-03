@@ -1,9 +1,10 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using SportsAnalyzer.Models;
 
 namespace SportsAnalyzer.DAL
 {
-  public class XmlSoccerAPI_DBContext : DbContext
+  public class XmlSoccerAPI_DBContext : DbContext, IXmlSoccerAPI_DBContext
   {
     public DbSet<FootballTeam> FootballTeams { get; set; }
     public DbSet<TeamLeagueStanding> LeagueTable { get; set; }
@@ -18,5 +19,13 @@ namespace SportsAnalyzer.DAL
       Database.SetInitializer<XmlSoccerAPI_DBContext>(null);
       base.OnModelCreating(modelBuilder);
     }
+  }
+
+  public interface IXmlSoccerAPI_DBContext : IDisposable
+  {
+    DbSet<FootballTeam> FootballTeams { get; }
+    DbSet<TeamLeagueStanding> LeagueTable { get; }
+    DbSet<FootballMatch> LeagueMatches { get; }
+    int SaveChanges();
   }
 }

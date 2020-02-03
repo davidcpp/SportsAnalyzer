@@ -10,7 +10,7 @@ namespace SportsAnalyzer.Controllers
 {
   public class FootballController : Controller
   {
-    private XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
+    private IXmlSoccerAPI_DBContext db;
 
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 
@@ -19,11 +19,14 @@ namespace SportsAnalyzer.Controllers
     public FootballController()
     {
       _xmlSoccerRequester = new XmlSoccerRequester();
+      db = new XmlSoccerAPI_DBContext();
     }
 
-    public FootballController(IXmlSoccerRequester xmlSoccerRequester)
+    public FootballController(IXmlSoccerRequester xmlSoccerRequester,
+      IXmlSoccerAPI_DBContext dbContext = null)
     {
       _xmlSoccerRequester = xmlSoccerRequester;
+      db = dbContext ?? new XmlSoccerAPI_DBContext();
     }
 
     /* Methods */

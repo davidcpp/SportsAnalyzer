@@ -8,7 +8,7 @@ using System.Linq;
 namespace SportsAnalyzer
 {
   using IXmlSR = SportsAnalyzer.IXmlSoccerRequester;
-  using XmlSocDB = SportsAnalyzer.DAL.XmlSoccerAPI_DBContext;
+  using IXmlSocDB = SportsAnalyzer.DAL.IXmlSoccerAPI_DBContext;
 
   public interface IXmlSoccerRequester
   {
@@ -72,7 +72,7 @@ namespace SportsAnalyzer
     public static DateTime TableLastUpdateTime;
     public static DateTime TeamsLastUpdateTime;
 
-    public static void ClearDBSet(DbSet dbList)
+    public static void ClearDBSet<T>(DbSet<T> dbList) where T : class
     {
       foreach (var dbItem in dbList)
       {
@@ -90,7 +90,7 @@ namespace SportsAnalyzer
     public static void RefreshTeamsData(string league,
       int seasonYear,
       IXmlSR xmlSocReq,
-      XmlSocDB xmlSocDB)
+      IXmlSocDB xmlSocDB)
     {
       LastUpdateTime = DateTime.UtcNow;
       TeamsLastUpdateTime = LastUpdateTime;
@@ -105,7 +105,7 @@ namespace SportsAnalyzer
     public static void RefreshTableData(string league,
       int seasonYear,
       IXmlSR xmlSocReq,
-      XmlSocDB xmlSocDB)
+      IXmlSocDB xmlSocDB)
     {
       LastUpdateTime = DateTime.UtcNow;
       TableLastUpdateTime = LastUpdateTime;
@@ -122,7 +122,7 @@ namespace SportsAnalyzer
     public static void RefreshMatchesData(string leagueName,
       int seasonYear,
       IXmlSR xmlSocReq,
-      XmlSocDB xmlSocDB)
+      IXmlSocDB xmlSocDB)
     {
       LastUpdateTime = DateTime.UtcNow;
       MatchesLastUpdateTime = LastUpdateTime;
@@ -137,7 +137,7 @@ namespace SportsAnalyzer
       SaveChangesInDatabase(xmlSocDB);
     }
 
-    private static void SaveChangesInDatabase(XmlSocDB db)
+    private static void SaveChangesInDatabase(IXmlSocDB db)
     {
       bool saveFailed;
       do
@@ -156,7 +156,7 @@ namespace SportsAnalyzer
     }
 
     public static void CalcStats(this Statistics statistics,
-      XmlSocDB xmlSocDB,
+      IXmlSocDB xmlSocDB,
       string startRound,
       string endRound)
     {
