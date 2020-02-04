@@ -133,6 +133,7 @@ function addTablePositionsOnChart(chart) {
   if (chart.options.title.text != roundPointsTitle)
     return;
 
+  // TODO: remove forEach and run code only for i=0 or apply .filter method
   chart.data.datasets.forEach((dataset, i) => {
     // table position will be shown only for the first team on the chart
     if (i > 0)
@@ -145,6 +146,7 @@ function addTablePositionsOnChart(chart) {
       meta.data.forEach((element, index) => {
         let dataString = teamStandings[teamName].tablePositions[index];
 
+        // TODO: dataString = '-' for undefined
         if (dataString == undefined)
           return;
 
@@ -224,6 +226,7 @@ function addChartDataset(chart, URI, teamName, id) {
           chartData = getIntegerLabeledData(data);
         }
 
+        // update labels of chart when data for new team has more labels
         if (chartData.labels.length > chart.data.labels.length) {
           chart.data.labels = chartData.labels;
         }
@@ -245,6 +248,8 @@ function addChartDataset(chart, URI, teamName, id) {
         dataset.fill = false;
         dataset.lineTension = 0;
         dataset.borderWidth = 2;
+
+        // Add crests of opponents if dataset will be first on the chart
         if (chart.data.datasets.length == 0)
           dataset.pointStyle = teamStandings[teamName].opponentCrests;
       }
@@ -491,6 +496,7 @@ function getRoundPointsData(teamName, data) {
 
 function getIntegerLabeledData(data) {
   let resultArray = [],
+    // add map() call to labels
     labels = Object.keys(data);
   const values = Object.values(data),
     maxLabel = labels[labels.length - 1];
@@ -499,6 +505,9 @@ function getIntegerLabeledData(data) {
     resultArray[parseInt(label)] = parseFloat(values[i]);
   });
 
+  // TODO: replace for loop with function generating array with integer values 
+  //      in range <0; maxLabel>
+  // filling labels with the missing ones up to maxLabel
   for (let i = 0; i <= maxLabel; i++) {
     labels[i] = i;
     if (resultArray[i] == undefined)

@@ -115,8 +115,10 @@ namespace SportsAnalyzer.Models
       set { timeIntervalsLimits = value; }
     }
 
-    public IDictionary<int, double> MatchGoals = new Dictionary<int, double>();
     // Number of matches with a given number of goals
+    // MatchGoalsPct[numberOfGoals] = numberOfMatches
+    public IDictionary<int, double> MatchGoals = new Dictionary<int, double>();
+    // Number of matches (%) with a given number of goals
     // MatchGoalsPct[numberOfGoals] = numberOfMatches
     public IDictionary<int, double> MatchGoalsPct = new Dictionary<int, double>();
     // Number of points in the given round for the given team
