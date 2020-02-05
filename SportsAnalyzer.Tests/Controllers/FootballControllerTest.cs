@@ -151,6 +151,7 @@ namespace SportsAnalyzer.Tests.Controllers
         x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
         x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
         x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
         x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, defaultSeasonYear),
         x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample),
       };
@@ -158,13 +159,12 @@ namespace SportsAnalyzer.Tests.Controllers
       var mockXmlReq = SetSequenceOfMockCalls(xmlTestList, callMockExpressions);
 
       var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
-      TeamsLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
 
       var listOfCallArgs = new List<(string, int?)>
       {
         (null, null),
         (defaultLeagueShortName, null),
+        (defaultLeague, defaultSeasonYear),
         (defaultLeagueId, null),
         (leagueIdExample, null),
         (leagueIdExample, seasonYearExample)
@@ -174,7 +174,14 @@ namespace SportsAnalyzer.Tests.Controllers
       CallControlerActionMuliply(footballController.Teams, listOfCallArgs);
 
       // Assert
-      Assert.AreEqual(1, testXmlSoccerContext.SavedChanges);
+      Assert.AreEqual(callMockExpressions.Count, testXmlSoccerContext.SavedChanges);
+
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()),
+        Times.Exactly(callMockExpressions.Count));
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
+        Times.Exactly(callMockExpressions.Count - 2));
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, defaultSeasonYear), Times.Once);
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample), Times.Once);
     }
 
     [TestMethod]
@@ -308,6 +315,7 @@ namespace SportsAnalyzer.Tests.Controllers
         x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
         x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
         x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
         x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear),
         x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample),
       };
@@ -315,13 +323,12 @@ namespace SportsAnalyzer.Tests.Controllers
       var mockXmlReq = SetSequenceOfMockCalls(xmlTestLeagueTable, callMockExpressions);
 
       var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
-      TableLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
 
       var listOfCallArgs = new List<(string, int?)>
       {
         (null, null),
         (defaultLeagueShortName, null),
+        (defaultLeague, defaultSeasonYear),
         (defaultLeagueId, null),
         (leagueIdExample, null),
         (leagueIdExample, seasonYearExample)
@@ -331,7 +338,14 @@ namespace SportsAnalyzer.Tests.Controllers
       CallControlerActionMuliply(footballController.Table, listOfCallArgs);
 
       // Assert
-      Assert.AreEqual(1, testXmlSoccerContext.SavedChanges);
+      Assert.AreEqual(callMockExpressions.Count, testXmlSoccerContext.SavedChanges);
+
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()),
+        Times.Exactly(callMockExpressions.Count));
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        Times.Exactly(callMockExpressions.Count - 2));
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear), Times.Once);
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample), Times.Once);
     }
 
     [TestMethod]
@@ -440,6 +454,12 @@ namespace SportsAnalyzer.Tests.Controllers
     {
       foreach (var (league, seasonYear) in listOfCallArgs)
       {
+        // Reset update time variables to call IXmlSoccerRequester methods
+        // each time footballControllerAction is called
+        TableLastUpdateTime = DateTime.MinValue;
+        TeamsLastUpdateTime = DateTime.MinValue;
+        LastUpdateTime = DateTime.MinValue;
+
         if (league == null && seasonYear == null)
         {
           // calling controller action without parameters
