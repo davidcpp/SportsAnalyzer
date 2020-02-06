@@ -41,43 +41,166 @@ namespace SportsAnalyzer.Tests.Controllers
     /* Methods */
 
     [TestMethod]
-    public void ShowTeams_TestList_EqualLists()
+    public void ShowTable_EmptyXmlList_ViewMessage()
     {
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var xmlTestList = CreateTestTeamList(numberOfTeams);
+      var xmlTestList = CreateTestLeagueTable(0);
 
-      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
+      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
         It.IsAny<string>(), It.IsAny<int>()))
         .Returns(xmlTestList);
 
       var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
-      TeamsLastUpdateTime = DateTime.MinValue;
+      TableLastUpdateTime = DateTime.MinValue;
       LastUpdateTime = DateTime.MinValue;
+
+      // Act
+      var viewResult = footballController.Table() as ViewResult;
+
+      // Assert
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+
+      Assert.AreEqual(1, testXmlSoccerContext.SavedChanges);
+      Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
+
+      // Checking if list forwarded as a model (viewResult.Model) to View
+      // corresponds to test list (Does this list have the same values of their objects? )
+
+      var dbList = viewResult.Model as List<TeamLeagueStanding>;
+
+      Assert.IsNotNull(dbList);
+      Assert.AreEqual(xmlTestList.Count, 0);
+      Assert.AreEqual(dbList.Count, xmlTestList.Count);
+    }
+
+    [TestMethod]
+    public void ShowTable_RecentlyUpdatedTable_NoRequestInvocation()
+    {
+      // Arrange
+      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
+      var mockXmlReq = new Mock<IXmlSoccerRequester>();
+
+      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
+      TableLastUpdateTime = DateTime.UtcNow;
+      LastUpdateTime = DateTime.UtcNow;
 
       // Act
       var viewResult = footballController.Teams() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Never());
+
+      Assert.AreEqual(0, testXmlSoccerContext.SavedChanges);
+    }
+
+    // Not completely proper unit test - necessity of using database (external dependency)
+    [TestMethod]
+    [ExpectedException(exceptionType: typeof(DbEntityValidationException))]
+    public void ShowTable_StringLengthOutOfRange_EntityValidationException()
+    {
+      // Arrange
+      var mockXmlReq = new Mock<IXmlSoccerRequester>();
+      var xmlTestList = CreateTestLeagueTable(1, shortString);
+
+      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(xmlTestList);
+
+      var footballController = new FootballController(mockXmlReq.Object);
+      TableLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
+
+      // Act
+      footballController.Table();
+    }
+
+    [TestMethod]
+    public void ShowTable_TestTable_EqualTables()
+    {
+      // Arrange
+      var mockXmlReq = new Mock<IXmlSoccerRequester>();
+      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
+      var xmlTestList = CreateTestLeagueTable(numberOfTeams);
+
+      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(xmlTestList);
+
+      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
+      TableLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
+
+      // Act
+      var viewResult = footballController.Table() as ViewResult;
+
+      // Assert
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
         It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       Assert.AreEqual(1, testXmlSoccerContext.SavedChanges);
 
       // Checking if list forwarded as a model (viewResult.Model) to View
-      // corresponds to test list (Does this list have the same values of their objects? )
+      // corresponds to test list (Does this list have the same values of their objects?)
 
-      var dbList = viewResult.Model as List<FootballTeam>;
+      var dbList = viewResult.Model as List<TeamLeagueStanding>;
 
       Assert.IsNotNull(dbList);
       Assert.AreEqual(xmlTestList.Count, numberOfTeams);
       Assert.AreEqual(dbList.Count, xmlTestList.Count);
-
       for (int i = 0; i < dbList.Count; i++)
       {
-        Assert.IsTrue(dbList[i].IsEqualToXmlTeam(xmlTestList[i]));
+        Assert.IsTrue(dbList[i].IsEqualToXmlTeamStanding(xmlTestList[i]));
       }
+    }
+
+    [TestMethod]
+    public void ShowTable_VariousControllerArgs_ProperArgumentsCall()
+    {
+      // Arrange
+      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
+      var xmlTestLeagueTable = CreateTestLeagueTable(0);
+
+      var callMockExpressions =
+        new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.TeamLeagueStanding>>>>
+      {
+        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample),
+      };
+
+      var mockXmlReq = SetSequenceOfMockCalls(xmlTestLeagueTable, callMockExpressions);
+
+      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
+
+      var listOfCallArgs = new List<(string, int?)>
+      {
+        (null, null),
+        (defaultLeagueShortName, null),
+        (defaultLeague, defaultSeasonYear),
+        (defaultLeagueId, null),
+        (leagueIdExample, null),
+        (leagueIdExample, seasonYearExample)
+      };
+
+      // Act
+      CallControlerActionMuliply(footballController.Table, listOfCallArgs);
+
+      // Assert
+      Assert.AreEqual(callMockExpressions.Count, testXmlSoccerContext.SavedChanges);
+
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()),
+        Times.Exactly(callMockExpressions.Count));
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+        Times.Exactly(callMockExpressions.Count - 2));
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear), Times.Once);
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample), Times.Once);
     }
 
     [TestMethod]
@@ -117,6 +240,27 @@ namespace SportsAnalyzer.Tests.Controllers
       Assert.AreEqual(dbList.Count, xmlTestList.Count);
     }
 
+    [TestMethod]
+    public void ShowTeams_RecentlyUpdatedList_NoRequestInvocation()
+    {
+      // Arrange
+      var mockXmlReq = new Mock<IXmlSoccerRequester>();
+      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
+
+      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
+      TeamsLastUpdateTime = DateTime.UtcNow;
+      LastUpdateTime = DateTime.UtcNow;
+
+      // Act
+      var viewResult = footballController.Teams() as ViewResult;
+
+      // Assert
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Never());
+
+      Assert.AreEqual(0, testXmlSoccerContext.SavedChanges);
+    }
+
     // Not completely proper unit test - necessity of using database (external dependency)
     [TestMethod]
     [ExpectedException(exceptionType: typeof(DbEntityValidationException))]
@@ -136,6 +280,46 @@ namespace SportsAnalyzer.Tests.Controllers
 
       // Act
       footballController.Teams();
+    }
+
+    [TestMethod]
+    public void ShowTeams_TestList_EqualLists()
+    {
+      // Arrange
+      var mockXmlReq = new Mock<IXmlSoccerRequester>();
+      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
+      var xmlTestList = CreateTestTeamList(numberOfTeams);
+
+      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(xmlTestList);
+
+      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
+      TeamsLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
+
+      // Act
+      var viewResult = footballController.Teams() as ViewResult;
+
+      // Assert
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+
+      Assert.AreEqual(1, testXmlSoccerContext.SavedChanges);
+
+      // Checking if list forwarded as a model (viewResult.Model) to View
+      // corresponds to test list (Does this list have the same values of their objects? )
+
+      var dbList = viewResult.Model as List<FootballTeam>;
+
+      Assert.IsNotNull(dbList);
+      Assert.AreEqual(xmlTestList.Count, numberOfTeams);
+      Assert.AreEqual(dbList.Count, xmlTestList.Count);
+
+      for (int i = 0; i < dbList.Count; i++)
+      {
+        Assert.IsTrue(dbList[i].IsEqualToXmlTeam(xmlTestList[i]));
+      }
     }
 
     [TestMethod]
@@ -182,191 +366,6 @@ namespace SportsAnalyzer.Tests.Controllers
         Times.Exactly(callMockExpressions.Count - 2));
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, defaultSeasonYear), Times.Once);
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample), Times.Once);
-    }
-
-    [TestMethod]
-    public void ShowTeams_RecentlyUpdatedList_NoRequestInvocation()
-    {
-      // Arrange
-      var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-
-      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
-      TeamsLastUpdateTime = DateTime.UtcNow;
-      LastUpdateTime = DateTime.UtcNow;
-
-      // Act
-      var viewResult = footballController.Teams() as ViewResult;
-
-      // Assert
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Never());
-
-      Assert.AreEqual(0, testXmlSoccerContext.SavedChanges);
-    }
-
-    [TestMethod]
-    public void ShowTable_TestTable_EqualTables()
-    {
-      // Arrange
-      var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var xmlTestList = CreateTestLeagueTable(numberOfTeams);
-
-      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(xmlTestList);
-
-      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
-      TableLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
-
-      // Act
-      var viewResult = footballController.Table() as ViewResult;
-
-      // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
-
-      Assert.AreEqual(1, testXmlSoccerContext.SavedChanges);
-
-      // Checking if list forwarded as a model (viewResult.Model) to View
-      // corresponds to test list (Does this list have the same values of their objects?)
-
-      var dbList = viewResult.Model as List<TeamLeagueStanding>;
-
-      Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestList.Count, numberOfTeams);
-      Assert.AreEqual(dbList.Count, xmlTestList.Count);
-      for (int i = 0; i < dbList.Count; i++)
-      {
-        Assert.IsTrue(dbList[i].IsEqualToXmlTeamStanding(xmlTestList[i]));
-      }
-    }
-
-    [TestMethod]
-    public void ShowTable_EmptyXmlList_ViewMessage()
-    {
-      // Arrange
-      var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var xmlTestList = CreateTestLeagueTable(0);
-
-      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(xmlTestList);
-
-      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
-      TableLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
-
-      // Act
-      var viewResult = footballController.Table() as ViewResult;
-
-      // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
-
-      Assert.AreEqual(1, testXmlSoccerContext.SavedChanges);
-      Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
-
-      // Checking if list forwarded as a model (viewResult.Model) to View
-      // corresponds to test list (Does this list have the same values of their objects? )
-
-      var dbList = viewResult.Model as List<TeamLeagueStanding>;
-
-      Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestList.Count, 0);
-      Assert.AreEqual(dbList.Count, xmlTestList.Count);
-    }
-
-    // Not completely proper unit test - necessity of using database (external dependency)
-    [TestMethod]
-    [ExpectedException(exceptionType: typeof(DbEntityValidationException))]
-    public void ShowTable_StringLengthOutOfRange_EntityValidationException()
-    {
-      // Arrange
-      var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var xmlTestList = CreateTestLeagueTable(1, shortString);
-
-      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(xmlTestList);
-
-      var footballController = new FootballController(mockXmlReq.Object);
-      TableLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
-
-      // Act
-      footballController.Table();
-    }
-
-    [TestMethod]
-    public void ShowTable_VariousControllerArgs_ProperArgumentsCall()
-    {
-      // Arrange
-      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var xmlTestLeagueTable = CreateTestLeagueTable(0);
-
-      var callMockExpressions =
-        new List<Expression<Func<IXmlSoccerRequester,
-                 List<XMLSoccerCOM.TeamLeagueStanding>>>>
-      {
-        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample),
-      };
-
-      var mockXmlReq = SetSequenceOfMockCalls(xmlTestLeagueTable, callMockExpressions);
-
-      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
-
-      var listOfCallArgs = new List<(string, int?)>
-      {
-        (null, null),
-        (defaultLeagueShortName, null),
-        (defaultLeague, defaultSeasonYear),
-        (defaultLeagueId, null),
-        (leagueIdExample, null),
-        (leagueIdExample, seasonYearExample)
-      };
-
-      // Act
-      CallControlerActionMuliply(footballController.Table, listOfCallArgs);
-
-      // Assert
-      Assert.AreEqual(callMockExpressions.Count, testXmlSoccerContext.SavedChanges);
-
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()),
-        Times.Exactly(callMockExpressions.Count));
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
-        Times.Exactly(callMockExpressions.Count - 2));
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear), Times.Once);
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample), Times.Once);
-    }
-
-    [TestMethod]
-    public void ShowTable_RecentlyUpdatedTable_NoRequestInvocation()
-    {
-      // Arrange
-      var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var mockXmlReq = new Mock<IXmlSoccerRequester>();
-
-      var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
-      TableLastUpdateTime = DateTime.UtcNow;
-      LastUpdateTime = DateTime.UtcNow;
-
-      // Act
-      var viewResult = footballController.Teams() as ViewResult;
-
-      // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Never());
-
-      Assert.AreEqual(0, testXmlSoccerContext.SavedChanges);
     }
 
     /* Auxiliary methods */

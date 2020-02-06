@@ -24,8 +24,8 @@ namespace SportsAnalyzer
 
   public class XmlSoccerRequester : IXmlSoccerRequester
   {
-    private const string apiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
-    private readonly XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(apiKey);
+    private const string _apiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
+    private readonly XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(_apiKey);
 
     public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
       string league, int seasonStartYear)
@@ -72,6 +72,17 @@ namespace SportsAnalyzer
     public static DateTime TableLastUpdateTime;
     public static DateTime TeamsLastUpdateTime;
 
+    public static void CalcStats(this Statistics statistics,
+      IXmlSocDB xmlSocDB,
+      string startRound,
+      string endRound)
+    {
+      statistics.SetMatches(xmlSocDB.LeagueMatches.ToList());
+      statistics.SetRoundsRange(startRound, endRound);
+      statistics.CalculateBasicStats();
+      statistics.CalculateGoalsInIntervals();
+    }
+
     public static void ClearDBSet<T>(DbSet<T> dbList) where T : class
     {
       foreach (var dbItem in dbList)
@@ -85,21 +96,6 @@ namespace SportsAnalyzer
       return (dataLastUpdateTime == DateTime.MinValue
         || (DateTime.UtcNow - dataLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
         && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds;
-    }
-
-    public static void RefreshTeamsData(string league,
-      int seasonYear,
-      IXmlSR xmlSocReq,
-      IXmlSocDB xmlSocDB)
-    {
-      LastUpdateTime = DateTime.UtcNow;
-      TeamsLastUpdateTime = LastUpdateTime;
-
-      var xmlTeams = xmlSocReq.GetAllTeamsByLeagueAndSeason(league, seasonYear);
-      ClearDBSet(xmlSocDB.FootballTeams);
-
-      xmlSocDB.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
-      SaveChangesInDatabase(xmlSocDB);
     }
 
     public static void RefreshTableData(string league,
@@ -116,6 +112,21 @@ namespace SportsAnalyzer
       ClearDBSet(xmlSocDB.LeagueTable);
 
       xmlSocDB.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
+      SaveChangesInDatabase(xmlSocDB);
+    }
+
+    public static void RefreshTeamsData(string league,
+      int seasonYear,
+      IXmlSR xmlSocReq,
+      IXmlSocDB xmlSocDB)
+    {
+      LastUpdateTime = DateTime.UtcNow;
+      TeamsLastUpdateTime = LastUpdateTime;
+
+      var xmlTeams = xmlSocReq.GetAllTeamsByLeagueAndSeason(league, seasonYear);
+      ClearDBSet(xmlSocDB.FootballTeams);
+
+      xmlSocDB.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
       SaveChangesInDatabase(xmlSocDB);
     }
 
@@ -153,17 +164,6 @@ namespace SportsAnalyzer
           ex.Entries.Single().Reload();
         }
       } while (saveFailed);
-    }
-
-    public static void CalcStats(this Statistics statistics,
-      IXmlSocDB xmlSocDB,
-      string startRound,
-      string endRound)
-    {
-      statistics.SetMatches(xmlSocDB.LeagueMatches.ToList());
-      statistics.SetRoundsRange(startRound, endRound);
-      statistics.CalculateBasicStats();
-      statistics.CalculateGoalsInIntervals();
     }
   }
 }

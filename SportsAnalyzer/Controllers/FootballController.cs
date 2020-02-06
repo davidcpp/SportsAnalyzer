@@ -46,24 +46,25 @@ namespace SportsAnalyzer.Controllers
       return View(db.FootballTeams.ToList());
     }
 
-    // GET: Football/Teams/{league}/{seasonYear}
-    public ActionResult Teams(
+    // GET: Football/Stats/{startRound}/{endRound}/{league}/{seasonYear}
+    public ActionResult Stats(
+      string startRound = "1",
+      string endRound = "last",
       string league = DefaultLeagueFullName,
       int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
 
-      if (IsDataOutOfDate(TeamsLastUpdateTime))
+      if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
-        RefreshTeamsData(league, seasonYear, _xmlSoccerRequester, db);
+        RefreshMatchesData(league, seasonYear, _xmlSoccerRequester, db);
       }
-
-      ViewBag.EmptyList = "List of teams is empty";
-      if (db.FootballTeams.Count() == 0)
-        ViewBag.Message = ViewBag.EmptyList;
-
-      return View(db.FootballTeams.ToList());
+      var stats = new Statistics(seasonYear, league);
+      stats.CalcStats(db, startRound, endRound);
+      stats.CreateTeamsSelectList();
+      stats.CreateRoundsSelectList();
+      return View(stats);
     }
 
     // GET: Football/Table/{league}/{seasonYear}
@@ -86,25 +87,24 @@ namespace SportsAnalyzer.Controllers
       return View(db.LeagueTable.ToList());
     }
 
-    // GET: Football/Stats/{startRound}/{endRound}/{league}/{seasonYear}
-    public ActionResult Stats(
-      string startRound = "1",
-      string endRound = "last",
+    // GET: Football/Teams/{league}/{seasonYear}
+    public ActionResult Teams(
       string league = DefaultLeagueFullName,
       int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
         league = DefaultLeagueFullName;
 
-      if (IsDataOutOfDate(MatchesLastUpdateTime))
+      if (IsDataOutOfDate(TeamsLastUpdateTime))
       {
-        RefreshMatchesData(league, seasonYear, _xmlSoccerRequester, db);
+        RefreshTeamsData(league, seasonYear, _xmlSoccerRequester, db);
       }
-      var stats = new Statistics(seasonYear, league);
-      stats.CalcStats(db, startRound, endRound);
-      stats.CreateTeamsSelectList();
-      stats.CreateRoundsSelectList();
-      return View(stats);
+
+      ViewBag.EmptyList = "List of teams is empty";
+      if (db.FootballTeams.Count() == 0)
+        ViewBag.Message = ViewBag.EmptyList;
+
+      return View(db.FootballTeams.ToList());
     }
   }
 }

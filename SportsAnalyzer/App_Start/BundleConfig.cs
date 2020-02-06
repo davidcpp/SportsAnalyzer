@@ -7,8 +7,16 @@ namespace SportsAnalyzer
     // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
     public static void RegisterBundles(BundleCollection bundles)
     {
+      bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+          "~/Scripts/bootstrap.min.js",
+          "~/Scripts/respond.min.js"));
+
+      bundles.Add(new ScriptBundle("~/bundles/chartjs").Include(
+                "~/Scripts/Chart.min.js",
+                "~/Scripts/ChartUtils.js"));
+
       bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                  "~/Scripts/jquery-{version}.js"));
+            "~/Scripts/jquery-{version}.js"));
 
       bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                   "~/Scripts/jquery.validate*"));
@@ -17,14 +25,6 @@ namespace SportsAnalyzer
       // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
       bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                   "~/Scripts/modernizr-*"));
-
-      bundles.Add(new ScriptBundle("~/bundles/chartjs").Include(
-                "~/Scripts/Chart.min.js",
-                "~/Scripts/ChartUtils.js"));
-
-      bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                "~/Scripts/bootstrap.min.js",
-                "~/Scripts/respond.min.js"));
 
       bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap.min.css",
