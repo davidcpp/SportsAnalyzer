@@ -12,7 +12,7 @@ namespace SportsAnalyzer
           "~/Scripts/respond.min.js"));
 
       bundles.Add(new ScriptBundle("~/bundles/chartjs").Include(
-                "~/Scripts/Chart.min.js",
+                "~/Scripts/Chart.js",
                 "~/Scripts/ChartUtils.js"));
 
       bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
