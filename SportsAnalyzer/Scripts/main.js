@@ -8,7 +8,13 @@ let timeIntervalsTexts = [],
 
 // variables from user input
 let selectedRounds = [],
-  selectedTeams = {};
+  // Order of the adding teams to the chart or presence on the chart during teams change
+  teamsInSelectionOrder = {},
+  firstTeam = {};
+
+let chartFirstTeamName = '',
+  isNewFirstTeamSelected = false,
+  isFirstTeamRemoved = false;
 
 const webApiUri = 'api/stats';
 
@@ -136,7 +142,7 @@ function addTablePositionsOnChart(chart) {
   // TODO: remove forEach and run code only for i=0 or apply .filter method
   chart.data.datasets.forEach((dataset, i) => {
     // table position will be shown only for the first team on the chart
-    if (i > 0)
+    if (dataset.label != chartFirstTeamName)
       return;
 
     const teamName = dataset.label,
@@ -250,8 +256,9 @@ function addChartDataset(chart, URI, teamName, id) {
         dataset.borderWidth = 2;
 
         // Add crests of opponents if dataset will be first on the chart
-        if (chart.data.datasets.length == 0)
+        if (teamName == chartFirstTeamName) {
           dataset.pointStyle = teamStandings[teamName].opponentCrests;
+        }
       }
 
       // calling RemoveChartDataset method for case of delay in receiving results from WebApi
@@ -420,26 +427,111 @@ function updateChartData(chart, data, index) {
   chart.update();
 }
 
-$('#teamsList').change(() => {
-  $('#teamsList > option').each((ind, element) => {
-    const teamName = $(element).text(),
-      id = $(element).val();
+$('#teamsList > option').mousedown(function() {
+  const teamName = $(this).text(),
+    id = $(this).val();
 
-    if ($(element).prop('selected')) {
-      if (selectedTeams[teamName] === false) {
-        selectedTeams[teamName] = true;
-        addChartDataset(window.goalsInIntervalsChart, goalsInIntervalsURI, teamName, id);
-        addChartDataset(window.matchGoalsChart, matchGoalsURI, teamName, id);
-        addChartDataset(window.roundPointsChart, roundPointsURI, teamName, id);
+  firstTeam = {
+    name: teamName,
+    id: parseInt(id),
+  }
+});
+
+/** Create arrray of selected teams in order from team selected in "mousedown" event to currentTeamId*/
+function createSelectedTeamsArray(currentTeamId) {
+  let selectedTeams = $('#teamsList > option').filter(function(index, selectedTeam) {
+    const id = index + 1;
+    return id >= firstTeam.id && id <= currentTeamId;
+  }).get();
+
+  if (firstTeam.id > currentTeamId) {
+    selectedTeams = $('#teamsList > option').filter(function(index) {
+      const id = index + 1;
+      return id >= currentTeamId && id <= firstTeam.id
+    }).get();
+    selectedTeams = selectedTeams.reverse();
+  }
+  return selectedTeams;
+}
+
+function removeTeamFromCharts(teamName) {
+  removeChartDataset(goalsInIntervalsChart, teamName);
+  removeChartDataset(matchGoalsChart, teamName);
+  removeChartDataset(roundPointsChart, teamName);
+}
+
+function addTeamToCharts(teamName, id) {
+  addChartDataset(goalsInIntervalsChart, goalsInIntervalsURI, teamName, id);
+  addChartDataset(matchGoalsChart, matchGoalsURI, teamName, id);
+  addChartDataset(roundPointsChart, roundPointsURI, teamName, id);
+}
+
+function changeTeamPointStyle(teamName, pointStyle) {
+  const index = roundPointsChart.data.datasets.findIndex(
+    dataset => dataset.label === teamName);
+
+  if (index != -1) {
+    roundPointsChart.data.datasets[index].pointStyle = pointStyle;
+  }
+}
+
+$('#teamsList > option').mouseup(function() {
+  const currentTeamId = parseInt($(this).val());
+  const selectedTeams = createSelectedTeamsArray(currentTeamId);
+  let teamsInNewOrder = Object.assign({}, teamsInSelectionOrder);
+
+  $('#teamsList > option').each(function(index, team) {
+    const teamName = $(team).text();
+
+    if (!($(team).prop('selected'))) {
+      if (teamsInSelectionOrder[teamName] == teamName) {
+        delete teamsInNewOrder[teamName];
+        delete teamsInSelectionOrder[teamName];
+        removeTeamFromCharts(teamName);
+        if (teamName === chartFirstTeamName) {
+          isFirstTeamRemoved = true;
+        }
       }
     }
-    else if (selectedTeams[teamName] === true) {
-      selectedTeams[teamName] = false;
-      removeChartDataset(window.goalsInIntervalsChart, teamName);
-      removeChartDataset(window.matchGoalsChart, teamName);
-      removeChartDataset(window.roundPointsChart, teamName);
+    else if (selectedTeams.findIndex(teamItem => $(teamItem).text() === teamName) !== -1) {
+      // Order from newly selected teams is prior to the existing one
+      delete teamsInNewOrder[teamName];
+      if (teamName === firstTeam.name && teamName !== chartFirstTeamName) {
+        isNewFirstTeamSelected = true;
+      }
     }
   });
+
+  $(selectedTeams).each(function(index, selectedTeam) {
+    const teamName = $(selectedTeam).text();
+    const id = parseInt($(selectedTeam).val());
+
+    if ($(selectedTeam).prop('selected')) {
+      teamsInNewOrder[teamName] = teamName;
+      // if there isn't the selected team on the chart yet
+      if (teamsInSelectionOrder[teamName] !== teamName) {
+        addTeamToCharts(teamName, id);
+      }
+    }
+  });
+
+  if (!isFirstTeamRemoved && isNewFirstTeamSelected) {
+    // Update point style for old first team on the chart
+    changeTeamPointStyle(chartFirstTeamName, 'circle');
+  }
+  teamsInSelectionOrder = Object.assign({}, teamsInNewOrder);
+
+  if (isNewFirstTeamSelected || isFirstTeamRemoved) {
+    for (const teamName in teamsInSelectionOrder) {
+      chartFirstTeamName = teamName;
+      break;
+    }
+    // Update point style for new first team on the chart
+    changeTeamPointStyle(chartFirstTeamName, teamStandings[chartFirstTeamName].opponentCrests);
+    window.roundPointsChart.update();
+  }
+  isNewFirstTeamSelected = false;
+  isFirstTeamRemoved = false;
 });
 
 $('#changeRounds').click(() => {
