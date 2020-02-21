@@ -47,19 +47,19 @@ const roundPointsURI = webApiUri + '/roundpoints',
 let titleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
 const color = Chart.helpers.color,
   myChartColors = [
-    '#4dc9f6',
-    '#f67019',
-    '#000000',
-    '#6B8E23',
-    '#acc236',
+    '#4DC9F6',
+    '#194071',
+    '#111111',
+    '#FFF933',
+    '#ACC236',
     '#B22222',
-    '#00a950',
-    '#58595b',
-    '#FF6347',
-    '#00FFFF',
-    '#FF00FF',
-    '#FFFF00',
-    '#0000FF',
+    '#00FA9A',
+    '#FF69B4',
+    '#FF5347',
+    '#EEC98C',
+    '#9F9F9F',
+    '#F59203',
+    '#808000',
     '#00FF00',
     '#FF0000',
     '#8A2BE2',
@@ -68,6 +68,7 @@ const color = Chart.helpers.color,
     '#BDB76B',
     '#FFA500',
   ];
+const alphaFactor = 0.65;
 
 const chartDefaultConfig = {
   responsive: true,
@@ -186,7 +187,7 @@ function generateStartDatasetArray(data) {
   if (Array.isArray(data)) {
     return [{
       label: leagueName,
-      backgroundColor: color(myChartColors[0]).alpha(0.5).rgbString(),
+      backgroundColor: color(myChartColors[0]).alpha(alphaFactor).rgbString(),
       borderColor: myChartColors[0],
       borderWidth: 1,
       data: data,
@@ -249,7 +250,7 @@ function addChartDataset(chart, URI, teamName, id) {
 
       let dataset = {
         label: teamName,
-        backgroundColor: color(myChartColors[id]).alpha(0.5).rgbString(),
+        backgroundColor: color(myChartColors[id]).alpha(alphaFactor).rgbString(),
         borderColor: myChartColors[id],
         borderWidth: 1,
         data: newData,
