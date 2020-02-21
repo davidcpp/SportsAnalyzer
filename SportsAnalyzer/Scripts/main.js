@@ -117,8 +117,8 @@ goalsInIntervalsPercent = eval($('#mainScript').attr('data-goals-in-intervals-pe
 leagueName = eval($('#mainScript').attr('data-league-name'));
 seasonYear = eval($('#mainScript').attr('data-season-year'));
 
-$('#teamsList > option').each((ind, element) => {
-  const teamName = $(element).text();
+$('#teamsList > option').each((index, teamItem) => {
+  const teamName = $(teamItem).text();
   teamStandings[teamName] = {
     points: [],
     tablePositions: [],
@@ -203,8 +203,8 @@ function updateChart(chart, chartDisplaySize) {
 function confirmSelectedRounds() {
   selectedRounds = [];
 
-  $('#roundsList :selected').each((ind, element) => {
-    selectedRounds.push($(element).val());
+  $('#roundsList :selected').each((index, roundItem) => {
+    selectedRounds.push($(roundItem).val());
   });
 }
 
@@ -550,7 +550,7 @@ $('#changeRounds').click(() => {
 });
 
 function getRoundPointsData(teamName, data) {
-  let labels = Object.keys(data).map(element => parseInt(element));
+  let labels = Object.keys(data).map(label => parseInt(label));
   const values = Object.values(data),
     maxRound = labels[labels.length - 1];
 
