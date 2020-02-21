@@ -118,7 +118,6 @@ seasonYear = eval($('#mainScript').attr('data-season-year'));
 
 $('#teamsList > option').each((ind, element) => {
   const teamName = $(element).text();
-  selectedTeams[teamName] = false;
   teamStandings[teamName] = {
     points: [],
     tablePositions: [],
