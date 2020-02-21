@@ -35,7 +35,8 @@ const roundPointsURI = webApiUri + '/roundpoints',
   roundPointsTitle = 'Number of points after a given round',
   roundPointsXLabel = 'Number of round',
   roundPointsYLabel = 'Number of points',
-  roundPointsTooltipTitle = 'Round';
+  roundPointsTooltipTitle = 'Round',
+  roundPointsLabels = Array.from(Array(20).keys(), x => x + 1);
 
 // charts style variables
 let titleFontSize, ticksFontSize, legendFontSize, tooltipsFontSize, labelsFontSize;
@@ -401,7 +402,7 @@ $(document).ready(() => {
   window.roundPointsChart = createChart(
     'roundPointsChartArea',
     roundPointsTitle,
-    null,
+    roundPointsLabels,
     null,
     0, 20,
     roundPointsXLabel,
