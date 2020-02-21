@@ -1,5 +1,10 @@
 ﻿'use strict';
 
+// chart objects
+let goalsInIntervalsChart = {},
+  matchGoalsChart = {},
+  roundPointsChart = {};
+
 // variables from model/API
 let timeIntervalsTexts = [],
   goalsInIntervalsPercent = [],
@@ -374,7 +379,7 @@ function createChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
 }
 
 $(document).ready(() => {
-  window.goalsInIntervalsChart = createChart(
+  goalsInIntervalsChart = createChart(
     'goalsInIntervalsChartArea',
     goalsInIntervalsTitle,
     timeIntervalsTexts,
@@ -385,7 +390,7 @@ $(document).ready(() => {
     'bar', '%',
     goalsInIntervalsTooltipTitle, '%');
 
-  window.matchGoalsChart = createChart(
+  matchGoalsChart = createChart(
     'matchGoalsChartArea',
     matchGoalsTitle,
     [],
@@ -397,9 +402,9 @@ $(document).ready(() => {
     matchGoalsTooltipTitle, '%');
 
   confirmSelectedRounds();
-  getMatchGoals(window.matchGoalsChart, '*');
+  getMatchGoals(matchGoalsChart, '*');
 
-  window.roundPointsChart = createChart(
+  roundPointsChart = createChart(
     'roundPointsChartArea',
     roundPointsTitle,
     roundPointsLabels,
@@ -528,7 +533,7 @@ $('#teamsList > option').mouseup(function() {
     }
     // Update point style for new first team on the chart
     changeTeamPointStyle(chartFirstTeamName, teamStandings[chartFirstTeamName].opponentCrests);
-    window.roundPointsChart.update();
+    roundPointsChart.update();
   }
   isNewFirstTeamSelected = false;
   isFirstTeamRemoved = false;
@@ -537,15 +542,15 @@ $('#teamsList > option').mouseup(function() {
 $('#changeRounds').click(() => {
   confirmSelectedRounds();
 
-  window.goalsInIntervalsChart.data.datasets.forEach((dataset, i) => {
+  goalsInIntervalsChart.data.datasets.forEach((dataset, i) => {
     let teamName = '*';
 
     if (dataset.label !== leagueName) {
       teamName = dataset.label;
     }
 
-    getGoalsInIntervals(window.goalsInIntervalsChart, i, teamName);
-    getMatchGoals(window.matchGoalsChart, teamName, i);
+    getGoalsInIntervals(goalsInIntervalsChart, i, teamName);
+    getMatchGoals(matchGoalsChart, teamName, i);
   });
 });
 
