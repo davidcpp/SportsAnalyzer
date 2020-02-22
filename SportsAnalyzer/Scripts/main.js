@@ -60,13 +60,6 @@ const color = Chart.helpers.color,
     '#9F9F9F',
     '#F59203',
     '#808000',
-    '#00FF00',
-    '#FF0000',
-    '#8A2BE2',
-    '#A52A2A',
-    '#6495ED',
-    '#BDB76B',
-    '#FFA500',
   ];
 const alphaFactor = 0.65;
 
