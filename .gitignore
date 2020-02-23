@@ -265,9 +265,6 @@ GCop.json
 GCopReport.json
 .vscode/settings.json
 .vscode/launch.json
-postponed/
-Screenshots/
-Scripts_unnecessary/
 
 # Notes
 *.txt
