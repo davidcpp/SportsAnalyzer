@@ -1,30 +1,30 @@
 ﻿'use strict';
 
-// chart objects
+// Chart objects
 let goalsInIntervalsChart = {},
   matchGoalsChart = {},
   roundPointsChart = {};
 
-// variables from model/API
+// Variables/objects from model/API
 let timeIntervalsTexts = eval($('#mainScript').attr('data-time-intervals-all-text')),
   goalsInIntervalsPercent = eval($('#mainScript').attr('data-goals-in-intervals-percent')),
   leagueName = eval($('#mainScript').attr('data-league-name')),
   seasonYear = eval($('#mainScript').attr('data-season-year')),
   teamStandings = {};
 
-// variables from user input
+// Variables/objects from user input
 let selectedRounds = [],
   firstTeam = {},
   // Order of the adding teams to the chart or presence on the chart during teams change
   teamsInSelectionOrder = {};
 
+// Variables to designate team selected as first from #teamsList ListBox
 let chartFirstTeamName = '',
   isFirstTeamRemoved = false,
   isNewFirstTeamSelected = false;
 
+// Variables for charts titles and WebAPI
 const webApiUri = 'api/stats';
-
-// variables for charts titles
 const goalsInIntervalsTitle = 'Minutes Intervales of scored goals',
   goalsInIntervalsTooltipTitle = 'Interval',
   goalsInIntervalsURI = webApiUri + '/goalsintervals',
@@ -44,7 +44,7 @@ const roundPointsLabels = Array.from(Array(20).keys(), x => x + 1),
   roundPointsXLabel = 'Number of round',
   roundPointsYLabel = 'Number of points';
 
-// charts style variables
+// Variables/objects for charts style
 let labelsFontSize, legendFontSize, ticksFontSize, titleFontSize, tooltipsFontSize;
 const alphaFactor = 0.65;
 const color = Chart.helpers.color;
@@ -121,6 +121,7 @@ $('#teamsList > option').each((index, teamItem) => {
   };
 });
 
+// TODO: Change to plugin applied only for roundPointsChart
 Chart.plugins.register({
   afterDatasetsDraw: addTablePositionsOnChart
 });
@@ -128,13 +129,13 @@ Chart.plugins.register({
 function addTablePositionsOnChart(chart) {
   let ctx = chart.chart.ctx;
 
-  // drawing the team's position in the table only on the round points chart
+  // Draw the team's position in the table only on the roundPointsChart
   if (chart.options.title.text != roundPointsTitle)
     return;
 
-  // TODO: remove forEach and run code only for i=0 or apply .filter method
+  // TODO: Remove forEach and run code only for dataset.label == chartFirstTeamName or apply .filter method
   chart.data.datasets.forEach((dataset, i) => {
-    // table position will be shown only for the first team on the chart
+    // Table position will be shown only for the first team on the chart
     if (dataset.label != chartFirstTeamName)
       return;
 
@@ -226,7 +227,7 @@ function addChartDataset(chart, URI, teamName, id) {
           chartData = getIntegerLabeledData(data);
         }
 
-        // update labels of chart when data for new team has more labels
+        // Update labels of the chart when data for new team has more labels
         if (chartData.labels.length > chart.data.labels.length) {
           chart.data.labels = chartData.labels;
         }
@@ -254,7 +255,7 @@ function addChartDataset(chart, URI, teamName, id) {
         }
       }
 
-      // calling RemoveChartDataset method for case of delay in receiving results from WebApi
+      // Call removeChartDataset method for case of delay in receiving results from WebAPI
       removeChartDataset(chart, teamName);
       chart.data.datasets.push(dataset);
       chart.update();
@@ -304,14 +305,11 @@ function createChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
   const ctx = $('#' + chartName);
 
   let chart = new Chart(ctx, {
-    // The type of chart we want to create
     type: typeOfChart,
-    // The data for our dataset
     data: {
       labels: labels,
       datasets: generateStartDatasetArray(data),
     },
-    // Configuration options go here
     options: chartDefaultConfig,
   });
 
@@ -425,7 +423,7 @@ $('#teamsList > option').mousedown(function() {
   }
 });
 
-/** Create arrray of selected teams in order from team selected in "mousedown" event to currentTeamId*/
+/** Create array of selected teams in order: from team selected in "mousedown" event to currentTeamId*/
 function createSelectedTeamsArray(currentTeamId) {
   let selectedTeams = $('#teamsList > option').filter(function(index, selectedTeam) {
     const id = index + 1;
@@ -484,7 +482,7 @@ $('#teamsList > option').mouseup(function() {
       }
     }
     else if (selectedTeams.findIndex(teamItem => $(teamItem).text() === teamName) !== -1) {
-      // Order from newly selected teams is prior to the existing one
+      // Order from newly selected teams is more important than the existing order
       delete teamsInNewOrder[teamName];
       if (teamName === firstTeam.name && teamName !== chartFirstTeamName) {
         isNewFirstTeamSelected = true;
@@ -498,7 +496,7 @@ $('#teamsList > option').mouseup(function() {
 
     if ($(selectedTeam).prop('selected')) {
       teamsInNewOrder[teamName] = teamName;
-      // if there isn't the selected team on the chart yet
+      // If there isn't the selected team on the chart yet
       if (teamsInSelectionOrder[teamName] !== teamName) {
         addTeamToCharts(teamName, id);
       }
@@ -577,7 +575,7 @@ function getRoundPointsData(teamName, data) {
 
 function getIntegerLabeledData(data) {
   let resultArray = [],
-    // add map() call to labels
+    // TODO: Add map() call to labels
     labels = Object.keys(data);
   const values = Object.values(data),
     maxLabel = labels[labels.length - 1];
@@ -586,9 +584,8 @@ function getIntegerLabeledData(data) {
     resultArray[parseInt(label)] = parseFloat(values[i]);
   });
 
-  // TODO: replace for loop with function generating array with integer values 
-  //      in range <0; maxLabel>
-  // filling labels with the missing ones up to maxLabel
+  // TODO: Replace for loop with function generating array with integer values in range <0; maxLabel>
+  // Filling labels with the missing ones up to maxLabel
   for (let i = 0; i <= maxLabel; i++) {
     labels[i] = i;
     if (resultArray[i] == undefined)
@@ -603,6 +600,7 @@ function getMatchGoals(chart, teamName, index = 0) {
   $.post(matchGoalsURI, statsRequestData, null, 'json')
     .done((data) => {
       const chartData = getIntegerLabeledData(data);
+      // Update chart labels when there is a request for whole league
       if (index === 0) {
         chart.data.labels = chartData.labels;
       }
