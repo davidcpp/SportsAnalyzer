@@ -115,12 +115,10 @@ namespace SportsAnalyzer.Models
       set { timeIntervalsLimits = value; }
     }
 
-    // Number of matches with a given number of goals
-    // MatchGoalsPct[numberOfGoals] = numberOfMatches
-    public IDictionary<int, double> MatchGoals = new Dictionary<int, double>();
     // Number of matches (%) with a given number of goals
     // MatchGoalsPct[numberOfGoals] = numberOfMatches
-    public IDictionary<int, double> MatchGoalsPct = new Dictionary<int, double>();
+    public double[] MatchGoalsPct;
+
     // Number of points in the given round for the given team
     // RoundPoints[numberOfRound] = numberOfPoints
     public IDictionary<int, RoundResult> RoundPoints = new Dictionary<int, RoundResult>();
@@ -204,6 +202,8 @@ namespace SportsAnalyzer.Models
         return;
       }
 
+      var MatchGoals = new Dictionary<int, double>();
+
       foreach (var match in SelectedMatches)
       {
         int matchGoals = match.HomeGoals ?? 0;
@@ -212,6 +212,9 @@ namespace SportsAnalyzer.Models
           MatchGoals.Add(matchGoals, 0);
         MatchGoals[matchGoals]++;
       }
+
+      int maxNumberOfGoals = MatchGoals.Max(x => x.Key);
+      MatchGoalsPct = new double[maxNumberOfGoals + 1];
 
       int numberOfGoals = 0;
       double numberOfMatches = 0;

@@ -81,6 +81,7 @@ namespace SportsAnalyzer
       statistics.SetRoundsRange(startRound, endRound);
       statistics.CalculateBasicStats();
       statistics.CalculateGoalsInIntervals();
+      statistics.CalculateMatchGoals();
     }
 
     public static void ClearDBSet<T>(DbSet<T> dbList) where T : class

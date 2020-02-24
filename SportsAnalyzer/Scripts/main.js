@@ -8,6 +8,8 @@ let goalsInIntervalsChart = {},
 // Variables/objects from model/API
 let timeIntervalsTexts = eval($('#mainScript').attr('data-time-intervals-all-text')),
   goalsInIntervalsPercent = eval($('#mainScript').attr('data-goals-in-intervals-percent')),
+  matchGoalsPct = eval($('#mainScript').attr('data-match-goals')),
+  matchGoalsLabels = Array.from(Array(matchGoalsPct.length).keys()),
   leagueName = eval($('#mainScript').attr('data-league-name')),
   seasonYear = eval($('#mainScript').attr('data-season-year')),
   teamStandings = {};
@@ -121,6 +123,8 @@ $('#teamsList > option').each((index, teamItem) => {
   };
 });
 
+confirmSelectedRounds();
+
 // TODO: Change to plugin applied only for roundPointsChart
 Chart.plugins.register({
   afterDatasetsDraw: addTablePositionsOnChart
@@ -216,36 +220,23 @@ function addChartDataset(chart, URI, teamName, id) {
 
   $.post(URI, statsRequestData, null, 'json')
     .done((data) => {
-      let newData;
-      if (URI === matchGoalsURI || URI === roundPointsURI) {
-        let chartData;
-
-        if (URI === roundPointsURI) {
-          chartData = getRoundPointsData(teamName, data);
-        }
-        else {
-          chartData = getIntegerLabeledData(data);
-        }
-
-        // Update labels of the chart when data for new team has more labels
-        if (chartData.labels.length > chart.data.labels.length) {
-          chart.data.labels = chartData.labels;
-        }
-        newData = chartData.data;
-      }
-      else {
-        newData = data;
-      }
 
       let dataset = {
         label: teamName,
         backgroundColor: color(myChartColors[id]).alpha(alphaFactor).rgbString(),
         borderColor: myChartColors[id],
         borderWidth: 1,
-        data: newData,
+        data: [],
       };
 
       if (URI === roundPointsURI) {
+        let chartData = getRoundPointsData(teamName, data);
+
+        // Update labels of the chart when data for new team has more labels
+        if (chartData.labels.length > chart.data.labels.length) {
+          chart.data.labels = chartData.labels;
+        }
+        dataset.data = chartData.data;
         dataset.fill = false;
         dataset.lineTension = 0;
         dataset.borderWidth = 2;
@@ -253,6 +244,9 @@ function addChartDataset(chart, URI, teamName, id) {
         if (teamName == chartFirstTeamName) {
           dataset.pointStyle = teamStandings[teamName].opponentCrests;
         }
+      }
+      else {
+        dataset.data = data;
       }
 
       // Call removeChartDataset method for case of delay in receiving results from WebAPI
@@ -379,13 +373,10 @@ $(document).ready(() => {
   matchGoalsChart = createChart(
     'matchGoalsChartArea',
     matchGoalsTitle,
-    [], [], 0, 0,
+    matchGoalsLabels, matchGoalsPct, 0, 0,
     matchGoalsXLabel,
     matchGoalsYLabel, 'bar', '%',
     matchGoalsTooltipTitle, '%');
-
-  confirmSelectedRounds();
-  getMatchGoals(matchGoalsChart, '*');
 
   roundPointsChart = createChart(
     'roundPointsChartArea',
@@ -574,27 +565,11 @@ function getRoundPointsData(teamName, data) {
 }
 
 function getIntegerLabeledData(data) {
-  let resultArray = [],
-    // TODO: Add map() call to labels
-    labels = Object.keys(data);
-  const values = Object.values(data),
-    maxLabel = labels[labels.length - 1];
-
-  labels.forEach((label, i) => {
-    resultArray[parseInt(label)] = parseFloat(values[i]);
-  });
-
-  // TODO: Replace for loop with function generating array with integer values in range <0; maxLabel>
-  // Filling labels with the missing ones up to maxLabel
-  for (let i = 0; i <= maxLabel; i++) {
-    labels[i] = i;
-    if (resultArray[i] == undefined)
-      resultArray[i] = 0;
-  }
-  return new ChartData(resultArray, labels);
+  let labels = Array.from(Array(data.length).keys());
+  return new ChartData(data, labels);
 }
 
-function getMatchGoals(chart, teamName, index = 0) {
+function getMatchGoals(chart, teamName, index) {
   const statsRequestData = getStatsRequestData(teamName);
 
   $.post(matchGoalsURI, statsRequestData, null, 'json')
