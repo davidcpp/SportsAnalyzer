@@ -110,7 +110,7 @@ const chartDefaultConfig = {
       }
     }]
   },
-}
+};
 
 $('#teamsList > option').each((index, teamItem) => {
   const teamName = $(teamItem).text();
@@ -131,7 +131,7 @@ Chart.plugins.register({
 });
 
 function addTablePositionsOnChart(chart) {
-  let ctx = chart.chart.ctx;
+  let ctx = chart.ctx;
 
   // Draw the team's position in the table only on the roundPointsChart
   if (chart.options.title.text != roundPointsTitle)
@@ -387,7 +387,7 @@ $(document).ready(() => {
     roundPointsTooltipTitle, 'pts');
 });
 
-function getGoalsInIntervals(chart, index, teamName) {
+function getGoalsInIntervals(chart, teamName, index) {
   const statsRequestData = getStatsRequestData(teamName);
 
   $.post(goalsInIntervalsURI, statsRequestData, null, 'json')
@@ -416,7 +416,7 @@ $('#teamsList > option').mousedown(function() {
 
 /** Create array of selected teams in order: from team selected in "mousedown" event to currentTeamId*/
 function createSelectedTeamsArray(currentTeamId) {
-  let selectedTeams = $('#teamsList > option').filter(function(index, selectedTeam) {
+  let selectedTeams = $('#teamsList > option').filter(function(index) {
     const id = index + 1;
     return id >= firstTeam.id && id <= currentTeamId;
   }).get();
@@ -444,13 +444,14 @@ function addTeamToCharts(teamName, id) {
   addChartDataset(roundPointsChart, roundPointsURI, teamName, id);
 }
 
-function changeTeamPointStyle(teamName, pointStyle) {
-  const index = roundPointsChart.data.datasets.findIndex(
+function changeTeamPointStyle(chart, teamName, pointStyle) {
+  const index = chart.data.datasets.findIndex(
     dataset => dataset.label === teamName);
 
   if (index != -1) {
-    roundPointsChart.data.datasets[index].pointStyle = pointStyle;
+    chart.data.datasets[index].pointStyle = pointStyle;
   }
+  chart.update();
 }
 
 $('#teamsList > option').mouseup(function() {
@@ -481,11 +482,11 @@ $('#teamsList > option').mouseup(function() {
     }
   });
 
-  $(selectedTeams).each(function(index, selectedTeam) {
-    const teamName = $(selectedTeam).text();
-    const id = parseInt($(selectedTeam).val());
+  $(selectedTeams).each(function(index, teamItem) {
+    const teamName = $(teamItem).text();
+    const id = parseInt($(teamItem).val());
 
-    if ($(selectedTeam).prop('selected')) {
+    if ($(teamItem).prop('selected')) {
       teamsInNewOrder[teamName] = teamName;
       // If there isn't the selected team on the chart yet
       if (teamsInSelectionOrder[teamName] !== teamName) {
@@ -496,7 +497,7 @@ $('#teamsList > option').mouseup(function() {
 
   if (!isFirstTeamRemoved && isNewFirstTeamSelected) {
     // Update point style for old first team on the chart
-    changeTeamPointStyle(chartFirstTeamName, 'circle');
+    changeTeamPointStyle(roundPointsChart, chartFirstTeamName, 'circle');
   }
   teamsInSelectionOrder = Object.assign({}, teamsInNewOrder);
 
@@ -505,9 +506,9 @@ $('#teamsList > option').mouseup(function() {
       chartFirstTeamName = teamName;
       break;
     }
+    let firstTeamOppCrests = teamStandings[chartFirstTeamName].opponentCrests;
     // Update point style for new first team on the chart
-    changeTeamPointStyle(chartFirstTeamName, teamStandings[chartFirstTeamName].opponentCrests);
-    roundPointsChart.update();
+    changeTeamPointStyle(roundPointsChart, chartFirstTeamName, firstTeamOppCrests);
   }
   isFirstTeamRemoved = false;
   isNewFirstTeamSelected = false;
@@ -522,7 +523,7 @@ $('#changeRounds').click(() => {
     if (dataset.label !== leagueName) {
       teamName = dataset.label;
     }
-    getGoalsInIntervals(goalsInIntervalsChart, i, teamName);
+    getGoalsInIntervals(goalsInIntervalsChart, teamName, i);
     getMatchGoals(matchGoalsChart, teamName, i);
   });
 });

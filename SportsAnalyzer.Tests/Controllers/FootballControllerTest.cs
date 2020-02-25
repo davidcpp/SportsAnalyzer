@@ -46,11 +46,11 @@ namespace SportsAnalyzer.Tests.Controllers
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var xmlTestList = CreateTestLeagueTable(0);
+      var xmlTestLeagueTable = CreateTestLeagueTable(0);
 
       mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
         It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(xmlTestList);
+        .Returns(xmlTestLeagueTable);
 
       var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
       TableLastUpdateTime = DateTime.MinValue;
@@ -72,8 +72,8 @@ namespace SportsAnalyzer.Tests.Controllers
       var dbList = viewResult.Model as List<TeamLeagueStanding>;
 
       Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestList.Count, 0);
-      Assert.AreEqual(dbList.Count, xmlTestList.Count);
+      Assert.AreEqual(xmlTestLeagueTable.Count, 0);
+      Assert.AreEqual(dbList.Count, xmlTestLeagueTable.Count);
     }
 
     [TestMethod]
@@ -104,11 +104,11 @@ namespace SportsAnalyzer.Tests.Controllers
     {
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var xmlTestList = CreateTestLeagueTable(1, shortString);
+      var xmlTestLeagueTable = CreateTestLeagueTable(1, shortString);
 
       mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
         It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(xmlTestList);
+        .Returns(xmlTestLeagueTable);
 
       var footballController = new FootballController(mockXmlReq.Object);
       TableLastUpdateTime = DateTime.MinValue;
@@ -124,11 +124,11 @@ namespace SportsAnalyzer.Tests.Controllers
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var xmlTestList = CreateTestLeagueTable(numberOfTeams);
+      var xmlTestLeagueTable = CreateTestLeagueTable(numberOfTeams);
 
       mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
         It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(xmlTestList);
+        .Returns(xmlTestLeagueTable);
 
       var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
       TableLastUpdateTime = DateTime.MinValue;
@@ -149,11 +149,11 @@ namespace SportsAnalyzer.Tests.Controllers
       var dbList = viewResult.Model as List<TeamLeagueStanding>;
 
       Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestList.Count, numberOfTeams);
-      Assert.AreEqual(dbList.Count, xmlTestList.Count);
+      Assert.AreEqual(xmlTestLeagueTable.Count, numberOfTeams);
+      Assert.AreEqual(dbList.Count, xmlTestLeagueTable.Count);
       for (int i = 0; i < dbList.Count; i++)
       {
-        Assert.IsTrue(dbList[i].IsEqualToXmlTeamStanding(xmlTestList[i]));
+        Assert.IsTrue(dbList[i].IsEqualToXmlTeamStanding(xmlTestLeagueTable[i]));
       }
     }
 
@@ -210,11 +210,11 @@ namespace SportsAnalyzer.Tests.Controllers
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
 
       var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var xmlTestList = CreateTestTeamList(0);
+      var xmlTestTeamList = CreateTestTeamList(0);
 
       mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
         It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(xmlTestList);
+        .Returns(xmlTestTeamList);
 
       var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
       TeamsLastUpdateTime = DateTime.MinValue;
@@ -236,8 +236,8 @@ namespace SportsAnalyzer.Tests.Controllers
       var dbList = viewResult.Model as List<FootballTeam>;
 
       Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestList.Count, 0);
-      Assert.AreEqual(dbList.Count, xmlTestList.Count);
+      Assert.AreEqual(xmlTestTeamList.Count, 0);
+      Assert.AreEqual(dbList.Count, xmlTestTeamList.Count);
     }
 
     [TestMethod]
@@ -268,11 +268,11 @@ namespace SportsAnalyzer.Tests.Controllers
     {
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var xmlTestList = CreateTestTeamList(1, shortString);
+      var xmlTestTeamList = CreateTestTeamList(1, shortString);
 
       mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
         It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(xmlTestList);
+        .Returns(xmlTestTeamList);
 
       var footballController = new FootballController(mockXmlReq.Object);
       TeamsLastUpdateTime = DateTime.MinValue;
@@ -288,11 +288,11 @@ namespace SportsAnalyzer.Tests.Controllers
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var xmlTestList = CreateTestTeamList(numberOfTeams);
+      var xmlTestTeamList = CreateTestTeamList(numberOfTeams);
 
       mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
         It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(xmlTestList);
+        .Returns(xmlTestTeamList);
 
       var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
       TeamsLastUpdateTime = DateTime.MinValue;
@@ -313,12 +313,12 @@ namespace SportsAnalyzer.Tests.Controllers
       var dbList = viewResult.Model as List<FootballTeam>;
 
       Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestList.Count, numberOfTeams);
-      Assert.AreEqual(dbList.Count, xmlTestList.Count);
+      Assert.AreEqual(xmlTestTeamList.Count, numberOfTeams);
+      Assert.AreEqual(dbList.Count, xmlTestTeamList.Count);
 
       for (int i = 0; i < dbList.Count; i++)
       {
-        Assert.IsTrue(dbList[i].IsEqualToXmlTeam(xmlTestList[i]));
+        Assert.IsTrue(dbList[i].IsEqualToXmlTeam(xmlTestTeamList[i]));
       }
     }
 
@@ -327,7 +327,7 @@ namespace SportsAnalyzer.Tests.Controllers
     {
       // Arrange
       var testXmlSoccerContext = new TestXmlSoccerAPI_DBContext();
-      var xmlTestList = CreateTestTeamList(0);
+      var xmlTestTeamList = CreateTestTeamList(0);
 
       var callMockExpressions =
         new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.Team>>>>
@@ -340,7 +340,7 @@ namespace SportsAnalyzer.Tests.Controllers
         x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample),
       };
 
-      var mockXmlReq = SetSequenceOfMockCalls(xmlTestList, callMockExpressions);
+      var mockXmlReq = SetSequenceOfMockCalls(xmlTestTeamList, callMockExpressions);
 
       var footballController = new FootballController(mockXmlReq.Object, testXmlSoccerContext);
 
@@ -484,9 +484,9 @@ namespace SportsAnalyzer.Tests.Controllers
   {
     public TestXmlSoccerAPI_DBContext()
     {
-      this.FootballTeams = new TestDbSet<FootballTeam>();
-      this.LeagueTable = new TestDbSet<TeamLeagueStanding>();
-      this.LeagueMatches = new TestDbSet<FootballMatch>();
+      FootballTeams = new TestDbSet<FootballTeam>();
+      LeagueTable = new TestDbSet<TeamLeagueStanding>();
+      LeagueMatches = new TestDbSet<FootballMatch>();
       SavedChanges = 0;
     }
 

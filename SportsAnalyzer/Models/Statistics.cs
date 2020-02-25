@@ -202,23 +202,23 @@ namespace SportsAnalyzer.Models
         return;
       }
 
-      var MatchGoals = new Dictionary<int, double>();
+      var matchGoals = new Dictionary<int, double>();
+      int numberOfGoals = 0;
+      double numberOfMatches = 0;
 
       foreach (var match in SelectedMatches)
       {
-        int matchGoals = match.HomeGoals ?? 0;
-        matchGoals += match.AwayGoals ?? 0;
-        if (!MatchGoals.ContainsKey(matchGoals))
-          MatchGoals.Add(matchGoals, 0);
-        MatchGoals[matchGoals]++;
+        numberOfGoals = match.HomeGoals ?? 0;
+        numberOfGoals += match.AwayGoals ?? 0;
+        if (!matchGoals.ContainsKey(numberOfGoals))
+          matchGoals.Add(numberOfGoals, 0);
+        matchGoals[numberOfGoals]++;
       }
 
-      int maxNumberOfGoals = MatchGoals.Max(x => x.Key);
+      int maxNumberOfGoals = matchGoals.Max(x => x.Key);
       MatchGoalsPct = new double[maxNumberOfGoals + 1];
 
-      int numberOfGoals = 0;
-      double numberOfMatches = 0;
-      foreach (var item in MatchGoals)
+      foreach (var item in matchGoals)
       {
         numberOfGoals = item.Key;
         numberOfMatches = item.Value;
