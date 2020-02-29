@@ -46,7 +46,7 @@ namespace SportsAnalyzer.Models
     {
       if (match == null)
         return;
-
+      Date = match.Date;
       Round = match.Round;
       AwayTeam = match.AwayTeam;
       AwayGoals = match.AwayGoals;
