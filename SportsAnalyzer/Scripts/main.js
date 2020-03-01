@@ -120,6 +120,7 @@ $('#teamsList > option').each((index, teamItem) => {
     opponentCrests: [],
     opposingTeams: [],
     matchResults: [],
+    matchDates: [],
   };
 });
 
@@ -324,7 +325,8 @@ function createChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
       label += tooltipLabelEnding;
 
       label += ' | ' + teamStandings[teamName].opposingTeams[tooltipItem.index]
-        + ' ' + teamStandings[teamName].matchResults[tooltipItem.index];
+        + ' ' + teamStandings[teamName].matchResults[tooltipItem.index]
+        + ' (' + teamStandings[teamName].matchDates[tooltipItem.index] + ') ';
 
       return label;
     }
@@ -541,6 +543,7 @@ function getRoundPointsData(teamName, data) {
     teamStandings[teamName].opponentCrests[i] = opponentCrest;
     teamStandings[teamName].opposingTeams[i] = value.OpposingTeams;
     teamStandings[teamName].matchResults[i] = value.MatchResult;
+    teamStandings[teamName].matchDates[i] = value.MatchDate;
   });
 
   for (let round = 1; round <= maxRound; round++) {

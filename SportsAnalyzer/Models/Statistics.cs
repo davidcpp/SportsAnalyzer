@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
@@ -353,13 +354,17 @@ namespace SportsAnalyzer.Models
           opponent = match.HomeTeam;
         }
 
+        var matchDate = match.Date.Value.ToUniversalTime()
+          .ToString("ddd, dd.MM.yyyy HH:mm", CultureInfo.CreateSpecificCulture("en-gb"));
+
         var roundResult = new RoundResult
         {
           Points = roundPoints,
           TablePosition = TablePositions[TeamName][matchRound],
           Opponent = opponent,
           OpposingTeams = match.HomeTeam + " - " + match.AwayTeam,
-          MatchResult = match.HomeGoals + ":" + match.AwayGoals
+          MatchResult = match.HomeGoals + ":" + match.AwayGoals,
+          MatchDate = matchDate
         };
 
         if (!RoundPoints.ContainsKey(matchRound))
@@ -499,6 +504,7 @@ namespace SportsAnalyzer.Models
       public string Opponent { get; set; }
       public string OpposingTeams { get; set; }
       public string MatchResult { get; set; }
+      public string MatchDate { get; set; }
     };
   }
 }
