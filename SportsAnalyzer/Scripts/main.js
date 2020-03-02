@@ -535,22 +535,20 @@ function getRoundPointsData(teamName, data) {
   const values = Object.values(data),
     maxRound = labels[labels.length - 1];
 
+  labels = Array.from(Array(maxRound).keys(), x => x + 1);
+
   values.forEach((value, i) => {
-    let opponentCrest = new Image();
-    opponentCrest.src = value.Opponent + '.png';
-    teamStandings[teamName].points[i] = value.Points;
-    teamStandings[teamName].tablePositions[i] = value.TablePosition;
-    teamStandings[teamName].opponentCrests[i] = opponentCrest;
-    teamStandings[teamName].opposingTeams[i] = value.OpposingTeams;
-    teamStandings[teamName].matchResults[i] = value.MatchResult;
-    teamStandings[teamName].matchDates[i] = value.MatchDate;
-  });
-
-  for (let round = 1; round <= maxRound; round++) {
-    let i = round - 1;
-    labels[i] = round;
-
-    if (teamStandings[teamName].points[i] == undefined) {
+    if (value != null && value != undefined) {
+      let opponentCrest = new Image();
+      opponentCrest.src = value.Opponent + '.png';
+      teamStandings[teamName].points[i] = value.Points;
+      teamStandings[teamName].tablePositions[i] = value.TablePosition;
+      teamStandings[teamName].opponentCrests[i] = opponentCrest;
+      teamStandings[teamName].opposingTeams[i] = value.OpposingTeams;
+      teamStandings[teamName].matchResults[i] = value.MatchResult;
+      teamStandings[teamName].matchDates[i] = value.MatchDate;
+    }
+    else {
       let blankCrest = new Image();
       blankCrest.src = 'blank.png';
 
@@ -564,7 +562,8 @@ function getRoundPointsData(teamName, data) {
       teamStandings[teamName].opposingTeams[i] = '';
       teamStandings[teamName].matchResults[i] = '';
     }
-  }
+  });
+
   return new ChartData(teamStandings[teamName].points, labels);
 }
 
