@@ -324,9 +324,11 @@ function createChart(chartName, title, labels, data, minY, maxY, xAxisLabel, yAx
       label += tooltipItem.yLabel;
       label += tooltipLabelEnding;
 
-      label += ' | ' + teamStandings[teamName].opposingTeams[tooltipItem.index]
-        + ' ' + teamStandings[teamName].matchResults[tooltipItem.index]
-        + ' (' + teamStandings[teamName].matchDates[tooltipItem.index] + ') ';
+      if (teamStandings[teamName].opposingTeams[tooltipItem.index] !== '') {
+        label += ' | ' + teamStandings[teamName].opposingTeams[tooltipItem.index]
+          + ' ' + teamStandings[teamName].matchResults[tooltipItem.index]
+          + ' (' + teamStandings[teamName].matchDates[tooltipItem.index] + ') ';
+      }
 
       return label;
     }
@@ -561,6 +563,7 @@ function getRoundPointsData(teamName, data) {
       teamStandings[teamName].opponentCrests[i] = blankCrest;
       teamStandings[teamName].opposingTeams[i] = '';
       teamStandings[teamName].matchResults[i] = '';
+      teamStandings[teamName].matchDates[i] = '';
     }
   });
 
