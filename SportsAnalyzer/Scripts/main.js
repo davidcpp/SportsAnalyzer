@@ -124,7 +124,7 @@ $('#teamsList > option').each((index, teamItem) => {
   };
 });
 
-confirmSelectedRounds();
+updateSelectedRounds();
 
 // TODO: Change to plugin applied only for roundPointsChart
 Chart.plugins.register({
@@ -199,7 +199,7 @@ function updateChart(chart, chartDisplaySize) {
   chart.update();
 }
 
-function confirmSelectedRounds() {
+function updateSelectedRounds() {
   selectedRounds = [];
 
   $('#roundsList :selected').each((index, roundItem) => {
@@ -231,7 +231,7 @@ function addChartDataset(chart, URI, teamName, id) {
       };
 
       if (URI === roundPointsURI) {
-        let chartData = getRoundPointsData(teamName, data);
+        let chartData = extractRoundPointsData(teamName, data);
 
         // Update labels of the chart when data for new team has more labels
         if (chartData.labels.length > chart.data.labels.length) {
@@ -391,7 +391,7 @@ $(document).ready(() => {
     roundPointsTooltipTitle, 'pts');
 });
 
-function getGoalsInIntervals(chart, teamName, index) {
+function updateGoalsInIntervals(chart, teamName, index) {
   const statsRequestData = getStatsRequestData(teamName);
 
   $.post(goalsInIntervalsURI, statsRequestData, null, 'json')
@@ -519,7 +519,7 @@ $('#teamsList > option').mouseup(function() {
 });
 
 $('#changeRounds').click(() => {
-  confirmSelectedRounds();
+  updateSelectedRounds();
 
   goalsInIntervalsChart.data.datasets.forEach((dataset, i) => {
     let teamName = '*';
@@ -527,12 +527,12 @@ $('#changeRounds').click(() => {
     if (dataset.label !== leagueName) {
       teamName = dataset.label;
     }
-    getGoalsInIntervals(goalsInIntervalsChart, teamName, i);
-    getMatchGoals(matchGoalsChart, teamName, i);
+    updateGoalsInIntervals(goalsInIntervalsChart, teamName, i);
+    updateMatchGoals(matchGoalsChart, teamName, i);
   });
 });
 
-function getRoundPointsData(teamName, data) {
+function extractRoundPointsData(teamName, data) {
   let labels = Object.keys(data).map(label => parseInt(label));
   const values = Object.values(data),
     maxRound = labels[labels.length - 1];
@@ -570,17 +570,17 @@ function getRoundPointsData(teamName, data) {
   return new ChartData(teamStandings[teamName].points, labels);
 }
 
-function getIntegerLabeledData(data) {
+function extractMatchGoalsData(data) {
   let labels = Array.from(Array(data.length).keys());
   return new ChartData(data, labels);
 }
 
-function getMatchGoals(chart, teamName, index) {
+function updateMatchGoals(chart, teamName, index) {
   const statsRequestData = getStatsRequestData(teamName);
 
   $.post(matchGoalsURI, statsRequestData, null, 'json')
     .done((data) => {
-      const chartData = getIntegerLabeledData(data);
+      const chartData = extractMatchGoalsData(data);
       // Update chart labels when there is a request for whole league
       if (index === 0) {
         chart.data.labels = chartData.labels;
