@@ -39,6 +39,7 @@ namespace SportsAnalyzer.Controllers
           statsRequest.SeasonYear,
           _xmlSoccerRequester,
           db);
+        MatchesDataUpdated = true;
       }
     }
 

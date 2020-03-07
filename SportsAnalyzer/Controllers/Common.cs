@@ -72,6 +72,8 @@ namespace SportsAnalyzer
     public static DateTime TableLastUpdateTime;
     public static DateTime TeamsLastUpdateTime;
 
+    public static bool MatchesDataUpdated = false;
+
     public static void CalcStats(this Statistics statistics,
       IXmlSocDB xmlSocDB,
       string startRound,
@@ -136,6 +138,7 @@ namespace SportsAnalyzer
       IXmlSR xmlSocReq,
       IXmlSocDB xmlSocDB)
     {
+      MatchesDataUpdated = true;
       LastUpdateTime = DateTime.UtcNow;
       MatchesLastUpdateTime = LastUpdateTime;
 

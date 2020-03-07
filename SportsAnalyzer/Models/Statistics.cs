@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using static System.Math;
 using static SportsAnalyzer.Common;
@@ -128,7 +129,8 @@ namespace SportsAnalyzer.Models
     public static IDictionary<string, Dictionary<int, int>> TablePositions
       = new Dictionary<string, Dictionary<int, int>>();
 
-    private static bool TableCalculated = false;
+    private static Task CalcTablePositions;
+    private readonly object _lockObject = new object();
 
     /* Methods */
 
@@ -258,7 +260,6 @@ namespace SportsAnalyzer.Models
           SetTeamTablePositions(standingsInOrder, matchRound);
         }
       }
-      TableCalculated = true;
     }
 
     /// <summary> Init standings objects for teamsNames </summary>
@@ -330,8 +331,15 @@ namespace SportsAnalyzer.Models
       if (TeamName == DefaultTeamName)
         return;
 
-      if (!TableCalculated)
-        CalculateTablePositions();
+      lock (_lockObject)
+      {
+        if (MatchesDataUpdated)
+        {
+          MatchesDataUpdated = false;
+          CalcTablePositions = Task.Run(() => CalculateTablePositions());
+        }
+      }
+      CalcTablePositions?.Wait();
 
       int roundPoints = 0;
       int matchRound = 0, prevMatchRound = 0;
