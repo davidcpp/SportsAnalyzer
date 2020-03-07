@@ -186,7 +186,7 @@ namespace SportsAnalyzer.Tests.Controllers
         (defaultLeague, defaultSeasonYear),
         (defaultLeagueId, null),
         (leagueIdExample, null),
-        (leagueIdExample, seasonYearExample)
+        (leagueIdExample, seasonYearExample),
       };
 
       // Act
@@ -351,7 +351,7 @@ namespace SportsAnalyzer.Tests.Controllers
         (defaultLeague, defaultSeasonYear),
         (defaultLeagueId, null),
         (leagueIdExample, null),
-        (leagueIdExample, seasonYearExample)
+        (leagueIdExample, seasonYearExample),
       };
 
       // Act
@@ -379,7 +379,7 @@ namespace SportsAnalyzer.Tests.Controllers
         Name = testString,
         Stadium = testString,
         WIKILink = testString,
-        HomePageURL = testString
+        HomePageURL = testString,
       };
     }
 
@@ -411,7 +411,7 @@ namespace SportsAnalyzer.Tests.Controllers
         Lost = testInt,
         Goals_For = testInt,
         Goals_Against = testInt,
-        Goal_Difference = testInt
+        Goal_Difference = testInt,
       };
     }
 

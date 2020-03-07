@@ -372,7 +372,7 @@ namespace SportsAnalyzer.Models
           Opponent = opponent,
           OpposingTeams = match.HomeTeam + " - " + match.AwayTeam,
           MatchResult = match.HomeGoals + ":" + match.AwayGoals,
-          MatchDate = matchDate
+          MatchDate = matchDate,
         };
 
         if (!RoundPoints.ContainsKey(matchRound))
@@ -384,8 +384,7 @@ namespace SportsAnalyzer.Models
 
     public void CreateTeamsSelectList()
     {
-      var teamNames = new HashSet<string>(
-        AllMatches.Select(match => match.HomeTeam)).ToList();
+      var teamNames = new HashSet<string>(AllMatches.Select(match => match.HomeTeam)).ToList();
       teamNames.Sort();
 
       for (int i = 0; i < teamNames.Count; i++)
@@ -393,7 +392,7 @@ namespace SportsAnalyzer.Models
         var teamItem = new SelectListItem
         {
           Value = (i + 1).ToString(),
-          Text = teamNames[i]
+          Text = teamNames[i],
         };
         TeamItems.Add(teamItem);
       }
@@ -476,7 +475,7 @@ namespace SportsAnalyzer.Models
       if (TeamName != DefaultTeamName)
       {
         SelectedMatches = SelectedMatches
-          .Where((x) => x.HomeTeam == TeamName || x.AwayTeam == TeamName).ToList();
+          .Where(x => x.HomeTeam == TeamName || x.AwayTeam == TeamName).ToList();
       }
     }
 

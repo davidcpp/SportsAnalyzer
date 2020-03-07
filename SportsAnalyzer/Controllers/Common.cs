@@ -109,11 +109,9 @@ namespace SportsAnalyzer
       LastUpdateTime = DateTime.UtcNow;
       TableLastUpdateTime = LastUpdateTime;
 
-      var xmlLeagueStandings = xmlSocReq
-        .GetLeagueStandingsBySeason(league, seasonYear);
+      var xmlLeagueStandings = xmlSocReq.GetLeagueStandingsBySeason(league, seasonYear);
 
       ClearDBSet(xmlSocDB.LeagueTable);
-
       xmlSocDB.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
       SaveChangesInDatabase(xmlSocDB);
     }
@@ -127,8 +125,8 @@ namespace SportsAnalyzer
       TeamsLastUpdateTime = LastUpdateTime;
 
       var xmlTeams = xmlSocReq.GetAllTeamsByLeagueAndSeason(league, seasonYear);
-      ClearDBSet(xmlSocDB.FootballTeams);
 
+      ClearDBSet(xmlSocDB.FootballTeams);
       xmlSocDB.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
       SaveChangesInDatabase(xmlSocDB);
     }
@@ -142,13 +140,10 @@ namespace SportsAnalyzer
       LastUpdateTime = DateTime.UtcNow;
       MatchesLastUpdateTime = LastUpdateTime;
 
-      var xmlLeagueMatches = xmlSocReq.
-        GetHistoricMatchesByLeagueAndSeason(leagueName, seasonYear);
+      var xmlLeagueMatches = xmlSocReq.GetHistoricMatchesByLeagueAndSeason(leagueName, seasonYear);
 
       ClearDBSet(xmlSocDB.LeagueMatches);
-
       xmlSocDB.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
-
       SaveChangesInDatabase(xmlSocDB);
     }
 
