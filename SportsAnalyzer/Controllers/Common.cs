@@ -59,7 +59,7 @@ namespace SportsAnalyzer
 
     public const int DefaultSeasonYear = 2019;
     public const int DefaultRoundsNumber = 33;
-    public const int RequestsBreakMinutes = 5;
+    public const int UpdateDataBreakMinutes = 5;
     public const int RequestsBreakSeconds = 15;
 
     public const double DefaultMatchTime = 90.0;
@@ -95,11 +95,11 @@ namespace SportsAnalyzer
     public static bool IsDataOutOfDate(DateTime dataLastUpdateTime)
     {
       return (dataLastUpdateTime == DateTime.MinValue
-        || (DateTime.UtcNow - dataLastUpdateTime).TotalMinutes > RequestsBreakMinutes)
+        || (DateTime.UtcNow - dataLastUpdateTime).TotalMinutes > UpdateDataBreakMinutes)
         && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds;
     }
 
-    public static void RefreshTableData(string league,
+    public static void UpdateTableData(string league,
       int seasonYear,
       IXmlSR xmlSocReq,
       IXmlSocDB xmlSocDB)
@@ -116,7 +116,7 @@ namespace SportsAnalyzer
       SaveChangesInDatabase(xmlSocDB);
     }
 
-    public static void RefreshTeamsData(string league,
+    public static void UpdateTeamsData(string league,
       int seasonYear,
       IXmlSR xmlSocReq,
       IXmlSocDB xmlSocDB)
@@ -131,7 +131,7 @@ namespace SportsAnalyzer
       SaveChangesInDatabase(xmlSocDB);
     }
 
-    public static void RefreshMatchesData(string leagueName,
+    public static void UpdateMatchesData(string leagueName,
       int seasonYear,
       IXmlSR xmlSocReq,
       IXmlSocDB xmlSocDB)

@@ -462,12 +462,12 @@ namespace SportsAnalyzer.Models
     {
       AllMatches.Reverse();
 
-      SelectedMatches = AllMatches.Select(x => x)
+      SelectedMatches = AllMatches
         .Where(x => RoundsNumbersInts.Contains(x.Round ?? 1)).ToList();
 
       if (TeamName != DefaultTeamName)
       {
-        SelectedMatches = SelectedMatches.Select(x => x)
+        SelectedMatches = SelectedMatches
           .Where((x) => x.HomeTeam == TeamName || x.AwayTeam == TeamName).ToList();
       }
     }

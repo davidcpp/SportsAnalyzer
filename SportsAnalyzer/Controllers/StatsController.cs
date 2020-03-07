@@ -31,16 +31,21 @@ namespace SportsAnalyzer.Controllers
       base.Dispose(disposing);
     }
 
-    [HttpPost]
-    public IHttpActionResult GoalsIntervals(StatsRequestModel statsRequest)
+    private void CheckMatchesData(StatsRequestModel statsRequest)
     {
       if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
-        RefreshMatchesData(statsRequest.LeagueName,
+        UpdateMatchesData(statsRequest.LeagueName,
           statsRequest.SeasonYear,
           _xmlSoccerRequester,
           db);
       }
+    }
+
+    [HttpPost]
+    public IHttpActionResult GoalsIntervals(StatsRequestModel statsRequest)
+    {
+      CheckMatchesData(statsRequest);
       var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
@@ -54,13 +59,7 @@ namespace SportsAnalyzer.Controllers
     [HttpPost]
     public IHttpActionResult MatchGoals(StatsRequestModel statsRequest)
     {
-      if (IsDataOutOfDate(MatchesLastUpdateTime))
-      {
-        RefreshMatchesData(statsRequest.LeagueName,
-          statsRequest.SeasonYear,
-          _xmlSoccerRequester,
-          db);
-      }
+      CheckMatchesData(statsRequest);
       var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
@@ -74,13 +73,7 @@ namespace SportsAnalyzer.Controllers
     [HttpPost]
     public IHttpActionResult RoundPoints(StatsRequestModel statsRequest)
     {
-      if (IsDataOutOfDate(MatchesLastUpdateTime))
-      {
-        RefreshMatchesData(statsRequest.LeagueName,
-          statsRequest.SeasonYear,
-          _xmlSoccerRequester,
-          db);
-      }
+      CheckMatchesData(statsRequest);
       var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
