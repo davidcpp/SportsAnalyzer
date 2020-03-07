@@ -88,7 +88,7 @@ namespace SportsAnalyzer.Tests.Controllers
       LastUpdateTime = DateTime.UtcNow;
 
       // Act
-      var viewResult = footballController.Teams() as ViewResult;
+      var viewResult = footballController.Table() as ViewResult;
 
       // Assert
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
