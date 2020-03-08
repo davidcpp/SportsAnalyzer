@@ -41,8 +41,8 @@ namespace SportsAnalyzer.Models
 
     public List<FootballMatch> AllMatches { get; private set; }
     public List<FootballMatch> SelectedMatches { get; private set; }
-    public List<Round> RoundsNumbers { get; set; } = new List<Round>();
     public List<int> RoundsNumbersInts { get; set; } = new List<int>();
+    public List<SelectListItem> RoundItems { get; set; } = new List<SelectListItem>();
     public List<SelectListItem> TeamItems { get; set; } = new List<SelectListItem>();
 
     [Display(Name = "Chose rounds")]
@@ -397,52 +397,25 @@ namespace SportsAnalyzer.Models
         TeamItems.Add(teamItem);
       }
 
-      TeamsSelectList = new MultiSelectList(TeamItems.OrderBy(item => item.Text),
-        "Value",
-        "Text");
+      TeamsSelectList = new MultiSelectList(TeamItems, "Value", "Text");
     }
 
     public void CreateRoundsSelectList()
     {
-      Dictionary<int, bool> roundsDictionary = new Dictionary<int, bool>();
+      var teamRounds = new HashSet<int>(AllMatches.Select(match => match.Round ?? 1)).ToList();
+      teamRounds.Sort();
 
-      int prevMatchRound = 0;
-      int currentMatchRound = AllMatches.Count > 0 ? (AllMatches[0].Round ?? 0) : 0;
-      var startDate = AllMatches.Count > 0 ?
-        (AllMatches[0].Date ?? DateTime.MinValue) : DateTime.MinValue;
-
-      for (int i = 1; i < AllMatches.Count; i++)
+      for (int i = 0; i < teamRounds.Count; i++)
       {
-        prevMatchRound = currentMatchRound;
-        currentMatchRound = AllMatches[i].Round ?? 1;
-
-        if (currentMatchRound == prevMatchRound || roundsDictionary.ContainsKey(prevMatchRound))
-          continue;
-
-        RoundsNumbers.Add(new Round
+        var roundItem = new SelectListItem
         {
-          Number = prevMatchRound,
-          StartDate = startDate,
-          EndDate = AllMatches[i - 1].Date ?? DateTime.MinValue
-        });
-
-        startDate = AllMatches[i].Date ?? DateTime.MinValue;
-        roundsDictionary[prevMatchRound] = true;
+          Value = teamRounds[i].ToString(),
+          Text = teamRounds[i].ToString(),
+        };
+        RoundItems.Add(roundItem);
       }
 
-      RoundsNumbers.Add(new Round
-      {
-        Number = currentMatchRound,
-        StartDate = startDate,
-        EndDate = AllMatches.Count > 0 ?
-          (AllMatches.Last().Date ?? DateTime.MinValue) : (DateTime.MinValue)
-      });
-
-      RoundsSelectList = new MultiSelectList(
-        RoundsNumbers.ToList().OrderBy(x => x.Number),
-        "Number",
-        "Number",
-        selectedValues: RoundsNumbersInts);
+      RoundsSelectList = new MultiSelectList(RoundItems, "Value", "Text", RoundsNumbersInts);
     }
 
     public void SetRoundsRange(string startRound, string endRound)
@@ -493,15 +466,6 @@ namespace SportsAnalyzer.Models
           .Range(startRoundInt, endRoundInt - startRoundInt + 1)
           .ToList();
       }
-    }
-
-    public class Round
-    {
-      [Required]
-      public int Number { get; set; }
-
-      public DateTime StartDate { get; set; }
-      public DateTime EndDate { get; set; }
     }
 
     public class RoundResult
