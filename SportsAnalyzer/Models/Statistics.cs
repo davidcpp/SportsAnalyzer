@@ -45,12 +45,10 @@ namespace SportsAnalyzer.Models
     public List<SelectListItem> RoundItems { get; set; } = new List<SelectListItem>();
     public List<SelectListItem> TeamItems { get; set; } = new List<SelectListItem>();
 
-    [Display(Name = "Chose rounds")]
     public MultiSelectList RoundsSelectList { get; private set; }
-
-    [Display(Name = "Chose teams")]
     public MultiSelectList TeamsSelectList { get; private set; }
 
+    [Display(Name = "Season Year")]
     public int SeasonYear { get; set; }
     public int LeagueRoundsNumber { get; private set; } = DefaultRoundsNumber;
     public string StartRound { get; private set; }
@@ -60,24 +58,24 @@ namespace SportsAnalyzer.Models
     public double MatchIntervalLength { get; }
     public double MatchTime { get; } = DefaultMatchTime;
 
-    [Display(Name = "League name")]
+    [Display(Name = "League Name")]
     public string LeagueName { get; set; }
 
-    [Display(Name = "Team name")]
+    [Display(Name = "Team Name")]
     public string TeamName { get; }
 
-    [Display(Name = "Avg. number of goals")]
+    [Display(Name = "Avg. Number of Goals")]
     public double GoalsAvg { get; private set; }
 
-    [Display(Name = "Avg. number of host/guest goals")]
+    [Display(Name = "Avg. Number of Host/Guest Goals")]
     public double GoalsAvgHome { get; private set; }
 
     public double GoalsAvgAway { get; private set; }
 
-    [Display(Name = "Goals sum")]
+    [Display(Name = "Goals Sum")]
     public double GoalsSum { get; private set; }
 
-    [Display(Name = "Number of matches")]
+    [Display(Name = "Number of Matches")]
     public double MatchesNumber { get; private set; }
 
     public double[] GoalsInIntervals

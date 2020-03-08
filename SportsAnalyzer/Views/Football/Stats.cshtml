@@ -73,10 +73,7 @@
       Select team
     </h4>
     <hr class="hr-col" />
-    <div class="row mx-1">
-      @Html.LabelFor(model => model.TeamsSelectList,
-        htmlAttributes: new { @class = "" })
-
+    <div class="form-group">
       @Html.ListBoxFor(model => model.TeamItems,
         Model.TeamsSelectList, new { @class = "form-control", @id = "teamsList" })
     </div>
@@ -88,9 +85,6 @@
     </h4>
     <hr class="hr-col" />
     <div class="form-group">
-      @Html.LabelFor(model => model.RoundsSelectList,
-        htmlAttributes: new { @class = "" })
-
       @Html.ListBoxFor(model => model.RoundsNumbersInts,
         Model.RoundsSelectList, new { @class = "form-control", @id = "roundsList" })
 
