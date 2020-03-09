@@ -24,19 +24,14 @@ namespace SportsAnalyzer.Tests.Controllers
     private const string shortString = "a";
     private const string standardString = "abcd";
 
-    private const int defaultSeasonYear = DefaultSeasonYear;
     private const int seasonYearExample = 2001;
-
-    private const string defaultLeagueShortName = DefaultLeagueShortName;
-    private const string defaultLeague = DefaultLeagueFullName;
-    private const string defaultLeagueId = DefaultLeagueId;
     private const string leagueIdExample = "league";
 
     /* Delegates */
 
     private delegate ActionResult FootballControllerAction(
-      string league = defaultLeague,
-      int seasonYear = defaultSeasonYear);
+      string league = DefaultLeagueFullName,
+      int seasonYear = DefaultSeasonYear);
 
     /* Methods */
 
@@ -167,11 +162,11 @@ namespace SportsAnalyzer.Tests.Controllers
       var callMockExpressions =
         new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.TeamLeagueStanding>>>>
       {
-        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
+        x => x.GetLeagueStandingsBySeason(leagueIdExample, DefaultSeasonYear),
         x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample),
       };
 
@@ -182,9 +177,9 @@ namespace SportsAnalyzer.Tests.Controllers
       var listOfCallArgs = new List<(string, int?)>
       {
         (null, null),
-        (defaultLeagueShortName, null),
-        (defaultLeague, defaultSeasonYear),
-        (defaultLeagueId, null),
+        (DefaultLeagueShortName, null),
+        (DefaultLeagueFullName, DefaultSeasonYear),
+        (DefaultLeagueId, null),
         (leagueIdExample, null),
         (leagueIdExample, seasonYearExample),
       };
@@ -197,9 +192,9 @@ namespace SportsAnalyzer.Tests.Controllers
 
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()),
         Times.Exactly(callMockExpressions.Count));
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(defaultLeague, defaultSeasonYear),
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
         Times.Exactly(callMockExpressions.Count - 2));
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, defaultSeasonYear), Times.Once);
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, DefaultSeasonYear), Times.Once);
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample), Times.Once);
     }
 
@@ -332,11 +327,11 @@ namespace SportsAnalyzer.Tests.Controllers
       var callMockExpressions =
         new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.Team>>>>
       {
-        x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
-        x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
-        x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
-        x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
-        x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, defaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
+        x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, DefaultSeasonYear),
         x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample),
       };
 
@@ -347,9 +342,9 @@ namespace SportsAnalyzer.Tests.Controllers
       var listOfCallArgs = new List<(string, int?)>
       {
         (null, null),
-        (defaultLeagueShortName, null),
-        (defaultLeague, defaultSeasonYear),
-        (defaultLeagueId, null),
+        (DefaultLeagueShortName, null),
+        (DefaultLeagueFullName, DefaultSeasonYear),
+        (DefaultLeagueId, null),
         (leagueIdExample, null),
         (leagueIdExample, seasonYearExample),
       };
@@ -362,9 +357,9 @@ namespace SportsAnalyzer.Tests.Controllers
 
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()),
         Times.Exactly(callMockExpressions.Count));
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(defaultLeague, defaultSeasonYear),
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
         Times.Exactly(callMockExpressions.Count - 2));
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, defaultSeasonYear), Times.Once);
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, DefaultSeasonYear), Times.Once);
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample), Times.Once);
     }
 
