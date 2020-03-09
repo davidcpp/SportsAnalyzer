@@ -114,6 +114,8 @@ const chartDefaultConfig = {
 
 $('#teamsList > option').each((index, teamItem) => {
   const teamName = $(teamItem).text();
+
+  // teamStandings - standings for teamName in consecutive rounds
   teamStandings[teamName] = {
     points: [],
     tablePositions: [],
@@ -448,10 +450,13 @@ function addTeamToCharts(teamName, id) {
   addChartDataset(roundPointsChart, roundPointsURI, teamName, id);
 }
 
+// TODO: Change to async function - waiting for dataset added to the roundPointsChart
 function changeTeamPointStyle(chart, teamName, pointStyle) {
   const index = chart.data.datasets.findIndex(
     dataset => dataset.label === teamName);
 
+  // In case of new team is still not added to chart - its point style will change after receiving data
+  // OR when the team has already been removed from the chart (rather impossible)
   if (index != -1) {
     chart.data.datasets[index].pointStyle = pointStyle;
   }
