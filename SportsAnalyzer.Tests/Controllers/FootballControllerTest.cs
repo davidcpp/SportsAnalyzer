@@ -72,8 +72,8 @@ namespace SportsAnalyzer.Tests.Controllers
       var dbList = viewResult.Model as List<TeamLeagueStanding>;
 
       Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestLeagueTable.Count, 0);
-      Assert.AreEqual(dbList.Count, xmlTestLeagueTable.Count);
+      Assert.AreEqual(0, xmlTestLeagueTable.Count);
+      Assert.AreEqual(xmlTestLeagueTable.Count, dbList.Count);
     }
 
     [TestMethod]
@@ -149,8 +149,8 @@ namespace SportsAnalyzer.Tests.Controllers
       var dbList = viewResult.Model as List<TeamLeagueStanding>;
 
       Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestLeagueTable.Count, numberOfTeams);
-      Assert.AreEqual(dbList.Count, xmlTestLeagueTable.Count);
+      Assert.AreEqual(numberOfTeams, xmlTestLeagueTable.Count);
+      Assert.AreEqual(xmlTestLeagueTable.Count, dbList.Count);
       for (int i = 0; i < dbList.Count; i++)
       {
         Assert.IsTrue(dbList[i].IsEqualToXmlTeamStanding(xmlTestLeagueTable[i]));
@@ -236,8 +236,8 @@ namespace SportsAnalyzer.Tests.Controllers
       var dbList = viewResult.Model as List<FootballTeam>;
 
       Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestTeamList.Count, 0);
-      Assert.AreEqual(dbList.Count, xmlTestTeamList.Count);
+      Assert.AreEqual(0, xmlTestTeamList.Count);
+      Assert.AreEqual(xmlTestTeamList.Count, dbList.Count);
     }
 
     [TestMethod]
@@ -313,8 +313,8 @@ namespace SportsAnalyzer.Tests.Controllers
       var dbList = viewResult.Model as List<FootballTeam>;
 
       Assert.IsNotNull(dbList);
-      Assert.AreEqual(xmlTestTeamList.Count, numberOfTeams);
-      Assert.AreEqual(dbList.Count, xmlTestTeamList.Count);
+      Assert.AreEqual(numberOfTeams, xmlTestTeamList.Count);
+      Assert.AreEqual(xmlTestTeamList.Count, dbList.Count);
 
       for (int i = 0; i < dbList.Count; i++)
       {
