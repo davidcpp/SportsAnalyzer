@@ -96,9 +96,9 @@ namespace SportsAnalyzer
 
     public static bool IsDataOutOfDate(DateTime dataLastUpdateTime)
     {
-      return (dataLastUpdateTime == DateTime.MinValue
-        || (DateTime.UtcNow - dataLastUpdateTime).TotalMinutes > UpdateDataBreakMinutes)
-        && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds;
+      return dataLastUpdateTime == DateTime.MinValue
+        || ((DateTime.UtcNow - dataLastUpdateTime).TotalMinutes > UpdateDataBreakMinutes
+        && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds);
     }
 
     public static void UpdateTableData(string league,
