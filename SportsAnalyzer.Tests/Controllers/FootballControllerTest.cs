@@ -27,6 +27,26 @@ namespace SportsAnalyzer.Tests.Controllers
     private const int seasonYearExample = 2001;
     private const string leagueIdExample = "league";
 
+    private readonly (string, int)[] callMockArguments = new[]
+    {
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (leagueIdExample, DefaultSeasonYear),
+      (leagueIdExample, seasonYearExample)
+    };
+
+    private readonly List<(string, int?)> callActionArguments = new List<(string, int?)>
+    {
+      (null, null),
+      (DefaultLeagueShortName, null),
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (DefaultLeagueId, null),
+      (leagueIdExample, null),
+      (leagueIdExample, seasonYearExample),
+    };
+
     /* Delegates */
 
     private delegate ActionResult FootballControllerAction(
@@ -159,30 +179,11 @@ namespace SportsAnalyzer.Tests.Controllers
       var testDBContext = new TestXmlSoccerAPI_DBContext();
       var apiTestLeagueTable = CreateTestLeagueTable(0);
 
-      var callMockExpressions =
-        new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.TeamLeagueStanding>>>>
-      {
-        x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(leagueIdExample, DefaultSeasonYear),
-        x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample),
-      };
-
-      var mockXmlReq = SetSequenceOfMockCalls(apiTestLeagueTable, callMockExpressions);
+      var callMockExpressions = CreateTableRequestsExpressions(callMockArguments).ToList();
+      var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
+      mockXmlReq.SetupSequenceCalls(apiTestLeagueTable, callMockExpressions);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-
-      var callActionArguments = new List<(string, int?)>
-      {
-        (null, null),
-        (DefaultLeagueShortName, null),
-        (DefaultLeagueFullName, DefaultSeasonYear),
-        (DefaultLeagueId, null),
-        (leagueIdExample, null),
-        (leagueIdExample, seasonYearExample),
-      };
 
       // Act
       CallControlerActionMuliply(footballController.Table, callActionArguments);
@@ -324,30 +325,11 @@ namespace SportsAnalyzer.Tests.Controllers
       var testDBContext = new TestXmlSoccerAPI_DBContext();
       var apiTestTeamList = CreateTestTeamList(0);
 
-      var callMockExpressions =
-        new List<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.Team>>>>
-      {
-        x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
-        x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
-        x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
-        x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
-        x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, DefaultSeasonYear),
-        x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample),
-      };
-
-      var mockXmlReq = SetSequenceOfMockCalls(apiTestTeamList, callMockExpressions);
+      var callMockExpressions = CreateTeamsRequestsExpressions(callMockArguments).ToList();
+      var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
+      mockXmlReq.SetupSequenceCalls(apiTestTeamList, callMockExpressions);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-
-      var callActionArguments = new List<(string, int?)>
-      {
-        (null, null),
-        (DefaultLeagueShortName, null),
-        (DefaultLeagueFullName, DefaultSeasonYear),
-        (DefaultLeagueId, null),
-        (leagueIdExample, null),
-        (leagueIdExample, seasonYearExample),
-      };
 
       // Act
       CallControlerActionMuliply(footballController.Teams, callActionArguments);
@@ -364,6 +346,24 @@ namespace SportsAnalyzer.Tests.Controllers
     }
 
     /* Auxiliary methods */
+
+    private IEnumerable<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.TeamLeagueStanding>>>>
+      CreateTableRequestsExpressions((string, int)[] callMockArguments)
+    {
+      foreach (var (league, seasonYear) in callMockArguments)
+      {
+        yield return x => x.GetLeagueStandingsBySeason(league, seasonYear);
+      }
+    }
+
+    private IEnumerable<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.Team>>>>
+      CreateTeamsRequestsExpressions((string, int)[] callMockArguments)
+    {
+      foreach (var (league, seasonYear) in callMockArguments)
+      {
+        yield return x => x.GetAllTeamsByLeagueAndSeason(league, seasonYear);
+      }
+    }
 
     private XMLSoccerCOM.Team CreateTestTeam(int team_Id, string testString)
     {
@@ -424,24 +424,6 @@ namespace SportsAnalyzer.Tests.Controllers
       return xmlList;
     }
 
-    private Mock<IXmlSoccerRequester> SetSequenceOfMockCalls<T>(
-      T xmlData,
-      List<Expression<Func<IXmlSoccerRequester, T>>> CallMockExpressions) where T : class
-    {
-      var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
-
-      var sequence = new MockSequence();
-
-      foreach (var expression in CallMockExpressions)
-      {
-        mockXmlReq.InSequence(sequence)
-          .Setup(expression)
-          .Returns(xmlData);
-      }
-
-      return mockXmlReq;
-    }
-
     private void CallControlerActionMuliply(
       FootballControllerAction footballControllerAction,
       List<(string league, int? seasonYear)> listOfCallArgs)
@@ -472,6 +454,24 @@ namespace SportsAnalyzer.Tests.Controllers
       }
       // Probably calls with null arguments are unnecessary 
       // - arguments of Controller action has default values
+    }
+  }
+
+  public static class MockExtensions
+  {
+    public static void SetupSequenceCalls<T>(
+      this Mock<IXmlSoccerRequester> mockXmlReq,
+      List<T> xmlData,
+      List<Expression<Func<IXmlSoccerRequester, List<T>>>> callMockExpressions) where T : class
+    {
+      var sequence = new MockSequence();
+
+      foreach (var expression in callMockExpressions)
+      {
+        mockXmlReq.InSequence(sequence)
+          .Setup(expression)
+          .Returns(xmlData);
+      }
     }
   }
 
