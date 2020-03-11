@@ -21,7 +21,6 @@ namespace SportsAnalyzer.Tests.Controllers
     /* Fields */
 
     private const int numberOfTeams = 12;
-    private const string shortString = "a";
     private const string standardString = "abcd";
 
     private const int seasonYearExample = 2001;
@@ -110,27 +109,6 @@ namespace SportsAnalyzer.Tests.Controllers
         It.IsAny<string>(), It.IsAny<int>()), Times.Never());
 
       Assert.AreEqual(0, testDBContext.SavedChanges);
-    }
-
-    // Not completely proper unit test - necessity of using database (external dependency)
-    [TestMethod]
-    [ExpectedException(exceptionType: typeof(DbEntityValidationException))]
-    public void ShowTable_StringLengthOutOfRange_EntityValidationException()
-    {
-      // Arrange
-      var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var apiTestLeagueTable = CreateTestLeagueTable(1, shortString);
-
-      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(apiTestLeagueTable);
-
-      var footballController = new FootballController(mockXmlReq.Object);
-      TableLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
-
-      // Act
-      footballController.Table();
     }
 
     [TestMethod]
@@ -255,27 +233,6 @@ namespace SportsAnalyzer.Tests.Controllers
         It.IsAny<string>(), It.IsAny<int>()), Times.Never());
 
       Assert.AreEqual(0, testDBContext.SavedChanges);
-    }
-
-    // Not completely proper unit test - necessity of using database (external dependency)
-    [TestMethod]
-    [ExpectedException(exceptionType: typeof(DbEntityValidationException))]
-    public void ShowTeams_StringLengthOutOfRange_EntityValidationException()
-    {
-      // Arrange
-      var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var apiTestTeamList = CreateTestTeamList(1, shortString);
-
-      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
-        It.IsAny<string>(), It.IsAny<int>()))
-        .Returns(apiTestTeamList);
-
-      var footballController = new FootballController(mockXmlReq.Object);
-      TeamsLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
-
-      // Act
-      footballController.Teams();
     }
 
     [TestMethod]
