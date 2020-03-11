@@ -46,6 +46,14 @@ namespace SportsAnalyzer.Tests.Controllers
       (leagueIdExample, seasonYearExample),
     };
 
+    public FootballControllerTest()
+    {
+      // These assignments are executed before each unit test
+      TableLastUpdateTime = DateTime.MinValue;
+      TeamsLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
+    }
+
     /* Delegates */
 
     private delegate ActionResult FootballControllerAction(
@@ -67,8 +75,6 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(apiTestLeagueTable);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-      TableLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
 
       // Act
       var viewResult = footballController.Table() as ViewResult;
@@ -103,8 +109,6 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(apiTestLeagueTable);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-      TableLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
 
       // Act
       var viewResult = footballController.Table() as ViewResult;
@@ -130,8 +134,6 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(apiTestLeagueTable);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-      TableLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
 
       // Act
       var viewResult = footballController.Table() as ViewResult;
@@ -197,8 +199,6 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(apiTestTeamList);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-      TeamsLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
 
       // Act
       var viewResult = footballController.Teams() as ViewResult;
@@ -233,8 +233,6 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(apiTestTeamList);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-      TeamsLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
 
       // Act
       var viewResult = footballController.Teams() as ViewResult;
@@ -260,8 +258,6 @@ namespace SportsAnalyzer.Tests.Controllers
         .Returns(apiTestTeamList);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-      TeamsLastUpdateTime = DateTime.MinValue;
-      LastUpdateTime = DateTime.MinValue;
 
       // Act
       var viewResult = footballController.Teams() as ViewResult;
