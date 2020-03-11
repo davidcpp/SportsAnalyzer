@@ -91,24 +91,30 @@ namespace SportsAnalyzer.Tests.Controllers
     }
 
     [TestMethod]
-    public void ShowTable_RecentlyUpdatedTable_NoRequestInvocation()
+    public void ShowTable_RepeatedControllerActionCall_NoRepeatedApiRequest()
     {
       // Arrange
       var testDBContext = new TestXmlSoccerAPI_DBContext();
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
+      var apiTestLeagueTable = CreateTestLeagueTable(0);
+
+      mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(apiTestLeagueTable);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-      TableLastUpdateTime = DateTime.UtcNow;
-      LastUpdateTime = DateTime.UtcNow;
+      TableLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       // Act
       var viewResult = footballController.Table() as ViewResult;
+      viewResult = footballController.Table() as ViewResult;
 
       // Assert
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Never());
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
-      Assert.AreEqual(0, testDBContext.SavedChanges);
+      Assert.AreEqual(1, testDBContext.SavedChanges);
     }
 
     [TestMethod]
@@ -215,24 +221,30 @@ namespace SportsAnalyzer.Tests.Controllers
     }
 
     [TestMethod]
-    public void ShowTeams_RecentlyUpdatedList_NoRequestInvocation()
+    public void ShowTeams_RepeatedControllerActionCall_NoRepeatedApiRequest()
     {
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var testDBContext = new TestXmlSoccerAPI_DBContext();
+      var apiTestTeamList = CreateTestTeamList(0);
+
+      mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
+        It.IsAny<string>(), It.IsAny<int>()))
+        .Returns(apiTestTeamList);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
-      TeamsLastUpdateTime = DateTime.UtcNow;
-      LastUpdateTime = DateTime.UtcNow;
+      TeamsLastUpdateTime = DateTime.MinValue;
+      LastUpdateTime = DateTime.MinValue;
 
       // Act
       var viewResult = footballController.Teams() as ViewResult;
+      viewResult = footballController.Teams() as ViewResult;
 
       // Assert
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Never());
+        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
-      Assert.AreEqual(0, testDBContext.SavedChanges);
+      Assert.AreEqual(1, testDBContext.SavedChanges);
     }
 
     [TestMethod]
