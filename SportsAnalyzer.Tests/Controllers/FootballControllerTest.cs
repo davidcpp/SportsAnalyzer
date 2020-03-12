@@ -15,37 +15,11 @@ using SportsAnalyzer.DAL;
 
 namespace SportsAnalyzer.Tests.Controllers
 {
+  using static AuxiliaryMethods;
+
   [TestClass]
   public class FootballControllerTest
   {
-    /* Fields */
-
-    private const int numberOfTeams = 12;
-    private const string standardString = "abcd";
-
-    private const int seasonYearExample = 2001;
-    private const string leagueIdExample = "league";
-
-    private readonly (string, int)[] callMockArguments = new[]
-    {
-      (DefaultLeagueFullName, DefaultSeasonYear),
-      (DefaultLeagueFullName, DefaultSeasonYear),
-      (DefaultLeagueFullName, DefaultSeasonYear),
-      (DefaultLeagueFullName, DefaultSeasonYear),
-      (leagueIdExample, DefaultSeasonYear),
-      (leagueIdExample, seasonYearExample)
-    };
-
-    private readonly List<(string, int?)> callActionArguments = new List<(string, int?)>
-    {
-      (null, null),
-      (DefaultLeagueShortName, null),
-      (DefaultLeagueFullName, DefaultSeasonYear),
-      (DefaultLeagueId, null),
-      (leagueIdExample, null),
-      (leagueIdExample, seasonYearExample),
-    };
-
     public FootballControllerTest()
     {
       // These assignments are executed before each unit test
@@ -56,7 +30,7 @@ namespace SportsAnalyzer.Tests.Controllers
 
     /* Delegates */
 
-    private delegate ActionResult FootballControllerAction(
+    public delegate ActionResult FootballControllerAction(
       string league = DefaultLeagueFullName,
       int seasonYear = DefaultSeasonYear);
 
@@ -309,10 +283,40 @@ namespace SportsAnalyzer.Tests.Controllers
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, DefaultSeasonYear), Times.Once);
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample), Times.Once);
     }
+  }
 
-    /* Auxiliary methods */
+  public static class AuxiliaryMethods
+  {
+    /* Fields */
 
-    private IEnumerable<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.TeamLeagueStanding>>>>
+    private const string standardString = "abcd";
+    public static readonly int numberOfTeams = 12;
+    public static readonly int seasonYearExample = 2001;
+    public static readonly string leagueIdExample = "league";
+
+    public static readonly (string, int)[] callMockArguments = new[]
+    {
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (leagueIdExample, DefaultSeasonYear),
+      (leagueIdExample, seasonYearExample)
+    };
+
+    public static readonly List<(string, int?)> callActionArguments = new List<(string, int?)>
+    {
+      (null, null),
+      (DefaultLeagueShortName, null),
+      (DefaultLeagueFullName, DefaultSeasonYear),
+      (DefaultLeagueId, null),
+      (leagueIdExample, null),
+      (leagueIdExample, seasonYearExample),
+    };
+
+    /* Methods */
+
+    public static IEnumerable<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.TeamLeagueStanding>>>>
       CreateTableRequestsExpressions((string, int)[] callMockArguments)
     {
       foreach (var (league, seasonYear) in callMockArguments)
@@ -321,7 +325,7 @@ namespace SportsAnalyzer.Tests.Controllers
       }
     }
 
-    private IEnumerable<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.Team>>>>
+    public static IEnumerable<Expression<Func<IXmlSoccerRequester, List<XMLSoccerCOM.Team>>>>
       CreateTeamsRequestsExpressions((string, int)[] callMockArguments)
     {
       foreach (var (league, seasonYear) in callMockArguments)
@@ -330,7 +334,7 @@ namespace SportsAnalyzer.Tests.Controllers
       }
     }
 
-    private XMLSoccerCOM.Team CreateTestTeam(int team_Id, string testString)
+    public static XMLSoccerCOM.Team CreateTestTeam(int team_Id, string testString)
     {
       return new XMLSoccerCOM.Team
       {
@@ -343,7 +347,7 @@ namespace SportsAnalyzer.Tests.Controllers
       };
     }
 
-    private List<XMLSoccerCOM.Team> CreateTestTeamList(
+    public static List<XMLSoccerCOM.Team> CreateTestTeamList(
       int size,
       string testString = standardString)
     {
@@ -355,7 +359,7 @@ namespace SportsAnalyzer.Tests.Controllers
       return xmlList;
     }
 
-    private XMLSoccerCOM.TeamLeagueStanding CreateTestTeamLeagueStanding(
+    public static XMLSoccerCOM.TeamLeagueStanding CreateTestTeamLeagueStanding(
       int team_Id,
       int testInt,
       string testString)
@@ -375,7 +379,7 @@ namespace SportsAnalyzer.Tests.Controllers
       };
     }
 
-    private List<XMLSoccerCOM.TeamLeagueStanding> CreateTestLeagueTable(
+    public static List<XMLSoccerCOM.TeamLeagueStanding> CreateTestLeagueTable(
       int size,
       string testString = standardString,
       int testInt = 0)
@@ -389,8 +393,8 @@ namespace SportsAnalyzer.Tests.Controllers
       return xmlList;
     }
 
-    private void CallControlerActionMuliply(
-      FootballControllerAction footballControllerAction,
+    public static void CallControlerActionMuliply(
+      FootballControllerTest.FootballControllerAction footballControllerAction,
       List<(string league, int? seasonYear)> listOfCallArgs)
     {
       foreach (var (league, seasonYear) in listOfCallArgs)
