@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace SportsAnalyzer.Models
+﻿namespace SportsAnalyzer.Models
 {
+  using System.Collections.Generic;
+  using System.ComponentModel.DataAnnotations;
+
   public static class FootballTeamConverter
   {
     public static List<FootballTeam> ConvertToTeamList(this List<XMLSoccerCOM.Team> xmlList)
@@ -23,6 +23,17 @@ namespace SportsAnalyzer.Models
 
     public const int MaxTeamNameLength = 80;
     public const int MaxCountryNameLength = 60;
+
+    /* Constructors */
+
+    public FootballTeam() { }
+
+    public FootballTeam(XMLSoccerCOM.Team team)
+    {
+      ConvertFromXmlSoccerTeam(team);
+    }
+
+    /* Properties */
 
     public int Id { get; set; }
 
@@ -48,15 +59,6 @@ namespace SportsAnalyzer.Models
 
     [Display(Name = "Wiki link")]
     public string WIKILink { get; set; }
-
-    /* Constructors */
-
-    public FootballTeam() { }
-
-    public FootballTeam(XMLSoccerCOM.Team team)
-    {
-      ConvertFromXmlSoccerTeam(team);
-    }
 
     /* Methods */
 

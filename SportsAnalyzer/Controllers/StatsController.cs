@@ -1,15 +1,14 @@
-﻿using System.Web.Http;
-using SportsAnalyzer.Models;
-using SportsAnalyzer.DAL;
-using System.Linq;
-using static SportsAnalyzer.Common;
-
-namespace SportsAnalyzer.Controllers
+﻿namespace SportsAnalyzer.Controllers
 {
+  using System.Linq;
+  using System.Web.Http;
+  using SportsAnalyzer.DAL;
+  using SportsAnalyzer.Models;
+  using static SportsAnalyzer.Common;
+
   public class StatsController : ApiController
   {
     private readonly XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
-
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 
     public StatsController()
@@ -20,27 +19,6 @@ namespace SportsAnalyzer.Controllers
     public StatsController(IXmlSoccerRequester xmlSoccerRequester)
     {
       _xmlSoccerRequester = xmlSoccerRequester;
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        db.Dispose();
-      }
-      base.Dispose(disposing);
-    }
-
-    private void CheckMatchesData(StatsRequestModel statsRequest)
-    {
-      if (IsDataOutOfDate(MatchesLastUpdateTime))
-      {
-        UpdateMatchesData(statsRequest.LeagueName,
-          statsRequest.SeasonYear,
-          _xmlSoccerRequester,
-          db);
-        MatchesDataUpdated = true;
-      }
     }
 
     [HttpPost]
@@ -83,6 +61,27 @@ namespace SportsAnalyzer.Controllers
       stats.CalculateRoundPoints();
 
       return Ok(stats.RoundPoints);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        db.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    private void CheckMatchesData(StatsRequestModel statsRequest)
+    {
+      if (IsDataOutOfDate(MatchesLastUpdateTime))
+      {
+        UpdateMatchesData(statsRequest.LeagueName,
+          statsRequest.SeasonYear,
+          _xmlSoccerRequester,
+          db);
+        MatchesDataUpdated = true;
+      }
     }
 
     public class StatsRequestModel

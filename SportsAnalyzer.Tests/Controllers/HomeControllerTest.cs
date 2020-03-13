@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SportsAnalyzer;
-using SportsAnalyzer.Controllers;
-
-namespace SportsAnalyzer.Tests.Controllers
+﻿namespace SportsAnalyzer.Tests.Controllers
 {
-    [TestClass]
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Text;
+  using System.Web.Mvc;
+  using Microsoft.VisualStudio.TestTools.UnitTesting;
+  using SportsAnalyzer;
+  using SportsAnalyzer.Controllers;
+
+  [TestClass]
     public class HomeControllerTest
     {
         [TestMethod]

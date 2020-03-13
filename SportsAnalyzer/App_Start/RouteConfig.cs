@@ -1,8 +1,8 @@
-﻿using System.Web.Mvc;
-using System.Web.Routing;
-
-namespace SportsAnalyzer
+﻿namespace SportsAnalyzer
 {
+  using System.Web.Mvc;
+  using System.Web.Routing;
+
   public static class RouteConfig
   {
     public static void RegisterRoutes(RouteCollection routes)

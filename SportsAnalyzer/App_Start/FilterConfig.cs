@@ -1,7 +1,7 @@
-﻿using System.Web.Mvc;
-
-namespace SportsAnalyzer
+﻿namespace SportsAnalyzer
 {
+  using System.Web.Mvc;
+
   public static class FilterConfig
   {
     public static void RegisterGlobalFilters(GlobalFilterCollection filters)

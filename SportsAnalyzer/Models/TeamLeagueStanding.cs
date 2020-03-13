@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
 namespace SportsAnalyzer.Models
 {
+  using System.Collections.Generic;
+  using System.ComponentModel.DataAnnotations;
+
   public static class TeamLeagueStandingConverter
   {
     public static List<TeamLeagueStanding> ConvertToLeagueStandingList(
@@ -23,6 +23,15 @@ namespace SportsAnalyzer.Models
     /* Constant fields */
 
     public const int MaxTeamNameLength = 80;
+
+    /* Constructors */
+
+    public TeamLeagueStanding() { }
+
+    public TeamLeagueStanding(XMLSoccerCOM.TeamLeagueStanding teamStanding)
+    {
+      ConvertFromXmlTeamStanding(teamStanding);
+    }
 
     /* Properties */
 
@@ -67,15 +76,6 @@ namespace SportsAnalyzer.Models
 
     [Display(Name = "Goals Difference")]
     public int GoalsDifference { get; set; }
-
-    /* Constructors */
-
-    public TeamLeagueStanding() { }
-
-    public TeamLeagueStanding(XMLSoccerCOM.TeamLeagueStanding teamStanding)
-    {
-      ConvertFromXmlTeamStanding(teamStanding);
-    }
 
     /* Methods */
 

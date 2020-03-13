@@ -1,14 +1,14 @@
-﻿using SportsAnalyzer.Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-
-namespace SportsAnalyzer
+﻿namespace SportsAnalyzer
 {
-  using IXmlSR = SportsAnalyzer.IXmlSoccerRequester;
+  using System;
+  using System.Collections.Generic;
+  using System.Data.Entity;
+  using System.Data.Entity.Infrastructure;
+  using System.Linq;
+  using SportsAnalyzer.Models;
+
   using IXmlSocDB = SportsAnalyzer.DAL.IXmlSoccerAPI_DBContext;
+  using IXmlSR = SportsAnalyzer.IXmlSoccerRequester;
 
   public interface IXmlSoccerRequester
   {
@@ -20,31 +20,6 @@ namespace SportsAnalyzer
 
     List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
       string league, int seasonStartYear);
-  }
-
-  public class XmlSoccerRequester : IXmlSoccerRequester
-  {
-    private const string _apiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
-    private readonly XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(_apiKey);
-
-    public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
-      string league, int seasonStartYear)
-    {
-      return _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonStartYear);
-    }
-
-    public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(
-      string league, int seasonStartYear)
-    {
-      return _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonStartYear);
-    }
-
-    public List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
-      string league, int seasonStartYear)
-    {
-      return _xmlSoccerRequester
-        .GetHistoricMatchesByLeagueAndSeason(league, seasonStartYear);
-    }
   }
 
   public static class Common
@@ -163,6 +138,31 @@ namespace SportsAnalyzer
           ex.Entries.Single().Reload();
         }
       } while (saveFailed);
+    }
+  }
+
+  public class XmlSoccerRequester : IXmlSoccerRequester
+  {
+    private const string apiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
+    private readonly XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(apiKey);
+
+    public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
+      string league, int seasonStartYear)
+    {
+      return _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonStartYear);
+    }
+
+    public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(
+      string league, int seasonStartYear)
+    {
+      return _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonStartYear);
+    }
+
+    public List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
+      string league, int seasonStartYear)
+    {
+      return _xmlSoccerRequester
+        .GetHistoricMatchesByLeagueAndSeason(league, seasonStartYear);
     }
   }
 }

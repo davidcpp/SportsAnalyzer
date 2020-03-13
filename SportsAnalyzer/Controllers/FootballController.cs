@@ -1,15 +1,14 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using SportsAnalyzer.Models;
-using SportsAnalyzer.DAL;
-using static SportsAnalyzer.Common;
-
-namespace SportsAnalyzer.Controllers
+﻿namespace SportsAnalyzer.Controllers
 {
+  using System.Linq;
+  using System.Web.Mvc;
+  using SportsAnalyzer.DAL;
+  using SportsAnalyzer.Models;
+  using static SportsAnalyzer.Common;
+
   public class FootballController : Controller
   {
     private readonly IXmlSoccerAPI_DBContext db;
-
     private readonly IXmlSoccerRequester _xmlSoccerRequester;
 
     /* Constructors */
@@ -28,15 +27,6 @@ namespace SportsAnalyzer.Controllers
     }
 
     /* Methods */
-
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        db.Dispose();
-      }
-      base.Dispose(disposing);
-    }
 
     // GET: Football
     public ActionResult Index()
@@ -105,6 +95,15 @@ namespace SportsAnalyzer.Controllers
         ViewBag.Message = ViewBag.EmptyList;
 
       return View(db.FootballTeams.ToList());
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        db.Dispose();
+      }
+      base.Dispose(disposing);
     }
   }
 }

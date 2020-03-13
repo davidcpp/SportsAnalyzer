@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SportsAnalyzer.Models
+﻿namespace SportsAnalyzer.Models
 {
+  using System;
+  using System.Collections.Generic;
+
   public static class FootballMatchConverter
   {
     public static List<FootballMatch> ConvertToMatchList(this List<XMLSoccerCOM.Match> xmlList)
@@ -19,6 +19,17 @@ namespace SportsAnalyzer.Models
 
   public class FootballMatch
   {
+    /* Constructors */
+
+    public FootballMatch() { }
+
+    public FootballMatch(XMLSoccerCOM.Match match)
+    {
+      ConvertFromXmlSoccerMatch(match);
+    }
+
+    /* Properties */
+
     public int Id { get; set; }
 
     public DateTime? Date { get; set; }
@@ -30,15 +41,6 @@ namespace SportsAnalyzer.Models
     public string HomeTeam { get; set; }
     public int? HomeGoals { get; set; }
     public string HomeGoalDetails { get; set; }
-
-    /* Constructors */
-
-    public FootballMatch() { }
-
-    public FootballMatch(XMLSoccerCOM.Match match)
-    {
-      ConvertFromXmlSoccerMatch(match);
-    }
 
     /* Methods */
 
