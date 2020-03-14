@@ -8,22 +8,22 @@
 
   public class FootballController : Controller
   {
-    private readonly IXmlSoccerAPI_DBContext db;
-    private readonly IXmlSoccerRequester _xmlSoccerRequester;
+    private readonly IXmlSoccerAPI_DBContext dbContext;
+    private readonly IXmlSoccerRequester xmlSoccerRequester;
 
     /* Constructors */
 
     public FootballController()
     {
-      _xmlSoccerRequester = new XmlSoccerRequester();
-      db = new XmlSoccerAPI_DBContext();
+      xmlSoccerRequester = new XmlSoccerRequester();
+      dbContext = new XmlSoccerAPI_DBContext();
     }
 
     public FootballController(IXmlSoccerRequester xmlSoccerRequester,
       IXmlSoccerAPI_DBContext dbContext = null)
     {
-      _xmlSoccerRequester = xmlSoccerRequester;
-      db = dbContext ?? new XmlSoccerAPI_DBContext();
+      this.xmlSoccerRequester = xmlSoccerRequester;
+      this.dbContext = dbContext ?? new XmlSoccerAPI_DBContext();
     }
 
     /* Methods */
@@ -33,7 +33,7 @@
     {
       ViewBag.Title = "Scottish Premier League main page.";
 
-      return View(db.FootballTeams.ToList());
+      return View(dbContext.FootballTeams.ToList());
     }
 
     // GET: Football/Stats/{startRound}/{endRound}/{league}/{seasonYear}
@@ -48,10 +48,10 @@
 
       if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
-        UpdateMatchesData(league, seasonYear, _xmlSoccerRequester, db);
+        UpdateMatchesData(league, seasonYear, xmlSoccerRequester, dbContext);
       }
       var stats = new Statistics(seasonYear, league);
-      stats.CalcStats(db, startRound, endRound);
+      stats.CalcStats(dbContext, startRound, endRound);
       stats.CreateTeamsSelectList();
       stats.CreateRoundsSelectList();
       return View(stats);
@@ -67,14 +67,14 @@
 
       if (IsDataOutOfDate(TableLastUpdateTime))
       {
-        UpdateTableData(league, seasonYear, _xmlSoccerRequester, db);
+        UpdateTableData(league, seasonYear, xmlSoccerRequester, dbContext);
       }
 
       ViewBag.EmptyList = "League Table is empty";
-      if (db.LeagueTable.Count() == 0)
+      if (dbContext.LeagueTable.Count() == 0)
         ViewBag.Message = ViewBag.EmptyList;
 
-      return View(db.LeagueTable.ToList());
+      return View(dbContext.LeagueTable.ToList());
     }
 
     // GET: Football/Teams/{league}/{seasonYear}
@@ -87,21 +87,21 @@
 
       if (IsDataOutOfDate(TeamsLastUpdateTime))
       {
-        UpdateTeamsData(league, seasonYear, _xmlSoccerRequester, db);
+        UpdateTeamsData(league, seasonYear, xmlSoccerRequester, dbContext);
       }
 
       ViewBag.EmptyList = "List of teams is empty";
-      if (db.FootballTeams.Count() == 0)
+      if (dbContext.FootballTeams.Count() == 0)
         ViewBag.Message = ViewBag.EmptyList;
 
-      return View(db.FootballTeams.ToList());
+      return View(dbContext.FootballTeams.ToList());
     }
 
     protected override void Dispose(bool disposing)
     {
       if (disposing)
       {
-        db.Dispose();
+        dbContext.Dispose();
       }
       base.Dispose(disposing);
     }

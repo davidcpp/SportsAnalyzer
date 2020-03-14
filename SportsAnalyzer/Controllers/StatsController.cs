@@ -8,17 +8,17 @@
 
   public class StatsController : ApiController
   {
-    private readonly XmlSoccerAPI_DBContext db = new XmlSoccerAPI_DBContext();
-    private readonly IXmlSoccerRequester _xmlSoccerRequester;
+    private readonly XmlSoccerAPI_DBContext dbContext = new XmlSoccerAPI_DBContext();
+    private readonly IXmlSoccerRequester xmlSoccerRequester;
 
     public StatsController()
     {
-      _xmlSoccerRequester = new XmlSoccerRequester();
+      xmlSoccerRequester = new XmlSoccerRequester();
     }
 
     public StatsController(IXmlSoccerRequester xmlSoccerRequester)
     {
-      _xmlSoccerRequester = xmlSoccerRequester;
+      this.xmlSoccerRequester = xmlSoccerRequester;
     }
 
     [HttpPost]
@@ -28,7 +28,7 @@
       var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
-      stats.SetMatches(db.LeagueMatches.ToList());
+      stats.SetMatches(dbContext.LeagueMatches.ToList());
       stats.SetRounds(statsRequest.Rounds.ToList());
       stats.CalculateGoalsInIntervals();
 
@@ -42,7 +42,7 @@
       var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
-      stats.SetMatches(db.LeagueMatches.ToList());
+      stats.SetMatches(dbContext.LeagueMatches.ToList());
       stats.SetRounds(statsRequest.Rounds.ToList());
       stats.CalculateMatchGoals();
 
@@ -56,7 +56,7 @@
       var stats = new Statistics(statsRequest.SeasonYear,
         statsRequest.LeagueName,
         statsRequest.TeamName);
-      stats.SetMatches(db.LeagueMatches.ToList());
+      stats.SetMatches(dbContext.LeagueMatches.ToList());
       stats.SetRoundsRange("first", "last");
       stats.CalculateRoundPoints();
 
@@ -67,7 +67,7 @@
     {
       if (disposing)
       {
-        db.Dispose();
+        dbContext.Dispose();
       }
       base.Dispose(disposing);
     }
@@ -78,8 +78,8 @@
       {
         UpdateMatchesData(statsRequest.LeagueName,
           statsRequest.SeasonYear,
-          _xmlSoccerRequester,
-          db);
+          xmlSoccerRequester,
+          dbContext);
         MatchesDataUpdated = true;
       }
     }

@@ -26,8 +26,8 @@
     // RoundPoints[numberOfRound] = numberOfPoints
     public IDictionary<int, RoundResult> RoundPoints = new Dictionary<int, RoundResult>();
 
-    private static Task CalcTablePositions;
-    private readonly object _lockObject = new object();
+    private static Task calcTablePositions;
+    private readonly object lockObject = new object();
 
     private double[] goalsInIntervals = null;
     private double[] goalsInIntervalsPercent = null;
@@ -264,15 +264,15 @@
       if (TeamName == DefaultTeamName)
         return;
 
-      lock (_lockObject)
+      lock (lockObject)
       {
         if (MatchesDataUpdated)
         {
           MatchesDataUpdated = false;
-          CalcTablePositions = Task.Run(() => CalculateTablePositions());
+          calcTablePositions = Task.Run(() => CalculateTablePositions());
         }
       }
-      CalcTablePositions?.Wait();
+      calcTablePositions?.Wait();
 
       int roundPoints = 0;
       int matchRound = 0, prevMatchRound = 0;

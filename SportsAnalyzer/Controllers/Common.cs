@@ -61,11 +61,11 @@
       statistics.CalculateMatchGoals();
     }
 
-    public static void ClearDBSet<T>(DbSet<T> dbList) where T : class
+    public static void ClearDBSet<T>(DbSet<T> set) where T : class
     {
-      foreach (var dbItem in dbList)
+      foreach (var item in set)
       {
-        dbList.Remove(dbItem);
+        set.Remove(item);
       }
     }
 
@@ -122,7 +122,7 @@
       SaveChangesInDatabase(xmlSocDB);
     }
 
-    private static void SaveChangesInDatabase(IXmlSocDB db)
+    private static void SaveChangesInDatabase(IXmlSocDB dbContext)
     {
       bool saveFailed;
       do
@@ -130,7 +130,7 @@
         saveFailed = false;
         try
         {
-          db.SaveChanges();
+          dbContext.SaveChanges();
         }
         catch (DbUpdateConcurrencyException ex)
         {
@@ -143,25 +143,25 @@
 
   public class XmlSoccerRequester : IXmlSoccerRequester
   {
-    private const string apiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
-    private readonly XMLSoccerCOM.Requester _xmlSoccerRequester = new XMLSoccerCOM.Requester(apiKey);
+    private const string ApiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
+    private readonly XMLSoccerCOM.Requester xmlSoccerRequester = new XMLSoccerCOM.Requester(ApiKey);
 
     public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
       string league, int seasonStartYear)
     {
-      return _xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonStartYear);
+      return xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonStartYear);
     }
 
     public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(
       string league, int seasonStartYear)
     {
-      return _xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonStartYear);
+      return xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonStartYear);
     }
 
     public List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
       string league, int seasonStartYear)
     {
-      return _xmlSoccerRequester
+      return xmlSoccerRequester
         .GetHistoricMatchesByLeagueAndSeason(league, seasonStartYear);
     }
   }

@@ -18,31 +18,31 @@
   public static class AuxiliaryMethods
   {
     /* Fields */
-    public static readonly int numberOfTeams = 12;
-    public static readonly int seasonYearExample = 2001;
-    public static readonly string leagueIdExample = "league";
+    public static readonly int NumberOfTeams = 12;
+    public static readonly int SeasonYearExample = 2001;
+    public static readonly string LeagueIdExample = "league";
 
-    public static readonly (string, int)[] callMockArguments = new[]
+    public static readonly (string, int)[] CallMockArguments = new[]
     {
       (DefaultLeagueFullName, DefaultSeasonYear),
       (DefaultLeagueFullName, DefaultSeasonYear),
       (DefaultLeagueFullName, DefaultSeasonYear),
       (DefaultLeagueFullName, DefaultSeasonYear),
-      (leagueIdExample, DefaultSeasonYear),
-      (leagueIdExample, seasonYearExample)
+      (LeagueIdExample, DefaultSeasonYear),
+      (LeagueIdExample, SeasonYearExample)
     };
 
-    public static readonly List<(string, int?)> callActionArguments = new List<(string, int?)>
+    public static readonly List<(string, int?)> CallActionArguments = new List<(string, int?)>
     {
       (null, null),
       (DefaultLeagueShortName, null),
       (DefaultLeagueFullName, DefaultSeasonYear),
       (DefaultLeagueId, null),
-      (leagueIdExample, null),
-      (leagueIdExample, seasonYearExample),
+      (LeagueIdExample, null),
+      (LeagueIdExample, SeasonYearExample),
     };
 
-    private const string standardString = "abcd";
+    private const string StandardString = "abcd";
 
     /* Methods */
 
@@ -79,7 +79,7 @@
 
     public static List<XMLSoccerCOM.Team> CreateTestTeamList(
       int size,
-      string testString = standardString)
+      string testString = StandardString)
     {
       var xmlList = new List<XMLSoccerCOM.Team>();
       for (int i = 1; i <= size; i++)
@@ -111,7 +111,7 @@
 
     public static List<XMLSoccerCOM.TeamLeagueStanding> CreateTestLeagueTable(
       int size,
-      string testString = standardString,
+      string testString = StandardString,
       int testInt = 0)
     {
       var xmlList = new List<XMLSoccerCOM.TeamLeagueStanding>();
@@ -258,7 +258,7 @@
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var testDBContext = new TestXmlSoccerAPI_DBContext();
-      var apiTestLeagueTable = CreateTestLeagueTable(numberOfTeams);
+      var apiTestLeagueTable = CreateTestLeagueTable(NumberOfTeams);
 
       mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
         It.IsAny<string>(), It.IsAny<int>()))
@@ -281,7 +281,7 @@
       var modelLeagueTable = viewResult.Model as List<TeamLeagueStanding>;
 
       Assert.IsNotNull(modelLeagueTable);
-      Assert.AreEqual(numberOfTeams, apiTestLeagueTable.Count);
+      Assert.AreEqual(NumberOfTeams, apiTestLeagueTable.Count);
       Assert.AreEqual(apiTestLeagueTable.Count, modelLeagueTable.Count);
       for (int i = 0; i < modelLeagueTable.Count; i++)
       {
@@ -296,14 +296,14 @@
       var testDBContext = new TestXmlSoccerAPI_DBContext();
       var apiTestLeagueTable = CreateTestLeagueTable(0);
 
-      var callMockExpressions = CreateTableRequestsExpressions(callMockArguments).ToList();
+      var callMockExpressions = CreateTableRequestsExpressions(CallMockArguments).ToList();
       var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
       mockXmlReq.SetupSequenceCalls(apiTestLeagueTable, callMockExpressions);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
 
       // Act
-      CallControlerActionMuliply(footballController.Table, callActionArguments);
+      CallControlerActionMuliply(footballController.Table, CallActionArguments);
 
       // Assert
       Assert.AreEqual(callMockExpressions.Count, testDBContext.SavedChanges);
@@ -312,8 +312,8 @@
         Times.Exactly(callMockExpressions.Count));
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
         Times.Exactly(callMockExpressions.Count - 2));
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, DefaultSeasonYear), Times.Once);
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(leagueIdExample, seasonYearExample), Times.Once);
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(LeagueIdExample, DefaultSeasonYear), Times.Once);
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(LeagueIdExample, SeasonYearExample), Times.Once);
     }
 
     [TestMethod]
@@ -382,7 +382,7 @@
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var testDBContext = new TestXmlSoccerAPI_DBContext();
-      var apiTestTeamList = CreateTestTeamList(numberOfTeams);
+      var apiTestTeamList = CreateTestTeamList(NumberOfTeams);
 
       mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
         It.IsAny<string>(), It.IsAny<int>()))
@@ -405,7 +405,7 @@
       var modelTeamList = viewResult.Model as List<FootballTeam>;
 
       Assert.IsNotNull(modelTeamList);
-      Assert.AreEqual(numberOfTeams, apiTestTeamList.Count);
+      Assert.AreEqual(NumberOfTeams, apiTestTeamList.Count);
       Assert.AreEqual(apiTestTeamList.Count, modelTeamList.Count);
 
       for (int i = 0; i < modelTeamList.Count; i++)
@@ -421,14 +421,14 @@
       var testDBContext = new TestXmlSoccerAPI_DBContext();
       var apiTestTeamList = CreateTestTeamList(0);
 
-      var callMockExpressions = CreateTeamsRequestsExpressions(callMockArguments).ToList();
+      var callMockExpressions = CreateTeamsRequestsExpressions(CallMockArguments).ToList();
       var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
       mockXmlReq.SetupSequenceCalls(apiTestTeamList, callMockExpressions);
 
       var footballController = new FootballController(mockXmlReq.Object, testDBContext);
 
       // Act
-      CallControlerActionMuliply(footballController.Teams, callActionArguments);
+      CallControlerActionMuliply(footballController.Teams, CallActionArguments);
 
       // Assert
       Assert.AreEqual(callMockExpressions.Count, testDBContext.SavedChanges);
@@ -437,8 +437,8 @@
         Times.Exactly(callMockExpressions.Count));
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
         Times.Exactly(callMockExpressions.Count - 2));
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, DefaultSeasonYear), Times.Once);
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(leagueIdExample, seasonYearExample), Times.Once);
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(LeagueIdExample, DefaultSeasonYear), Times.Once);
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(LeagueIdExample, SeasonYearExample), Times.Once);
     }
   }
 
@@ -469,23 +469,23 @@
   public partial class TestDbSet<T> : DbSet<T>
     where T : class
   {
-    private readonly ObservableCollection<T> _data;
-    private readonly IQueryable _query;
+    private readonly ObservableCollection<T> data;
+    private readonly IQueryable query;
 
     public TestDbSet()
     {
-      _data = new ObservableCollection<T>();
-      _query = _data.AsQueryable();
+      data = new ObservableCollection<T>();
+      query = data.AsQueryable();
     }
 
     public override ObservableCollection<T> Local
     {
-      get { return new ObservableCollection<T>(_data); }
+      get { return new ObservableCollection<T>(data); }
     }
 
     public override T Add(T item)
     {
-      _data.Add(item);
+      data.Add(item);
       return item;
     }
 
@@ -493,20 +493,20 @@
     {
       foreach (var item in entities)
       {
-        _data.Add(item);
+        data.Add(item);
       }
-      return _data;
+      return data;
     }
 
     public override T Remove(T item)
     {
-      _data.Remove(item);
+      data.Remove(item);
       return item;
     }
 
     public override T Attach(T item)
     {
-      _data.Add(item);
+      data.Add(item);
       return item;
     }
 
@@ -526,27 +526,27 @@
   {
     Type IQueryable.ElementType
     {
-      get { return _query.ElementType; }
+      get { return query.ElementType; }
     }
 
     System.Linq.Expressions.Expression IQueryable.Expression
     {
-      get { return _query.Expression; }
+      get { return query.Expression; }
     }
 
     IQueryProvider IQueryable.Provider
     {
-      get { return _query.Provider; }
+      get { return query.Provider; }
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
-      return _data.GetEnumerator();
+      return data.GetEnumerator();
     }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-      return _data.GetEnumerator();
+      return data.GetEnumerator();
     }
   }
 }
