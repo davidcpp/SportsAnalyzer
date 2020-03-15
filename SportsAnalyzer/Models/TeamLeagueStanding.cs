@@ -12,8 +12,11 @@ namespace SportsAnalyzer.Models
       foreach (var xmlTeamLeagueStanding in xmlList)
       {
         if (xmlTeamLeagueStanding != null)
+        {
           list.Add(new TeamLeagueStanding(xmlTeamLeagueStanding));
+        }
       }
+
       return list;
     }
   }
@@ -26,7 +29,9 @@ namespace SportsAnalyzer.Models
 
     /* Constructors */
 
-    public TeamLeagueStanding() { }
+    public TeamLeagueStanding()
+    {
+    }
 
     public TeamLeagueStanding(XMLSoccerCOM.TeamLeagueStanding teamStanding)
     {
@@ -82,7 +87,9 @@ namespace SportsAnalyzer.Models
     public void ConvertFromXmlTeamStanding(XMLSoccerCOM.TeamLeagueStanding teamStanding)
     {
       if (teamStanding == null)
+      {
         return;
+      }
 
       Team_Id = teamStanding.Team_Id;
 
@@ -102,28 +109,59 @@ namespace SportsAnalyzer.Models
     public bool IsEqualToXmlTeamStanding(XMLSoccerCOM.TeamLeagueStanding teamStanding)
     {
       if (teamStanding == null)
+      {
         return false;
+      }
 
       if (Team_Id != teamStanding.Team_Id)
+      {
         return false;
+      }
+
       if (Team != teamStanding.Team)
+      {
         return false;
+      }
+
       if (Played != teamStanding.Played)
+      {
         return false;
+      }
+
       if (Points != teamStanding.Points)
+      {
         return false;
+      }
+
       if (Won != teamStanding.Won)
+      {
         return false;
+      }
+
       if (Draw != teamStanding.Draw)
+      {
         return false;
+      }
+
       if (Lost != teamStanding.Lost)
+      {
         return false;
+      }
+
       if (GoalsFor != teamStanding.Goals_For)
+      {
         return false;
+      }
+
       if (GoalsAgainst != teamStanding.Goals_Against)
+      {
         return false;
+      }
+
       if (GoalsDifference != teamStanding.Goal_Difference)
+      {
         return false;
+      }
 
       return true;
     }

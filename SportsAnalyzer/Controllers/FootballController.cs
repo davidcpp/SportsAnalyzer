@@ -44,12 +44,15 @@
       int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
+      {
         league = DefaultLeagueFullName;
+      }
 
       if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
         UpdateMatchesData(league, seasonYear, xmlSoccerRequester, dbContext);
       }
+
       var stats = new Statistics(seasonYear, league);
       stats.CalcStats(dbContext, startRound, endRound);
       stats.CreateTeamsSelectList();
@@ -63,7 +66,9 @@
       int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
+      {
         league = DefaultLeagueFullName;
+      }
 
       if (IsDataOutOfDate(TableLastUpdateTime))
       {
@@ -72,7 +77,9 @@
 
       ViewBag.EmptyList = "League Table is empty";
       if (dbContext.LeagueTable.Count() == 0)
+      {
         ViewBag.Message = ViewBag.EmptyList;
+      }
 
       return View(dbContext.LeagueTable.ToList());
     }
@@ -83,7 +90,9 @@
       int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
+      {
         league = DefaultLeagueFullName;
+      }
 
       if (IsDataOutOfDate(TeamsLastUpdateTime))
       {
@@ -92,7 +101,9 @@
 
       ViewBag.EmptyList = "List of teams is empty";
       if (dbContext.FootballTeams.Count() == 0)
+      {
         ViewBag.Message = ViewBag.EmptyList;
+      }
 
       return View(dbContext.FootballTeams.ToList());
     }
@@ -103,6 +114,7 @@
       {
         dbContext.Dispose();
       }
+
       base.Dispose(disposing);
     }
   }

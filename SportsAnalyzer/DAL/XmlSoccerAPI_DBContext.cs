@@ -7,7 +7,9 @@
   public interface IXmlSoccerAPI_DBContext : IDisposable
   {
     DbSet<FootballTeam> FootballTeams { get; }
+
     DbSet<TeamLeagueStanding> LeagueTable { get; }
+
     DbSet<FootballMatch> LeagueMatches { get; }
 
     int SaveChanges();
@@ -20,7 +22,9 @@
     }
 
     public DbSet<FootballTeam> FootballTeams { get; set; }
+
     public DbSet<TeamLeagueStanding> LeagueTable { get; set; }
+
     public DbSet<FootballMatch> LeagueMatches { get; set; }
 
     protected override void OnModelCreating(DbModelBuilder modelBuilder)

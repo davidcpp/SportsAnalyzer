@@ -137,7 +137,8 @@
           saveFailed = true;
           ex.Entries.Single().Reload();
         }
-      } while (saveFailed);
+      }
+      while (saveFailed);
     }
   }
 

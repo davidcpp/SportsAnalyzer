@@ -69,6 +69,7 @@
       {
         dbContext.Dispose();
       }
+
       base.Dispose(disposing);
     }
 
@@ -87,8 +88,11 @@
     public class StatsRequestModel
     {
       public int[] Rounds { get; set; }
+
       public string TeamName { get; set; }
+
       public string LeagueName { get; set; }
+
       public int SeasonYear { get; set; }
     }
   }

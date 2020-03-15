@@ -54,22 +54,32 @@
     /* Properties */
 
     public List<FootballMatch> AllMatches { get; private set; }
+
     public List<FootballMatch> SelectedMatches { get; private set; }
+
     public List<int> RoundsNumbersInts { get; set; } = new List<int>();
+
     public List<SelectListItem> RoundItems { get; set; } = new List<SelectListItem>();
+
     public List<SelectListItem> TeamItems { get; set; } = new List<SelectListItem>();
 
     public MultiSelectList RoundsSelectList { get; private set; }
+
     public MultiSelectList TeamsSelectList { get; private set; }
 
     [Display(Name = "Season Year")]
     public int SeasonYear { get; set; }
+
     public int LeagueRoundsNumber { get; private set; } = DefaultRoundsNumber;
+
     public string StartRound { get; private set; }
+
     public string EndRound { get; private set; }
 
     public double NumberOfMatchIntervals { get; }
+
     public double MatchIntervalLength { get; }
+
     public double MatchTime { get; } = DefaultMatchTime;
 
     [Display(Name = "League Name")]
@@ -94,22 +104,14 @@
 
     public double[] GoalsInIntervals
     {
-      get
-      {
-        return goalsInIntervals ??
-          (goalsInIntervals = new double[(int)NumberOfMatchIntervals]);
-      }
-      set { goalsInIntervals = value; }
+      get => goalsInIntervals ?? (goalsInIntervals = new double[(int)NumberOfMatchIntervals]);
+      private set => goalsInIntervals = value;
     }
 
     public double[] GoalsInIntervalsPercent
     {
-      get
-      {
-        return goalsInIntervalsPercent ??
-          (goalsInIntervalsPercent = new double[(int)NumberOfMatchIntervals]);
-      }
-      set { goalsInIntervalsPercent = value; }
+      get => goalsInIntervalsPercent ?? (goalsInIntervalsPercent = new double[(int)NumberOfMatchIntervals]);
+      private set => goalsInIntervalsPercent = value;
     }
 
     public double[] TimeIntervalsLimits
@@ -124,9 +126,11 @@
             timeIntervalsLimits[i] = (MatchTime / NumberOfMatchIntervals) * i;
           }
         }
+
         return timeIntervalsLimits;
       }
-      set { timeIntervalsLimits = value; }
+
+      set => timeIntervalsLimits = value;
     }
 
     /* Methods */
@@ -211,7 +215,10 @@
         numberOfGoals = match.HomeGoals ?? 0;
         numberOfGoals += match.AwayGoals ?? 0;
         if (!matchGoals.ContainsKey(numberOfGoals))
+        {
           matchGoals.Add(numberOfGoals, 0);
+        }
+
         matchGoals[numberOfGoals]++;
       }
 
@@ -243,7 +250,9 @@
         matchRound = match.Round ?? 0;
 
         if (matchRound == 0)
+        {
           continue;
+        }
 
         UpdateStandingsAfterMatch(teamLeagueStandings, match);
 
@@ -262,7 +271,9 @@
     public void CalculateRoundPoints()
     {
       if (TeamName == DefaultTeamName)
+      {
         return;
+      }
 
       lock (lockObject)
       {
@@ -272,6 +283,7 @@
           calcTablePositions = Task.Run(() => CalculateTablePositions());
         }
       }
+
       calcTablePositions?.Wait();
 
       int roundPoints = 0;
@@ -282,7 +294,9 @@
       {
         matchRound = match.Round ?? 0;
         if (prevMatchRound == matchRound || matchRound == 0)
+        {
           continue;
+        }
 
         if (match.HomeTeam == TeamName)
         {
@@ -309,7 +323,9 @@
         };
 
         if (!RoundPoints.ContainsKey(matchRound))
+        {
           RoundPoints.Add(matchRound, roundResult);
+        }
 
         prevMatchRound = matchRound;
       }
@@ -393,7 +409,9 @@
         var teamName = standingsInOrder.ElementAt(i).Team;
 
         if (!TablePositions.ContainsKey(teamName))
+        {
           TablePositions[teamName] = new Dictionary<int, int>();
+        }
 
         // Position int the table of the given team after matchRound
         TablePositions[teamName][matchRound] = i + 1;
@@ -433,10 +451,14 @@
     private void GenerateUserSelectedRounds()
     {
       if (!int.TryParse(StartRound, out int startRoundInt))
+      {
         startRoundInt = 1;
+      }
 
       if (!int.TryParse(EndRound, out int endRoundInt))
+      {
         endRoundInt = LeagueRoundsNumber;
+      }
 
       if (startRoundInt > 0 && endRoundInt >= startRoundInt)
       {
@@ -468,11 +490,16 @@
     public class RoundResult
     {
       public int Points { get; set; }
+
       public int TablePosition { get; set; }
+
       public string Opponent { get; set; }
+
       public string OpposingTeams { get; set; }
+
       public string MatchResult { get; set; }
+
       public string MatchDate { get; set; }
-    };
+    }
   }
 }

@@ -11,8 +11,11 @@
       foreach (var xmlTeam in xmlList)
       {
         if (xmlTeam != null)
+        {
           list.Add(new FootballTeam(xmlTeam));
+        }
       }
+
       return list;
     }
   }
@@ -26,7 +29,9 @@
 
     /* Constructors */
 
-    public FootballTeam() { }
+    public FootballTeam()
+    {
+    }
 
     public FootballTeam(XMLSoccerCOM.Team team)
     {
@@ -65,7 +70,9 @@
     public void ConvertFromXmlSoccerTeam(XMLSoccerCOM.Team team)
     {
       if (team == null)
+      {
         return;
+      }
 
       Team_Id = team.Team_Id;
       Name = team.Name;
@@ -78,14 +85,24 @@
     public bool IsEqualToXmlTeam(XMLSoccerCOM.Team team)
     {
       if (team == null)
+      {
         return false;
+      }
 
       if (Team_Id != team.Team_Id)
+      {
         return false;
+      }
+
       if (Name != team.Name)
+      {
         return false;
+      }
+
       if (Country != team.Country)
+      {
         return false;
+      }
 
       return true;
     }

@@ -11,8 +11,11 @@
       foreach (var xmlMatch in xmlList)
       {
         if (xmlMatch != null)
+        {
           list.Add(new FootballMatch(xmlMatch));
+        }
       }
+
       return list;
     }
   }
@@ -21,7 +24,9 @@
   {
     /* Constructors */
 
-    public FootballMatch() { }
+    public FootballMatch()
+    {
+    }
 
     public FootballMatch(XMLSoccerCOM.Match match)
     {
@@ -33,13 +38,21 @@
     public int Id { get; set; }
 
     public DateTime? Date { get; set; }
+
     public string AwayTeam { get; set; }
+
     public int? AwayGoals { get; set; }
+
     public string AwayGoalDetails { get; set; }
+
     public int? Round { get; set; }
+
     public string League { get; set; }
+
     public string HomeTeam { get; set; }
+
     public int? HomeGoals { get; set; }
+
     public string HomeGoalDetails { get; set; }
 
     /* Methods */
@@ -47,7 +60,10 @@
     public void ConvertFromXmlSoccerMatch(XMLSoccerCOM.Match match)
     {
       if (match == null)
+      {
         return;
+      }
+
       Date = match.Date;
       Round = match.Round;
       AwayTeam = match.AwayTeam;
@@ -63,36 +79,59 @@
     public bool IsEqualToXmlMatch(XMLSoccerCOM.Match match)
     {
       if (match == null)
+      {
         return false;
+      }
 
       if (Date != match.Date)
+      {
         return false;
+      }
+
       if (AwayTeam != match.AwayTeam)
+      {
         return false;
+      }
+
       if (AwayGoals != match.AwayGoals)
+      {
         return false;
+      }
+
       if (match.AwayGoalDetails == null)
       {
         if (AwayGoalDetails?.Length != 0 && AwayGoalDetails != null)
+        {
           return false;
+        }
       }
       else if (AwayGoalDetails != match.AwayGoalDetails.ToString())
       {
         return false;
       }
+
       if (HomeTeam != match.HomeTeam)
+      {
         return false;
+      }
+
       if (HomeGoals != match.HomeGoals)
+      {
         return false;
+      }
+
       if (match.HomeGoalDetails == null)
       {
         if (HomeGoalDetails?.Length != 0 && HomeGoalDetails != null)
+        {
           return false;
+        }
       }
       else if (HomeGoalDetails != match.HomeGoalDetails.ToString())
       {
         return false;
       }
+
       return true;
     }
   }

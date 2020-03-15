@@ -86,6 +86,7 @@
       {
         xmlList.Add(CreateTestTeam(i, testString));
       }
+
       return xmlList;
     }
 
@@ -120,6 +121,7 @@
       {
         xmlList.Add(CreateTestTeamLeagueStanding(i, testInt, testString));
       }
+
       return xmlList;
     }
 
@@ -151,8 +153,6 @@
           footballControllerAction(league, seasonYear.Value);
         }
       }
-      // Probably calls with null arguments are unnecessary
-      // - arguments of Controller action has default values
     }
   }
 
@@ -217,11 +217,10 @@
       Assert.AreEqual(1, testDBContext.SavedChanges);
       Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
 
-      // Checking if list forwarded as a model (viewResult.Model) to View
-      // corresponds to test list (Does this list have the same values of their objects? )
-
       var modelLeagueTable = viewResult.Model as List<TeamLeagueStanding>;
 
+      // Checking if list forwarded as a model (viewResult.Model) to View
+      // corresponds to test list (Does this list have the same values of their objects? )
       Assert.IsNotNull(modelLeagueTable);
       Assert.AreEqual(0, apiTestLeagueTable.Count);
       Assert.AreEqual(apiTestLeagueTable.Count, modelLeagueTable.Count);
@@ -275,11 +274,10 @@
 
       Assert.AreEqual(1, testDBContext.SavedChanges);
 
-      // Checking if list forwarded as a model (viewResult.Model) to View
-      // corresponds to test list (Does this list have the same values of their objects?)
-
       var modelLeagueTable = viewResult.Model as List<TeamLeagueStanding>;
 
+      // Checking if list forwarded as a model (viewResult.Model) to View
+      // corresponds to test list (Does this list have the same values of their objects?)
       Assert.IsNotNull(modelLeagueTable);
       Assert.AreEqual(NumberOfTeams, apiTestLeagueTable.Count);
       Assert.AreEqual(apiTestLeagueTable.Count, modelLeagueTable.Count);
@@ -341,11 +339,10 @@
       Assert.AreEqual(1, testDBContext.SavedChanges);
       Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
 
-      // Checking if list forwarded as a model (viewResult.Model) to View
-      // corresponds to test list (Does this list have the same values of their objects? )
-
       var modelTeamList = viewResult.Model as List<FootballTeam>;
 
+      // Checking if list forwarded as a model (viewResult.Model) to View
+      // corresponds to test list (Does this list have the same values of their objects? )
       Assert.IsNotNull(modelTeamList);
       Assert.AreEqual(0, apiTestTeamList.Count);
       Assert.AreEqual(apiTestTeamList.Count, modelTeamList.Count);
@@ -399,11 +396,10 @@
 
       Assert.AreEqual(1, testDBContext.SavedChanges);
 
-      // Checking if list forwarded as a model (viewResult.Model) to View
-      // corresponds to test list (Does this list have the same values of their objects? )
-
       var modelTeamList = viewResult.Model as List<FootballTeam>;
 
+      // Checking if list forwarded as a model (viewResult.Model) to View
+      // corresponds to test list (Does this list have the same values of their objects? )
       Assert.IsNotNull(modelTeamList);
       Assert.AreEqual(NumberOfTeams, apiTestTeamList.Count);
       Assert.AreEqual(apiTestTeamList.Count, modelTeamList.Count);
@@ -453,8 +449,11 @@
     }
 
     public DbSet<FootballTeam> FootballTeams { get; set; }
+
     public DbSet<TeamLeagueStanding> LeagueTable { get; set; }
+
     public DbSet<FootballMatch> LeagueMatches { get; set; }
+
     public int SavedChanges { get; private set; }
 
     public int SaveChanges()
@@ -463,7 +462,9 @@
       return 0;
     }
 
-    public void Dispose() { }
+    public void Dispose()
+    {
+    }
   }
 
   public partial class TestDbSet<T> : DbSet<T>
@@ -495,6 +496,7 @@
       {
         data.Add(item);
       }
+
       return data;
     }
 
