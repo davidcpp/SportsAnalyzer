@@ -1,6 +1,7 @@
 ﻿namespace SportsAnalyzer.Tests.Controllers
 {
   using System;
+  using System.Collections;
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
   using System.Data.Entity;
@@ -478,10 +479,7 @@
       query = data.AsQueryable();
     }
 
-    public override ObservableCollection<T> Local
-    {
-      get { return new ObservableCollection<T>(data); }
-    }
+    public override ObservableCollection<T> Local => new ObservableCollection<T>(data);
 
     public override T Add(T entity)
     {
@@ -511,43 +509,22 @@
       return entity;
     }
 
-    public override T Create()
-    {
-      return Activator.CreateInstance<T>();
-    }
+    public override T Create() => Activator.CreateInstance<T>();
 
-    public override TDerivedEntity Create<TDerivedEntity>()
-    {
-      return Activator.CreateInstance<TDerivedEntity>();
-    }
+    public override TDerivedEntity Create<TDerivedEntity>() => Activator.CreateInstance<TDerivedEntity>();
   }
 
   public partial class TestDbSet<T> : IQueryable, IEnumerable<T>
     where T : class
   {
-    Type IQueryable.ElementType
-    {
-      get { return query.ElementType; }
-    }
+    Type IQueryable.ElementType => query.ElementType;
 
-    System.Linq.Expressions.Expression IQueryable.Expression
-    {
-      get { return query.Expression; }
-    }
+    Expression IQueryable.Expression => query.Expression;
 
-    IQueryProvider IQueryable.Provider
-    {
-      get { return query.Provider; }
-    }
+    IQueryProvider IQueryable.Provider => query.Provider;
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-    {
-      return data.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => data.GetEnumerator();
 
-    IEnumerator<T> IEnumerable<T>.GetEnumerator()
-    {
-      return data.GetEnumerator();
-    }
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() => data.GetEnumerator();
   }
 }
