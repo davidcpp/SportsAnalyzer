@@ -21,8 +21,7 @@
             endRound = UrlParameter.Optional,
             league = UrlParameter.Optional,
             seasonYear = UrlParameter.Optional,
-          }
-      );
+          });
     }
   }
 }

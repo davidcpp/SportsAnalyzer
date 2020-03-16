@@ -25,9 +25,7 @@
     public IHttpActionResult GoalsIntervals(StatsRequestModel statsRequest)
     {
       CheckMatchesData(statsRequest);
-      var stats = new Statistics(statsRequest.SeasonYear,
-        statsRequest.LeagueName,
-        statsRequest.TeamName);
+      var stats = new Statistics(statsRequest.SeasonYear, statsRequest.LeagueName, statsRequest.TeamName);
       stats.SetMatches(dbContext.LeagueMatches.ToList());
       stats.SetRounds(statsRequest.Rounds.ToList());
       stats.CalculateGoalsInIntervals();
@@ -39,9 +37,7 @@
     public IHttpActionResult MatchGoals(StatsRequestModel statsRequest)
     {
       CheckMatchesData(statsRequest);
-      var stats = new Statistics(statsRequest.SeasonYear,
-        statsRequest.LeagueName,
-        statsRequest.TeamName);
+      var stats = new Statistics(statsRequest.SeasonYear, statsRequest.LeagueName, statsRequest.TeamName);
       stats.SetMatches(dbContext.LeagueMatches.ToList());
       stats.SetRounds(statsRequest.Rounds.ToList());
       stats.CalculateMatchGoals();
@@ -53,9 +49,7 @@
     public IHttpActionResult RoundPoints(StatsRequestModel statsRequest)
     {
       CheckMatchesData(statsRequest);
-      var stats = new Statistics(statsRequest.SeasonYear,
-        statsRequest.LeagueName,
-        statsRequest.TeamName);
+      var stats = new Statistics(statsRequest.SeasonYear, statsRequest.LeagueName, statsRequest.TeamName);
       stats.SetMatches(dbContext.LeagueMatches.ToList());
       stats.SetRoundsRange("first", "last");
       stats.CalculateRoundPoints();
@@ -77,10 +71,7 @@
     {
       if (IsDataOutOfDate(MatchesLastUpdateTime))
       {
-        UpdateMatchesData(statsRequest.LeagueName,
-          statsRequest.SeasonYear,
-          xmlSoccerRequester,
-          dbContext);
+        UpdateMatchesData(statsRequest.LeagueName, statsRequest.SeasonYear, xmlSoccerRequester, dbContext);
         MatchesDataUpdated = true;
       }
     }

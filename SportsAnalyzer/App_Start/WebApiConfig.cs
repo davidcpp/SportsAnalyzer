@@ -13,8 +13,7 @@
 
       config.Routes.MapHttpRoute(
           name: "DefaultApi",
-          routeTemplate: "Football/api/{controller}/{action}"
-      );
+          routeTemplate: "Football/api/{controller}/{action}");
     }
   }
 }

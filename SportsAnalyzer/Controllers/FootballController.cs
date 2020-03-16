@@ -19,8 +19,7 @@
       dbContext = new XmlSoccerAPI_DBContext();
     }
 
-    public FootballController(IXmlSoccerRequester xmlSoccerRequester,
-      IXmlSoccerAPI_DBContext dbContext = null)
+    public FootballController(IXmlSoccerRequester xmlSoccerRequester, IXmlSoccerAPI_DBContext dbContext = null)
     {
       this.xmlSoccerRequester = xmlSoccerRequester;
       this.dbContext = dbContext ?? new XmlSoccerAPI_DBContext();
@@ -61,9 +60,7 @@
     }
 
     // GET: Football/Table/{league}/{seasonYear}
-    public ActionResult Table(
-      string league = DefaultLeagueFullName,
-      int seasonYear = DefaultSeasonYear)
+    public ActionResult Table(string league = DefaultLeagueFullName, int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
       {
@@ -85,9 +82,7 @@
     }
 
     // GET: Football/Teams/{league}/{seasonYear}
-    public ActionResult Teams(
-      string league = DefaultLeagueFullName,
-      int seasonYear = DefaultSeasonYear)
+    public ActionResult Teams(string league = DefaultLeagueFullName, int seasonYear = DefaultSeasonYear)
     {
       if (league == DefaultLeagueShortName || league == DefaultLeagueId)
       {

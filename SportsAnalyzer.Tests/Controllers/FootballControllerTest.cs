@@ -211,8 +211,7 @@
       var viewResult = footballController.Table() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       Assert.AreEqual(1, testDBContext.SavedChanges);
       Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
@@ -245,8 +244,7 @@
       viewResult = footballController.Table() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       Assert.AreEqual(1, testDBContext.SavedChanges);
     }
@@ -269,8 +267,7 @@
       var viewResult = footballController.Table() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       Assert.AreEqual(1, testDBContext.SavedChanges);
 
@@ -281,6 +278,7 @@
       Assert.IsNotNull(modelLeagueTable);
       Assert.AreEqual(NumberOfTeams, apiTestLeagueTable.Count);
       Assert.AreEqual(apiTestLeagueTable.Count, modelLeagueTable.Count);
+
       for (int i = 0; i < modelLeagueTable.Count; i++)
       {
         Assert.IsTrue(modelLeagueTable[i].IsEqualToXmlTeamStanding(apiTestLeagueTable[i]));
@@ -306,9 +304,11 @@
       // Assert
       Assert.AreEqual(callMockExpressions.Count, testDBContext.SavedChanges);
 
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()),
+      mockXmlReq.Verify(
+        x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()),
         Times.Exactly(callMockExpressions.Count));
-      mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
+      mockXmlReq.Verify(
+        x => x.GetLeagueStandingsBySeason(DefaultLeagueFullName, DefaultSeasonYear),
         Times.Exactly(callMockExpressions.Count - 2));
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(LeagueIdExample, DefaultSeasonYear), Times.Once);
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(LeagueIdExample, SeasonYearExample), Times.Once);
@@ -333,8 +333,7 @@
       var viewResult = footballController.Teams() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       Assert.AreEqual(1, testDBContext.SavedChanges);
       Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
@@ -367,8 +366,7 @@
       viewResult = footballController.Teams() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       Assert.AreEqual(1, testDBContext.SavedChanges);
     }
@@ -391,8 +389,7 @@
       var viewResult = footballController.Teams() as ViewResult;
 
       // Assert
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(
-        It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
       Assert.AreEqual(1, testDBContext.SavedChanges);
 
@@ -429,9 +426,11 @@
       // Assert
       Assert.AreEqual(callMockExpressions.Count, testDBContext.SavedChanges);
 
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()),
+      mockXmlReq.Verify(
+        x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()),
         Times.Exactly(callMockExpressions.Count));
-      mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
+      mockXmlReq.Verify(
+        x => x.GetAllTeamsByLeagueAndSeason(DefaultLeagueFullName, DefaultSeasonYear),
         Times.Exactly(callMockExpressions.Count - 2));
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(LeagueIdExample, DefaultSeasonYear), Times.Once);
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(LeagueIdExample, SeasonYearExample), Times.Once);

@@ -39,10 +39,11 @@
     {
     }
 
-    public Statistics(int seasonYear = DefaultSeasonYear,
-                    string leagueName = DefaultLeagueName,
-                    string teamName = DefaultTeamName,
-                    double numberOfMatchIntervals = DefaultNumberOfMatchIntervals)
+    public Statistics(
+        int seasonYear = DefaultSeasonYear,
+        string leagueName = DefaultLeagueName,
+        string teamName = DefaultTeamName,
+        double numberOfMatchIntervals = DefaultNumberOfMatchIntervals)
     {
       SeasonYear = seasonYear;
       NumberOfMatchIntervals = numberOfMatchIntervals;
@@ -401,8 +402,7 @@
     }
 
     /// <summary> Set positions of teams in the league table after the given round</summary>
-    private static void SetTeamTablePositions(IEnumerable<TeamLeagueStanding> standingsInOrder,
-      int matchRound)
+    private static void SetTeamTablePositions(IEnumerable<TeamLeagueStanding> standingsInOrder, int matchRound)
     {
       for (int i = 0; i < standingsInOrder.Count(); i++)
       {
@@ -422,19 +422,18 @@
     {
       AllMatches.Reverse();
 
-      SelectedMatches = AllMatches
-        .Where(x => RoundsNumbersInts.Contains(x.Round ?? 1)).ToList();
+      SelectedMatches = AllMatches.Where(x => RoundsNumbersInts.Contains(x.Round ?? 1)).ToList();
 
       if (TeamName != DefaultTeamName)
       {
-        SelectedMatches = SelectedMatches
-          .Where(x => x.HomeTeam == TeamName || x.AwayTeam == TeamName).ToList();
+        SelectedMatches = SelectedMatches.Where(x => x.HomeTeam == TeamName || x.AwayTeam == TeamName).ToList();
       }
     }
 
     /// <summary> Init standings objects for teamsNames </summary>
-    private void InitAllTeamsStandings(Dictionary<string, TeamLeagueStanding> standings,
-       HashSet<string> teamsNames)
+    private void InitAllTeamsStandings(
+      Dictionary<string, TeamLeagueStanding> standings,
+      HashSet<string> teamsNames)
     {
       foreach (var teamName in teamsNames)
       {
@@ -462,15 +461,12 @@
 
       if (startRoundInt > 0 && endRoundInt >= startRoundInt)
       {
-        RoundsNumbersInts = Enumerable
-          .Range(startRoundInt, endRoundInt - startRoundInt + 1)
-          .ToList();
+        RoundsNumbersInts = Enumerable.Range(startRoundInt, endRoundInt - startRoundInt + 1).ToList();
       }
     }
 
     /// <summary> Set goals and points for teams after match between them </summary>
-    private void UpdateStandingsAfterMatch(Dictionary<string, TeamLeagueStanding> standings,
-      FootballMatch match)
+    private void UpdateStandingsAfterMatch(Dictionary<string, TeamLeagueStanding> standings, FootballMatch match)
     {
       standings[match.HomeTeam].GoalsFor += match.HomeGoals ?? 0;
       standings[match.HomeTeam].GoalsAgainst += match.AwayGoals ?? 0;

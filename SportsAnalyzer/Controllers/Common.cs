@@ -49,10 +49,7 @@
 
     public static bool MatchesDataUpdated = false;
 
-    public static void CalcStats(this Statistics statistics,
-      IXmlSocDB xmlSocDB,
-      string startRound,
-      string endRound)
+    public static void CalcStats(this Statistics statistics, IXmlSocDB xmlSocDB, string startRound, string endRound)
     {
       statistics.SetMatches(xmlSocDB.LeagueMatches.ToList());
       statistics.SetRoundsRange(startRound, endRound);
@@ -76,10 +73,7 @@
         && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds);
     }
 
-    public static void UpdateTableData(string league,
-      int seasonYear,
-      IXmlSR xmlSocReq,
-      IXmlSocDB xmlSocDB)
+    public static void UpdateTableData(string league, int seasonYear, IXmlSR xmlSocReq, IXmlSocDB xmlSocDB)
     {
       LastUpdateTime = DateTime.UtcNow;
       TableLastUpdateTime = LastUpdateTime;
@@ -91,10 +85,7 @@
       SaveChangesInDatabase(xmlSocDB);
     }
 
-    public static void UpdateTeamsData(string league,
-      int seasonYear,
-      IXmlSR xmlSocReq,
-      IXmlSocDB xmlSocDB)
+    public static void UpdateTeamsData(string league, int seasonYear, IXmlSR xmlSocReq, IXmlSocDB xmlSocDB)
     {
       LastUpdateTime = DateTime.UtcNow;
       TeamsLastUpdateTime = LastUpdateTime;
@@ -106,10 +97,7 @@
       SaveChangesInDatabase(xmlSocDB);
     }
 
-    public static void UpdateMatchesData(string leagueName,
-      int seasonYear,
-      IXmlSR xmlSocReq,
-      IXmlSocDB xmlSocDB)
+    public static void UpdateMatchesData(string leagueName, int seasonYear, IXmlSR xmlSocReq, IXmlSocDB xmlSocDB)
     {
       MatchesDataUpdated = true;
       LastUpdateTime = DateTime.UtcNow;
@@ -147,20 +135,17 @@
     private const string ApiKey = "AZRBAQTJUNSUUELVRATIYETSXZJREDNJQVMHENMHJOAVVAZKRC";
     private readonly XMLSoccerCOM.Requester xmlSoccerRequester = new XMLSoccerCOM.Requester(ApiKey);
 
-    public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(
-      string league, int seasonStartYear)
+    public List<XMLSoccerCOM.Team> GetAllTeamsByLeagueAndSeason(string league, int seasonStartYear)
     {
       return xmlSoccerRequester.GetAllTeamsByLeagueAndSeason(league, seasonStartYear);
     }
 
-    public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(
-      string league, int seasonStartYear)
+    public List<XMLSoccerCOM.TeamLeagueStanding> GetLeagueStandingsBySeason(string league, int seasonStartYear)
     {
       return xmlSoccerRequester.GetLeagueStandingsBySeason(league, seasonStartYear);
     }
 
-    public List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(
-      string league, int seasonStartYear)
+    public List<XMLSoccerCOM.Match> GetHistoricMatchesByLeagueAndSeason(string league, int seasonStartYear)
     {
       return xmlSoccerRequester
         .GetHistoricMatchesByLeagueAndSeason(league, seasonStartYear);
