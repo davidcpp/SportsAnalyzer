@@ -2,14 +2,14 @@ namespace SportsAnalyzer.Migrations
 {
   using System.Data.Entity.Migrations;
 
-  internal sealed class Configuration : DbMigrationsConfiguration<SportsAnalyzer.DAL.XmlSoccerAPI_DBContext>
+  internal sealed class Configuration : DbMigrationsConfiguration<SportsAnalyzer.DAL.XmlSoccerApiDBContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(SportsAnalyzer.DAL.XmlSoccerAPI_DBContext context)
+        protected override void Seed(SportsAnalyzer.DAL.XmlSoccerApiDBContext context)
         {
             //  This method will be called after migrating to the latest version.
 

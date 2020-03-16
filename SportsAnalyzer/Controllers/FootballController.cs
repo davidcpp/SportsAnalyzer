@@ -8,7 +8,7 @@
 
   public class FootballController : Controller
   {
-    private readonly IXmlSoccerAPI_DBContext dbContext;
+    private readonly IXmlSoccerApiDBContext dbContext;
     private readonly IXmlSoccerRequester xmlSoccerRequester;
 
     /* Constructors */
@@ -16,13 +16,13 @@
     public FootballController()
     {
       xmlSoccerRequester = new XmlSoccerRequester();
-      dbContext = new XmlSoccerAPI_DBContext();
+      dbContext = new XmlSoccerApiDBContext();
     }
 
-    public FootballController(IXmlSoccerRequester xmlSoccerRequester, IXmlSoccerAPI_DBContext dbContext = null)
+    public FootballController(IXmlSoccerRequester xmlSoccerRequester, IXmlSoccerApiDBContext dbContext = null)
     {
       this.xmlSoccerRequester = xmlSoccerRequester;
-      this.dbContext = dbContext ?? new XmlSoccerAPI_DBContext();
+      this.dbContext = dbContext ?? new XmlSoccerApiDBContext();
     }
 
     /* Methods */

@@ -4,7 +4,7 @@
   using System.Data.Entity;
   using SportsAnalyzer.Models;
 
-  public interface IXmlSoccerAPI_DBContext : IDisposable
+  public interface IXmlSoccerApiDBContext : IDisposable
   {
     DbSet<FootballTeam> FootballTeams { get; }
 
@@ -15,9 +15,9 @@
     int SaveChanges();
   }
 
-  public class XmlSoccerAPI_DBContext : DbContext, IXmlSoccerAPI_DBContext
+  public class XmlSoccerApiDBContext : DbContext, IXmlSoccerApiDBContext
   {
-    public XmlSoccerAPI_DBContext() : base("XmlSoccerAPI_DBContext")
+    public XmlSoccerApiDBContext() : base("XmlSoccerApiDBContext")
     {
     }
 
@@ -29,7 +29,7 @@
 
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
-      Database.SetInitializer<XmlSoccerAPI_DBContext>(null);
+      Database.SetInitializer<XmlSoccerApiDBContext>(null);
       base.OnModelCreating(modelBuilder);
     }
   }

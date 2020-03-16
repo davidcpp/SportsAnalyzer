@@ -7,7 +7,7 @@
   using System.Linq;
   using SportsAnalyzer.Models;
 
-  using IXmlSocDB = SportsAnalyzer.DAL.IXmlSoccerAPI_DBContext;
+  using IXmlSocDB = SportsAnalyzer.DAL.IXmlSoccerApiDBContext;
   using IXmlSR = SportsAnalyzer.IXmlSoccerRequester;
 
   public interface IXmlSoccerRequester
@@ -49,16 +49,16 @@
 
     public static bool MatchesDataUpdated = false;
 
-    public static void CalcStats(this Statistics statistics, IXmlSocDB xmlSocDB, string startRound, string endRound)
+    public static void CalcStats(this Statistics statistics, IXmlSocDB xmlSocDb, string startRound, string endRound)
     {
-      statistics.SetMatches(xmlSocDB.LeagueMatches.ToList());
+      statistics.SetMatches(xmlSocDb.LeagueMatches.ToList());
       statistics.SetRoundsRange(startRound, endRound);
       statistics.CalculateBasicStats();
       statistics.CalculateGoalsInIntervals();
       statistics.CalculateMatchGoals();
     }
 
-    public static void ClearDBSet<T>(DbSet<T> set) where T : class
+    public static void ClearDbSet<T>(DbSet<T> set) where T : class
     {
       foreach (var item in set)
       {
@@ -73,31 +73,31 @@
         && (DateTime.UtcNow - LastUpdateTime).TotalSeconds > RequestsBreakSeconds);
     }
 
-    public static void UpdateTableData(string league, int seasonYear, IXmlSR xmlSocReq, IXmlSocDB xmlSocDB)
+    public static void UpdateTableData(string league, int seasonYear, IXmlSR xmlSocReq, IXmlSocDB xmlSocDb)
     {
       LastUpdateTime = DateTime.UtcNow;
       TableLastUpdateTime = LastUpdateTime;
 
       var xmlLeagueStandings = xmlSocReq.GetLeagueStandingsBySeason(league, seasonYear);
 
-      ClearDBSet(xmlSocDB.LeagueTable);
-      xmlSocDB.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
-      SaveChangesInDatabase(xmlSocDB);
+      ClearDbSet(xmlSocDb.LeagueTable);
+      xmlSocDb.LeagueTable.AddRange(xmlLeagueStandings.ConvertToLeagueStandingList());
+      SaveChangesInDatabase(xmlSocDb);
     }
 
-    public static void UpdateTeamsData(string league, int seasonYear, IXmlSR xmlSocReq, IXmlSocDB xmlSocDB)
+    public static void UpdateTeamsData(string league, int seasonYear, IXmlSR xmlSocReq, IXmlSocDB xmlSocDb)
     {
       LastUpdateTime = DateTime.UtcNow;
       TeamsLastUpdateTime = LastUpdateTime;
 
       var xmlTeams = xmlSocReq.GetAllTeamsByLeagueAndSeason(league, seasonYear);
 
-      ClearDBSet(xmlSocDB.FootballTeams);
-      xmlSocDB.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
-      SaveChangesInDatabase(xmlSocDB);
+      ClearDbSet(xmlSocDb.FootballTeams);
+      xmlSocDb.FootballTeams.AddRange(xmlTeams.ConvertToTeamList());
+      SaveChangesInDatabase(xmlSocDb);
     }
 
-    public static void UpdateMatchesData(string leagueName, int seasonYear, IXmlSR xmlSocReq, IXmlSocDB xmlSocDB)
+    public static void UpdateMatchesData(string leagueName, int seasonYear, IXmlSR xmlSocReq, IXmlSocDB xmlSocDb)
     {
       MatchesDataUpdated = true;
       LastUpdateTime = DateTime.UtcNow;
@@ -105,9 +105,9 @@
 
       var xmlLeagueMatches = xmlSocReq.GetHistoricMatchesByLeagueAndSeason(leagueName, seasonYear);
 
-      ClearDBSet(xmlSocDB.LeagueMatches);
-      xmlSocDB.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
-      SaveChangesInDatabase(xmlSocDB);
+      ClearDbSet(xmlSocDb.LeagueMatches);
+      xmlSocDb.LeagueMatches.AddRange(xmlLeagueMatches.ConvertToMatchList());
+      SaveChangesInDatabase(xmlSocDb);
     }
 
     private static void SaveChangesInDatabase(IXmlSocDB dbContext)

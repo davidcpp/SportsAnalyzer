@@ -8,7 +8,7 @@
 
   public class StatsController : ApiController
   {
-    private readonly XmlSoccerAPI_DBContext dbContext = new XmlSoccerAPI_DBContext();
+    private readonly XmlSoccerApiDBContext dbContext = new XmlSoccerApiDBContext();
     private readonly IXmlSoccerRequester xmlSoccerRequester;
 
     public StatsController()

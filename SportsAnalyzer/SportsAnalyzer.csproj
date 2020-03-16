@@ -167,7 +167,7 @@
     <Compile Include="Controllers\FootballController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Controllers\Common.cs" />
-    <Compile Include="DAL\XmlSoccerAPI_DBContext.cs" />
+    <Compile Include="DAL\XmlSoccerApiDBContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

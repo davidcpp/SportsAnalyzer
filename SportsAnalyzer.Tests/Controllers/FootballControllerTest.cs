@@ -198,14 +198,14 @@
     {
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var testDBContext = new TestXmlSoccerAPI_DBContext();
+      var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestLeagueTable = CreateTestLeagueTable(0);
 
       mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
         It.IsAny<string>(), It.IsAny<int>()))
         .Returns(apiTestLeagueTable);
 
-      var footballController = new FootballController(mockXmlReq.Object, testDBContext);
+      var footballController = new FootballController(mockXmlReq.Object, testDbContext);
 
       // Act
       var viewResult = footballController.Table() as ViewResult;
@@ -213,7 +213,7 @@
       // Assert
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
-      Assert.AreEqual(1, testDBContext.SavedChanges);
+      Assert.AreEqual(1, testDbContext.SavedChanges);
       Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
 
       var modelLeagueTable = viewResult.Model as List<TeamLeagueStanding>;
@@ -229,7 +229,7 @@
     public void ShowTable_RepeatedControllerActionCall_NoRepeatedApiRequest()
     {
       // Arrange
-      var testDBContext = new TestXmlSoccerAPI_DBContext();
+      var testDbContext = new TestXmlSoccerApiDBContext();
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
       var apiTestLeagueTable = CreateTestLeagueTable(0);
 
@@ -237,7 +237,7 @@
         It.IsAny<string>(), It.IsAny<int>()))
         .Returns(apiTestLeagueTable);
 
-      var footballController = new FootballController(mockXmlReq.Object, testDBContext);
+      var footballController = new FootballController(mockXmlReq.Object, testDbContext);
 
       // Act
       var viewResult = footballController.Table() as ViewResult;
@@ -246,7 +246,7 @@
       // Assert
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
-      Assert.AreEqual(1, testDBContext.SavedChanges);
+      Assert.AreEqual(1, testDbContext.SavedChanges);
     }
 
     [TestMethod]
@@ -254,14 +254,14 @@
     {
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var testDBContext = new TestXmlSoccerAPI_DBContext();
+      var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestLeagueTable = CreateTestLeagueTable(NumberOfTeams);
 
       mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
         It.IsAny<string>(), It.IsAny<int>()))
         .Returns(apiTestLeagueTable);
 
-      var footballController = new FootballController(mockXmlReq.Object, testDBContext);
+      var footballController = new FootballController(mockXmlReq.Object, testDbContext);
 
       // Act
       var viewResult = footballController.Table() as ViewResult;
@@ -269,7 +269,7 @@
       // Assert
       mockXmlReq.Verify(x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
-      Assert.AreEqual(1, testDBContext.SavedChanges);
+      Assert.AreEqual(1, testDbContext.SavedChanges);
 
       var modelLeagueTable = viewResult.Model as List<TeamLeagueStanding>;
 
@@ -289,20 +289,20 @@
     public void ShowTable_VariousControllerArgs_ProperArgumentsCall()
     {
       // Arrange
-      var testDBContext = new TestXmlSoccerAPI_DBContext();
+      var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestLeagueTable = CreateTestLeagueTable(0);
 
       var callMockExpressions = CreateTableRequestsExpressions(CallMockArguments).ToList();
       var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
       mockXmlReq.SetupSequenceCalls(apiTestLeagueTable, callMockExpressions);
 
-      var footballController = new FootballController(mockXmlReq.Object, testDBContext);
+      var footballController = new FootballController(mockXmlReq.Object, testDbContext);
 
       // Act
       CallControlerActionMuliply(footballController.Table, CallActionArguments);
 
       // Assert
-      Assert.AreEqual(callMockExpressions.Count, testDBContext.SavedChanges);
+      Assert.AreEqual(callMockExpressions.Count, testDbContext.SavedChanges);
 
       mockXmlReq.Verify(
         x => x.GetLeagueStandingsBySeason(It.IsAny<string>(), It.IsAny<int>()),
@@ -320,14 +320,14 @@
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
 
-      var testDBContext = new TestXmlSoccerAPI_DBContext();
+      var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestTeamList = CreateTestTeamList(0);
 
       mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
         It.IsAny<string>(), It.IsAny<int>()))
         .Returns(apiTestTeamList);
 
-      var footballController = new FootballController(mockXmlReq.Object, testDBContext);
+      var footballController = new FootballController(mockXmlReq.Object, testDbContext);
 
       // Act
       var viewResult = footballController.Teams() as ViewResult;
@@ -335,7 +335,7 @@
       // Assert
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
-      Assert.AreEqual(1, testDBContext.SavedChanges);
+      Assert.AreEqual(1, testDbContext.SavedChanges);
       Assert.AreEqual(viewResult.ViewBag.EmptyList, viewResult.ViewBag.Message);
 
       var modelTeamList = viewResult.Model as List<FootballTeam>;
@@ -352,14 +352,14 @@
     {
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var testDBContext = new TestXmlSoccerAPI_DBContext();
+      var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestTeamList = CreateTestTeamList(0);
 
       mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
         It.IsAny<string>(), It.IsAny<int>()))
         .Returns(apiTestTeamList);
 
-      var footballController = new FootballController(mockXmlReq.Object, testDBContext);
+      var footballController = new FootballController(mockXmlReq.Object, testDbContext);
 
       // Act
       var viewResult = footballController.Teams() as ViewResult;
@@ -368,7 +368,7 @@
       // Assert
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
-      Assert.AreEqual(1, testDBContext.SavedChanges);
+      Assert.AreEqual(1, testDbContext.SavedChanges);
     }
 
     [TestMethod]
@@ -376,14 +376,14 @@
     {
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
-      var testDBContext = new TestXmlSoccerAPI_DBContext();
+      var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestTeamList = CreateTestTeamList(NumberOfTeams);
 
       mockXmlReq.Setup(x => x.GetAllTeamsByLeagueAndSeason(
         It.IsAny<string>(), It.IsAny<int>()))
         .Returns(apiTestTeamList);
 
-      var footballController = new FootballController(mockXmlReq.Object, testDBContext);
+      var footballController = new FootballController(mockXmlReq.Object, testDbContext);
 
       // Act
       var viewResult = footballController.Teams() as ViewResult;
@@ -391,7 +391,7 @@
       // Assert
       mockXmlReq.Verify(x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
 
-      Assert.AreEqual(1, testDBContext.SavedChanges);
+      Assert.AreEqual(1, testDbContext.SavedChanges);
 
       var modelTeamList = viewResult.Model as List<FootballTeam>;
 
@@ -411,20 +411,20 @@
     public void ShowTeams_VariousControllerArgs_ProperArgumentsCall()
     {
       // Arrange
-      var testDBContext = new TestXmlSoccerAPI_DBContext();
+      var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestTeamList = CreateTestTeamList(0);
 
       var callMockExpressions = CreateTeamsRequestsExpressions(CallMockArguments).ToList();
       var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
       mockXmlReq.SetupSequenceCalls(apiTestTeamList, callMockExpressions);
 
-      var footballController = new FootballController(mockXmlReq.Object, testDBContext);
+      var footballController = new FootballController(mockXmlReq.Object, testDbContext);
 
       // Act
       CallControlerActionMuliply(footballController.Teams, CallActionArguments);
 
       // Assert
-      Assert.AreEqual(callMockExpressions.Count, testDBContext.SavedChanges);
+      Assert.AreEqual(callMockExpressions.Count, testDbContext.SavedChanges);
 
       mockXmlReq.Verify(
         x => x.GetAllTeamsByLeagueAndSeason(It.IsAny<string>(), It.IsAny<int>()),
@@ -437,9 +437,9 @@
     }
   }
 
-  public class TestXmlSoccerAPI_DBContext : IXmlSoccerAPI_DBContext
+  public class TestXmlSoccerApiDBContext : IXmlSoccerApiDBContext
   {
-    public TestXmlSoccerAPI_DBContext()
+    public TestXmlSoccerApiDBContext()
     {
       FootballTeams = new TestDbSet<FootballTeam>();
       LeagueTable = new TestDbSet<TeamLeagueStanding>();
@@ -483,10 +483,10 @@
       get { return new ObservableCollection<T>(data); }
     }
 
-    public override T Add(T item)
+    public override T Add(T entity)
     {
-      data.Add(item);
-      return item;
+      data.Add(entity);
+      return entity;
     }
 
     public override IEnumerable<T> AddRange(IEnumerable<T> entities)
@@ -499,16 +499,16 @@
       return data;
     }
 
-    public override T Remove(T item)
+    public override T Remove(T entity)
     {
-      data.Remove(item);
-      return item;
+      data.Remove(entity);
+      return entity;
     }
 
-    public override T Attach(T item)
+    public override T Attach(T entity)
     {
-      data.Add(item);
-      return item;
+      data.Add(entity);
+      return entity;
     }
 
     public override T Create()
