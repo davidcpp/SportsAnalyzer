@@ -194,9 +194,12 @@
         }
       }
 
-      for (int i = 0; i < NumberOfMatchIntervals; i++)
+      if (scoredGoalsSum > 0)
       {
-        GoalsInIntervalsPercent[i] = Round((GoalsInIntervals[i] / scoredGoalsSum) * 100, 2);
+        for (int i = 0; i < NumberOfMatchIntervals; i++)
+        {
+          GoalsInIntervalsPercent[i] = Round((GoalsInIntervals[i] / scoredGoalsSum) * 100, 2);
+        }
       }
     }
 
