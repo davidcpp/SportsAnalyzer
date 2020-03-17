@@ -392,7 +392,7 @@
     }
 
     /// <summary> Calculate order of teams in the league table after the given round</summary>
-    private static List<TeamLeagueStanding> GetTeamsOrder(Dictionary<string, TeamLeagueStanding> standings)
+    private List<TeamLeagueStanding> GetTeamsOrder(Dictionary<string, TeamLeagueStanding> standings)
     {
       var result = standings.Values
         .OrderBy(standing => standing.Points)
@@ -404,7 +404,7 @@
     }
 
     /// <summary> Set positions of teams in the league table after the given round</summary>
-    private static void SetTeamTablePositions(IEnumerable<TeamLeagueStanding> standingsInOrder, int matchRound)
+    private void SetTeamTablePositions(IEnumerable<TeamLeagueStanding> standingsInOrder, int matchRound)
     {
       for (int i = 0; i < standingsInOrder.Count(); i++)
       {
