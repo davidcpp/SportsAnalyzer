@@ -230,8 +230,8 @@
     public void ShowTable_RepeatedControllerActionCall_NoRepeatedApiRequest()
     {
       // Arrange
-      var testDbContext = new TestXmlSoccerApiDBContext();
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
+      var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestLeagueTable = CreateTestLeagueTable(0);
 
       mockXmlReq.Setup(x => x.GetLeagueStandingsBySeason(
@@ -290,11 +290,11 @@
     public void ShowTable_VariousControllerArgs_ProperArgumentsCall()
     {
       // Arrange
+      var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
       var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestLeagueTable = CreateTestLeagueTable(0);
-
       var callMockExpressions = CreateTableRequestsExpressions(CallMockArguments).ToList();
-      var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
+
       mockXmlReq.SetupSequenceCalls(apiTestLeagueTable, callMockExpressions);
 
       var footballController = new FootballController(mockXmlReq.Object, testDbContext);
@@ -320,7 +320,6 @@
     {
       // Arrange
       var mockXmlReq = new Mock<IXmlSoccerRequester>();
-
       var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestTeamList = CreateTestTeamList(0);
 
@@ -412,11 +411,11 @@
     public void ShowTeams_VariousControllerArgs_ProperArgumentsCall()
     {
       // Arrange
+      var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
       var testDbContext = new TestXmlSoccerApiDBContext();
       var apiTestTeamList = CreateTestTeamList(0);
-
       var callMockExpressions = CreateTeamsRequestsExpressions(CallMockArguments).ToList();
-      var mockXmlReq = new Mock<IXmlSoccerRequester>(MockBehavior.Strict);
+
       mockXmlReq.SetupSequenceCalls(apiTestTeamList, callMockExpressions);
 
       var footballController = new FootballController(mockXmlReq.Object, testDbContext);
@@ -497,15 +496,15 @@
       return data;
     }
 
-    public override T Remove(T entity)
-    {
-      data.Remove(entity);
-      return entity;
-    }
-
     public override T Attach(T entity)
     {
       data.Add(entity);
+      return entity;
+    }
+
+    public override T Remove(T entity)
+    {
+      data.Remove(entity);
       return entity;
     }
 

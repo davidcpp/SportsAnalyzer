@@ -45,11 +45,11 @@
         string teamName = DefaultTeamName,
         double numberOfMatchIntervals = DefaultNumberOfMatchIntervals)
     {
+      LeagueName = leagueName;
       SeasonYear = seasonYear;
+      TeamName = teamName;
       NumberOfMatchIntervals = numberOfMatchIntervals;
       MatchIntervalLength = MatchTime / NumberOfMatchIntervals;
-      LeagueName = leagueName;
-      TeamName = teamName;
     }
 
     /* Properties */
@@ -234,41 +234,6 @@
       }
     }
 
-    /// <summary> Calculate team positions in the table for all rounds </summary>
-    public void CalculateTablePositions()
-    {
-      var teamsNames = new HashSet<string>(AllMatches.Select(match => match.HomeTeam));
-
-      int matchRound;
-      var teamLeagueStandings = new Dictionary<string, TeamLeagueStanding>();
-      var orderedMatches = AllMatches.OrderBy(match => match.Round ?? 0);
-
-      InitAllTeamsStandings(teamLeagueStandings, teamsNames);
-
-      for (int i = 0; i < orderedMatches.Count(); i++)
-      {
-        var match = orderedMatches.ElementAt(i);
-        matchRound = match.Round ?? 0;
-
-        if (matchRound == 0)
-        {
-          continue;
-        }
-
-        UpdateStandingsAfterMatch(teamLeagueStandings, match);
-
-        // Calculating teams positions after all played matches in a given round - even incomplete
-        // - Check if there are still any matches in a given round
-        var nextMatch = orderedMatches.ElementAtOrDefault(i + 1);
-        if (nextMatch?.Round != match.Round)
-        {
-          // Calculating teams positions in the league table
-          var standingsInOrder = GetTeamsOrder(teamLeagueStandings);
-          SetTeamTablePositions(standingsInOrder, matchRound);
-        }
-      }
-    }
-
     public void CalculateRoundPoints()
     {
       if (TeamName == DefaultTeamName)
@@ -332,22 +297,39 @@
       }
     }
 
-    public void CreateTeamsSelectList()
+    /// <summary> Calculate team positions in the table for all rounds </summary>
+    public void CalculateTablePositions()
     {
-      var teamNames = new HashSet<string>(AllMatches.Select(match => match.HomeTeam)).ToList();
-      teamNames.Sort();
+      var teamsNames = new HashSet<string>(AllMatches.Select(match => match.HomeTeam));
 
-      for (int i = 0; i < teamNames.Count; i++)
+      int matchRound;
+      var teamLeagueStandings = new Dictionary<string, TeamLeagueStanding>();
+      var orderedMatches = AllMatches.OrderBy(match => match.Round ?? 0);
+
+      InitAllTeamsStandings(teamLeagueStandings, teamsNames);
+
+      for (int i = 0; i < orderedMatches.Count(); i++)
       {
-        var teamItem = new SelectListItem
-        {
-          Value = (i + 1).ToString(),
-          Text = teamNames[i],
-        };
-        TeamItems.Add(teamItem);
-      }
+        var match = orderedMatches.ElementAt(i);
+        matchRound = match.Round ?? 0;
 
-      TeamsSelectList = new MultiSelectList(TeamItems, "Value", "Text");
+        if (matchRound == 0)
+        {
+          continue;
+        }
+
+        UpdateStandingsAfterMatch(teamLeagueStandings, match);
+
+        // Calculating teams positions after all played matches in a given round - even incomplete
+        // - Check if there are still any matches in a given round
+        var nextMatch = orderedMatches.ElementAtOrDefault(i + 1);
+        if (nextMatch?.Round != match.Round)
+        {
+          // Calculating teams positions in the league table
+          var standingsInOrder = GetTeamsOrder(teamLeagueStandings);
+          SetTeamTablePositions(standingsInOrder, matchRound);
+        }
+      }
     }
 
     public void CreateRoundsSelectList()
@@ -368,18 +350,22 @@
       RoundsSelectList = new MultiSelectList(RoundItems, "Value", "Text", RoundsNumbersInts);
     }
 
-    public void SetRoundsRange(string startRound, string endRound)
+    public void CreateTeamsSelectList()
     {
-      StartRound = startRound;
-      EndRound = endRound;
-      GenerateUserSelectedRounds();
-      SetSelectedMatches();
-    }
+      var teamNames = new HashSet<string>(AllMatches.Select(match => match.HomeTeam)).ToList();
+      teamNames.Sort();
 
-    public void SetRounds(IEnumerable<int> rounds)
-    {
-      RoundsNumbersInts = rounds?.ToList() ?? new List<int>();
-      SetSelectedMatches();
+      for (int i = 0; i < teamNames.Count; i++)
+      {
+        var teamItem = new SelectListItem
+        {
+          Value = (i + 1).ToString(),
+          Text = teamNames[i],
+        };
+        TeamItems.Add(teamItem);
+      }
+
+      TeamsSelectList = new MultiSelectList(TeamItems, "Value", "Text");
     }
 
     public void SetMatches(IEnumerable<FootballMatch> matches)
@@ -388,9 +374,22 @@
       LeagueRoundsNumber = AllMatches.Max(x => x.Round) ?? LeagueRoundsNumber;
     }
 
+    public void SetRounds(IEnumerable<int> rounds)
+    {
+      RoundsNumbersInts = rounds?.ToList() ?? new List<int>();
+      SetSelectedMatches();
+    }
+
+    public void SetRoundsRange(string startRound, string endRound)
+    {
+      StartRound = startRound;
+      EndRound = endRound;
+      GenerateUserSelectedRounds();
+      SetSelectedMatches();
+    }
+
     /// <summary> Calculate order of teams in the league table after the given round</summary>
-    private static List<TeamLeagueStanding> GetTeamsOrder(
-      Dictionary<string, TeamLeagueStanding> standings)
+    private static List<TeamLeagueStanding> GetTeamsOrder(Dictionary<string, TeamLeagueStanding> standings)
     {
       var result = standings.Values
         .OrderBy(standing => standing.Points)
@@ -418,18 +417,6 @@
       }
     }
 
-    private void SetSelectedMatches()
-    {
-      AllMatches.Reverse();
-
-      SelectedMatches = AllMatches.Where(x => RoundsNumbersInts.Contains(x.Round ?? 1)).ToList();
-
-      if (TeamName != DefaultTeamName)
-      {
-        SelectedMatches = SelectedMatches.Where(x => x.HomeTeam == TeamName || x.AwayTeam == TeamName).ToList();
-      }
-    }
-
     /// <summary> Init standings objects for teamsNames </summary>
     private void InitAllTeamsStandings(
       Dictionary<string, TeamLeagueStanding> standings,
@@ -445,6 +432,24 @@
           };
         }
       }
+    }
+
+    /// <summary> Set goals and points for teams after match between them </summary>
+    private void UpdateStandingsAfterMatch(Dictionary<string, TeamLeagueStanding> standings, FootballMatch match)
+    {
+      standings[match.HomeTeam].GoalsFor += match.HomeGoals ?? 0;
+      standings[match.HomeTeam].GoalsAgainst += match.AwayGoals ?? 0;
+      standings[match.HomeTeam].GoalsDifference = standings[match.HomeTeam].GoalsFor
+        - standings[match.HomeTeam].GoalsAgainst;
+      standings[match.HomeTeam].Points += match.HomeGoals > match.AwayGoals ?
+        3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
+
+      standings[match.AwayTeam].GoalsFor += match.AwayGoals ?? 0;
+      standings[match.AwayTeam].GoalsAgainst += match.HomeGoals ?? 0;
+      standings[match.AwayTeam].GoalsDifference = standings[match.AwayTeam].GoalsFor
+        - standings[match.AwayTeam].GoalsAgainst;
+      standings[match.AwayTeam].Points += match.AwayGoals > match.HomeGoals ?
+        3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
     }
 
     private void GenerateUserSelectedRounds()
@@ -465,22 +470,16 @@
       }
     }
 
-    /// <summary> Set goals and points for teams after match between them </summary>
-    private void UpdateStandingsAfterMatch(Dictionary<string, TeamLeagueStanding> standings, FootballMatch match)
+    private void SetSelectedMatches()
     {
-      standings[match.HomeTeam].GoalsFor += match.HomeGoals ?? 0;
-      standings[match.HomeTeam].GoalsAgainst += match.AwayGoals ?? 0;
-      standings[match.HomeTeam].GoalsDifference = standings[match.HomeTeam].GoalsFor
-        - standings[match.HomeTeam].GoalsAgainst;
-      standings[match.HomeTeam].Points += match.HomeGoals > match.AwayGoals ?
-        3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
+      AllMatches.Reverse();
 
-      standings[match.AwayTeam].GoalsFor += match.AwayGoals ?? 0;
-      standings[match.AwayTeam].GoalsAgainst += match.HomeGoals ?? 0;
-      standings[match.AwayTeam].GoalsDifference = standings[match.AwayTeam].GoalsFor
-        - standings[match.AwayTeam].GoalsAgainst;
-      standings[match.AwayTeam].Points += match.AwayGoals > match.HomeGoals ?
-        3 : (match.HomeGoals == match.AwayGoals ? 1 : 0);
+      SelectedMatches = AllMatches.Where(x => RoundsNumbersInts.Contains(x.Round ?? 1)).ToList();
+
+      if (TeamName != DefaultTeamName)
+      {
+        SelectedMatches = SelectedMatches.Where(x => x.HomeTeam == TeamName || x.AwayTeam == TeamName).ToList();
+      }
     }
 
     public class RoundResult
